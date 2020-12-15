@@ -62,25 +62,25 @@ public class BidmadPlugin : ModuleRules
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "AdColony",
-                    "../ThirdParty/IOS/AdColony.embeddedframework.zip"
+                    "../../ThirdParty/IOS/AdColony.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "AdColonyAdapter",
-                    "../ThirdParty/IOS/AdColonyAdapter.embeddedframework.zip"
+                    "../../ThirdParty/IOS/AdColonyAdapter.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "AppLovinSDK",
-                    "../ThirdParty/IOS/AppLovinSDK.embeddedframework.zip"
+                    "../../ThirdParty/IOS/AppLovinSDK.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "AppLovinAdapter",
-                    "../ThirdParty/IOS/AppLovinAdapter.embeddedframework.zip"
+                    "../../ThirdParty/IOS/AppLovinAdapter.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
@@ -92,74 +92,74 @@ public class BidmadPlugin : ModuleRules
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "Chartboost",
-                    "../ThirdParty/IOS/Chartboost.embeddedframework.zip"
+                    "../../ThirdParty/IOS/Chartboost.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "ChartboostAdapter",
-                    "../ThirdParty/IOS/ChartboostAdapter.embeddedframework.zip"
+                    "../../ThirdParty/IOS/ChartboostAdapter.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "FBSDKCoreKit",
-                    "../ThirdParty/IOS/FBSDKCoreKit.embeddedframework.zip"
+                    "../../ThirdParty/IOS/FBSDKCoreKit.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "FBAudienceNetwork",
-                    "../ThirdParty/IOS/FBAudienceNetwork.embeddedframework.zip"
+                    "../../ThirdParty/IOS/FBAudienceNetwork.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "FacebookAdapter",
-                    "../ThirdParty/IOS/FacebookAdapter.embeddedframework.zip"
+                    "../../ThirdParty/IOS/FacebookAdapter.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "FBAudienceNetworkBiddingKit",
-                    "../ThirdParty/IOS/FBAudienceNetworkBiddingKit.embeddedframework.zip"
+                    "../../ThirdParty/IOS/FBAudienceNetworkBiddingKit.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "GoogleMobileAds",
-                    "../ThirdParty/IOS/GoogleMobileAds.embeddedframework.zip"
+                    "../../ThirdParty/IOS/GoogleMobileAds.embeddedframework.zip"
                 )
             );
             
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "GoogleAppMeasurement",
-                    "../ThirdParty/IOS/GoogleAppMeasurement.embeddedframework.zip"
+                    "../../ThirdParty/IOS/GoogleAppMeasurement.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "GoogleUtilities",
-                    "../ThirdParty/IOS/GoogleUtilities.embeddedframework.zip"
+                    "../../ThirdParty/IOS/GoogleUtilities.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "nanopb",
-                    "../ThirdParty/IOS/nanopb.embeddedframework.zip"
+                    "../../ThirdParty/IOS/nanopb.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "PromisesObjC",
-                    "../ThirdParty/IOS/PromisesObjC.embeddedframework.zip"
+                    "../../ThirdParty/IOS/PromisesObjC.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "UserMessagingPlatform",
-                    "../ThirdParty/IOS/UserMessagingPlatform.embeddedframework.zip"
+                    "../../ThirdParty/IOS/UserMessagingPlatform.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
@@ -171,31 +171,31 @@ public class BidmadPlugin : ModuleRules
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "UnityAdapter",
-                    "../ThirdParty/IOS/UnityAdapter.embeddedframework.zip"
+                    "../../ThirdParty/IOS/UnityAdapter.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "VungleSDK",
-                    "../ThirdParty/IOS/VungleSDK.embeddedframework.zip"
+                    "../../ThirdParty/IOS/VungleSDK.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "VungleAdapter",
-                    "../ThirdParty/IOS/VungleAdapter.embeddedframework.zip"
+                    "../../ThirdParty/IOS/VungleAdapter.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "IronSource",
-                    "../ThirdParty/IOS/IronSource.embeddedframework.zip"
+                    "../../ThirdParty/IOS/IronSource.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "IronSourceAdapter",
-                    "../ThirdParty/IOS/IronSourceAdapter.embeddedframework.zip"
+                    "../../ThirdParty/IOS/IronSourceAdapter.embeddedframework.zip"
                 )
             );
         }
