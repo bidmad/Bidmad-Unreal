@@ -86,7 +86,7 @@ public class BidmadPlugin : ModuleRules
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "BidmadSDK",
-                    "../ThirdParty/IOS/BidmadSDK.embeddedframework.zip"
+                    "../../ThirdParty/IOS/BidmadSDK.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
@@ -165,7 +165,7 @@ public class BidmadPlugin : ModuleRules
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "UnityAds",
-                    "../ThirdParty/IOS/UnityAds.embeddedframework.zip"
+                    "../../ThirdParty/IOS/UnityAds.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
