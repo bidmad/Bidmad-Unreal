@@ -256,6 +256,9 @@ extern "C"{
 - (void)BIDMADRewardVideoShow:(BIDMADRewardVideo *)core {
     NSString* nsZoneId = core.zoneID;
     FRewardCallback::OnShowAd.Broadcast([nsZoneId UTF8String]);
+    
+    FRewardInterface ri = FRewardInterface([nsZoneId UTF8String]);
+    ri.Load();
 }
 - (void)BIDMADRewardVideoLoad:(BIDMADRewardVideo *)core{
     NSString* nsZoneId = core.zoneID;

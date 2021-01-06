@@ -152,7 +152,6 @@ extern "C"{
         FInterstitialCallback::OnShowAd.Broadcast(zoneId);
 
         //Ad ReLoad
-        // FString fZoneId = FString(ANSI_TO_TCHAR(zoneId));
         FInterstitialInterface ii = FInterstitialInterface(zoneId);
         ii.Load();
     }
@@ -231,6 +230,9 @@ extern "C"{
 - (void)BIDMADInterstitialShow:(BIDMADInterstitial *)core{
     NSString* nsZoneId = core.zoneID;
     FInterstitialCallback::OnShowAd.Broadcast(nsZoneId);
+    
+    FInterstitialInterface ii = FInterstitialInterface(nsZoneId);
+    ii.Load();
 }
 -(void)BIDMADInterstitialLoad:(BIDMADInterstitial *)core{
     NSString* nsZoneId = core.zoneID;
