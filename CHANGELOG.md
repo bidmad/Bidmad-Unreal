@@ -1,7 +1,7 @@
 v.1.0.2
 -------------
 *iOS<br>
--Fixed Incorrect ThirdParty Path.
+-Fixed Incorrect ThirdParty Path.<br>
 -Fixed Ad Reload error.
 
 v.1.0.1
