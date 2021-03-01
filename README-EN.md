@@ -44,154 +44,237 @@ bGenerateXCArchive=True
 Among the above setting values, change <string>ca-app-pub-XXXX~XXXX</string> to the GADApplicationIdentifier of the account running the advertisement.<br>
 The GADApplicationIdentifier value is the ID of the app registered in your Google Admob account, which can be found in the Admob Dashboard.
 
+*Add NSUserTrackingUsageDescription and SKAdNetworkItems to AdditionalPlistData for prepare in iOS 14 or higher.
+```
+AdditionalPlistData=
+    ...
+    <key>NSUserTrackingUsageDescription</key>
+    <string>Write your description here</string>
+    <key>SKAdNetworkItems</key>
+    <array>
+      <dict>
+       <key>SKAdNetworkIdentifier</key>
+       <string>cstr6suwn9.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>v9wttpbfk9.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>n38lu8286q.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>4dzt52r2t5.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>bvpn9ufa9b.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>2u9pt9hc89.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>4468km3ulz.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>4fzdc2evr5.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>7ug5zh24hu.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>8s468mfl3y.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>9rd848q2bz.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>9t245vhmpl.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>av6w8kgt66.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>f38h382jlk.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>hs6bdukanm.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>kbd757ywx3.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>ludvb6z3bs.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>m8dbw4sv7c.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>mlmmfzh3r3.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>prcb7njmu6.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>t38b2kh725.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>tl55sbb4fm.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>wzmmz9fp6w.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>yclnxrl5pm.skadnetwork</string>
+      </dict>
+      <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>ydx93a7ass.skadnetwork</string>
+      </dict>
+    </array>
+bGenerateXCArchive=True
+```
+
+*After completing the above tasks, the contents added to **DefaultEngine.ini** are as follows.
+```
+AdditionalLinkerFlags=-ObjC
+AdditionalPlistData=<key>GADApplicationIdentifier</key><string>ca-app-pub-3940256099942544~1458002511</string><key>NSAppTransportSecurity</key><dict><key>NSAllowsArbitraryLoads</key><true/><key>NSAllowsArbitraryLoadsForMedia</key><true/><key>NSAllowsArbitraryLoadsInWebContent</key><true/></dict><key>NSUserTrackingUsageDescription</key><string>언리얼 테스트</string><key>SKAdNetworkItems</key><array><dict><key>SKAdNetworkIdentifier</key><string>cstr6suwn9.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>v9wttpbfk9.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>n38lu8286q.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>4dzt52r2t5.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>bvpn9ufa9b.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>2u9pt9hc89.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>4468km3ulz.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>4fzdc2evr5.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>7ug5zh24hu.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>8s468mfl3y.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>9rd848q2bz.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>9t245vhmpl.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>av6w8kgt66.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>f38h382jlk.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>hs6bdukanm.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>kbd757ywx3.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>ludvb6z3bs.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>m8dbw4sv7c.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>mlmmfzh3r3.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>prcb7njmu6.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>t38b2kh725.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>tl55sbb4fm.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>wzmmz9fp6w.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>yclnxrl5pm.skadnetwork</string></dict><dict><key>SKAdNetworkIdentifier</key><string>ydx93a7ass.skadnetwork</string></dict></array>
+bGenerateXCArchive=True
+```
+
 2. In case of setting the project through xcodeprj file, set BuildSetting> Bitcode to YES.
 (For Unreal Engine, default bitcode=YES)
 
-### 3. How to use Plugin
+### 3. Interstitial
 
-The method of requesting and showing advertisement through plugin is as follows.<br>
-(*Please refer to item 4 for details on the function.)
+The following is how to request (Load) an interstitial advertisement and show the advertisement through the plugin.<br>
 
-#### 3.1 AD Load
+#### 3.1 Init
 
-How to load an ad is simple.<br>
-Call NewInstance and Load Function provided by Plugin in order.<br><br>
+Bidmad is issued each ZoneId for Android / iOS, and sets the issued ZoneId in the Init function according to the OS.
 
-You can check the result of calling Load through Callback.
+![InitInterstitial](./Readme_Contents/Interstitial_InitInterstitial.png)
 
-![UnrealADLoad](./Readme_Contents/UnrealADLoad.png)
+#### 3.2 AD Load
 
-*After requesting Reward / Interstitial advertisement, there is a certain time delay until advertisement is loaded.<br>
+If you have called the Init function, then the Load function is called to request an advertisement.<br>
+*For iOS14 or higher, it is recommended to load after confirming that the user has consented to app tracking authorization.
+You can check the load result through Callback.
+
+![InterstitialLoad](./Readme_Contents/Interstitial_Load.png)
+
+*After requesting Interstitial advertisement, there is a certain time delay until advertisement is loaded.<br>
 In order not to expose the load delay to the view, it is recommended to request an advertisement immediately when the app starts.
 
-#### 3.2 Ad Show
+#### 3.3 Ad IsLoaded
 
-Plugin provides IsLoaded Function that can check whether advertisement is loaded.<br>
-After calling IsLoaded to confirm that the ad has been loaded, and calling Show, the ad is exposed.
+Before calling the Show function, the IsLoaded function is called to check whether the advertisement is loaded.
 
-![UnrealADShow](./Readme_Contents/UnrealADShow.png)
+![InterstitialIsLoad](./Readme_Contents/Interstitial_IsLoaded.png)
+
+#### 3.4 Ad Show
+
+If the advertisement request is successful through the Load function, the advertisement is displayed.
+
+![InterstitialShow](./Readme_Contents/Interstitial_Show.png)
 
 *If the advertisement is shown, the plugin loads again.<br>
 At this time, if the result of the called Load is Fail, Load is not called again.
 
-#### 3.3 Ad Callback
+#### 3.5 Ad Callback
 
-Plugin provides callback function according to advertisement event.<br>
-If you need to process after an event related to advertisement such as Load / Show / Fail, register and use the Callback function.<br>
-(*Please refer to the 5th section for details.)
+Interstitial provides 4 types of Callbacks: Load / Show / Close / Failed.
 
-```cpp
-#include "RewardCallback.h"
-....
-ABidmadPluginSampleGameMode::ABidmadPluginSampleGameMode(){
-    if(FBidmadPluginModule::isBidmadModuleStart){
-        FRewardCallback::OnLoadAd.AddUObject(this, &ABidmadPluginSampleGameMode::OnRewardLoadAd);
-        FRewardCallback::OnFailedAd.AddUObject(this, &ABidmadPluginSampleGameMode::OnRewardFailedAd);
-        ...
-    }
-}
+![InterstitialCallbacks](./Readme_Contents/Interstitial_Callbacks.png)
 
-void ABidmadPluginSampleGameMode::OnRewardLoadAd(const FString& zoneId){
-    UE_LOG(LogTemp, Warning, TEXT("[OnRewardLoadAd] #####"));
-}
-void ABidmadPluginSampleGameMode::OnRewardFailedAd(const FString& zoneId){
-    UE_LOG(LogTemp, Warning, TEXT("[OnRewardFailedAd] #####"));
-}
-...
-```
+### 4. Reward
 
-### 4. Plugin Function
+The following is how to request (Load) rewarded advertisement through plugin and show (Show) advertisement.<br>
 
-BidmadPlugin provides BluePrintFunction for Interstitial / Reward ad types.
+#### 4.1 Init
 
-#### 4.1 NewInstance
+Bidmad is issued each ZoneId for Android / iOS, and sets the issued ZoneId in the Init function according to the OS.
 
-Creates a new instance based on the ZoneId.<br>
-There is only 1 Instance for the same ZoneId.
-
-```cpp
-UFUNCTION(BlueprintCallable,Category="BidmadReward")
-static void NewRewardInstance(FString zoneId);
-
-UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
-static void NewInterstitialInstance(FString zoneId);
-```
+![RewardInitReward](./Readme_Contents/Reward_InitReward.png)
 
 #### 4.2 Load
 
-Request an advertisement through Instance created with NewInstance.
+If you have called the Init function, then the Load function is called to request an advertisement.<br>
+*For iOS14 or higher, it is recommended to load after confirming that the user has consented to app tracking authorization.
+You can check the load result through Callback.
 
-```cpp
-UFUNCTION(BlueprintCallable,Category="BidmadReward")
-static void LoadReward(FString zoneId);
+![RewardLoad](./Readme_Contents/Reward_Load.png)
 
-UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
-static void LoadInterstitial(FString zoneId);
-```
+*After requesting Reward advertisement, there is a certain time delay until advertisement is loaded.<br>
+In order not to expose the load delay to the view, it is recommended to request an advertisement immediately when the app starts.
 
 #### 4.3 IsLoaded
 
-This is a function to check whether the advertisement has been normally received after the Instance has performed Load. If the Instance has received an advertisement, it returns true.
+Before calling the Show function, the IsLoaded function is called to check whether the advertisement is loaded.
 
-```cpp
-UFUNCTION(BlueprintCallable,Category="BidmadReward")
-static bool IsLoadedReward(FString zoneId);
-
-UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
-static bool IsLoadedInterstitial(FString zoneId);
-```
+![RewardIsLoaded](./Readme_Contents/Reward_IsLoaded.png)
 
 #### 4.4 Show
 
-If the Instance has requested/received an advertisement through Load, the received advertisement is exposed.<br>
-After performing the show, the plugin loads the advertisement again.
-Show를 수행 후 Plugin에서 광고를 다시 Load 합니다.
+If the advertisement request is successful through the Load function, the advertisement is displayed.
 
-```cpp
-UFUNCTION(BlueprintCallable,Category="BidmadReward")
-static void ShowReward(FString zoneId);
+![RewardShow](./Readme_Contents/Reward_Show.png)
 
-UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
-static void ShowInterstitial(FString zoneId);
-```
+*If the advertisement is shown, the plugin loads again.<br>
+At this time, if the result of the called Load is Fail, Load is not called again.
 
-#### 4.5 DeleteInstance
+#### 4.5 Ad Callback
 
-Use when you need to deallocate an instance created with NewInstance.<br>
-NewInstance must be called again to call Load, IsLoaded, and Show after calling DeleteInstance.
+Reward provides 6 types of Callbacks: Load / Show / Close / Failed / Complete / Skipped.
 
-```cpp
-UFUNCTION(BlueprintCallable,Category="BidmadReward")
-static void DeleteRewardInstance(FString zoneId);
+![RewardCallbacks](./Readme_Contents/Reward_Callbacks.png)
 
-UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
-static void DeleteInstanceInterstitial(FString zoneId);
-```
+### 5. Common
 
-### 5. Callback Delegate
+Common is a component that provides functions other than advertisements such as debugging mode and iOS14 AppTrackingAuthorization function.
 
-BidmadPlugin notifies the occurrence of an ad-related event to a callback function through a callback delegate.<br>
-If processing according to the occurrence of an event is required, it must be processed according to each event.
+#### 5.1 SetDebugging
 
-#### 5.1 Reward
+Debugging log is output when calling SetDebugging True.
 
-```cpp
-//FRewardCallback
-static FOnLoadAd OnLoadAd; //Occurs when advertisement is normally received after performing advertisement load.
-static FOnShowAd OnShowAd; //Occurs when performing an advertisement show.
-static FOnFailedAd OnFailedAd; //Occurs when advertisement is not received after performing advertisement load
-static FOnCompleteAd OnCompleteAd; //Occurs when the reward payment standard is achieved in reward advertisement.
-static FOnCloseAd OnCloseAd; //Occurs when the advertisement is closed.
-static FOnClickAd OnClickAd; //Occurs when an advertisement is clicked.
-static FOnSkippedAd OnSkippedAd; //Occurs when the Reward payment standard is not achieved and the advertisement ends in a reward advertisement.
-```
+![CommonSetDebugging](./Readme_Contents/Common_SetDebugging.png)
 
-#### 5.2 Interstitial
+#### 5.2 ReqAdTrackingAuthorization
 
-```cpp
-//FInterstitialCallback
-static FOnLoadAd OnLoadAd; //Occurs when advertisement is normally received after performing advertisement load.
-static FOnShowAd OnShowAd; //Occurs when performing an advertisement show.
-static FOnFailedAd OnFailedAd; //Occurs when advertisement is not received after performing advertisement load.
-static FOnCloseAd OnCloseAd; //Occurs when the advertisement is closed.
-```
+In iOS 14, the app tracking transparency consent popup is exposed, and the resulting callback is provided.
+
+![CommonReqAdTrackingAuthorization](./Readme_Contents/Common_ReqAdTrackingAuthorization.png)
+
+#### 5.2 SetAdvertiserTrackingEnabled
+
+When obtaining app tracking transparency consent through a method other than ReqAdTrackingAuthorization provided by Plugin, 
+<br>pass agrees(True) and rejected(False) through SetAdvertiserTrackingEnabled.
+
+![CommonSetAdvertiserTrackingEnabled](./Readme_Contents/Common_SetAdvertiserTrackingEnabled.png)
+
+#### 5.2 GetAdvertiserTrackingEnabled
+
+Check the value set through SetAdvertiserTrackingEnabled.
+
+![CommonGetAdvertiserTrackingEnabled](./Readme_Contents/Common_GetAdvertiserTrackingEnabled.png)

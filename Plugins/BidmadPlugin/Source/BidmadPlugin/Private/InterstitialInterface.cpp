@@ -3,34 +3,72 @@
 
 #include "InterstitialInterface.h"
 
-TMap <FString, FInterstitialInterface*> FInterstitialInterface::mInterstitialInterfaceMap = TMap <FString, FInterstitialInterface*> ();
-
-FInterstitialInterface::FInterstitialInterface(FString zoneId)
+UInterstitialInterface::UInterstitialInterface()
 {
-    #if PLATFORM_ANDROID || PLATFORM_IOS
-    checkf(!zoneId.IsEmpty(), TEXT("[FInterstitialInterface::FInterstitialInterface] ZoneId is Empty #####"));
+    // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
+    // off to improve performance if you don't need them.
+    PrimaryComponentTick.bCanEverTick = true;
+
+    // ...
+}
+
+// Called when the game starts
+void UInterstitialInterface::BeginPlay()
+{
+    Super::BeginPlay();
+
+    // ...
+}
+
+
+// Called every frame
+void UInterstitialInterface::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+    // ...
+}
+
+void UInterstitialInterface::InitInterstitial(FString androidZoneId, FString iosZoneId){
+    #if PLATFORM_ANDROID
+    checkf(!androidZoneId.IsEmpty(), TEXT("[UInterstitialInterface::InitInterstitial] ZoneId is Empty #####"));
+    #elif PLATFORM_IOS
+    checkf(!iosZoneId.IsEmpty(), TEXT("[UInterstitialInterface::InitInterstitial] ZoneId is Empty #####"));
     #else
-    if(zoneId.IsEmpty()){
-        UE_LOG(FBidmadPlugin, Error, TEXT("[FInterstitialInterface::FInterstitialInterface] ZoneId is Empty #####"));
+    if(androidZoneId.IsEmpty() || androidZoneId.IsEmpty()){
+        UE_LOG(FBidmadPlugin, Error, TEXT("[UInterstitialInterface::InitInterstitial] ZoneId is Empty #####"));
     }
     #endif
 
-    mZoneId = zoneId;
-    GetInstance();
+    #if PLATFORM_ANDROID
+    mZoneId = androidZoneId;
+    #else //PLATFORM_IOS 
+    mZoneId = iosZoneId;
+    #endif
+
     #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    GetInstance();
     SetActivity();//Android JNI Start
     MakeInterstitial();
+    #elif PLATFORM_IOS
+    NewiOSInstance();
     #endif
     
     SetAdInfo(); //AOS&iOS
     
     #if PLATFORM_ANDROID && USE_ANDROID_JNI
     DeleteRefMember(); //Android JNI END
+    #endif 
+}
+
+void UInterstitialInterface::NewiOSInstance() {
+    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #elif PLATFORM_IOS
+    unrealInterstitial = [[BidmadInterstitialInterface getSharedInstance] newInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
     #endif
 }
 
-
-void FInterstitialInterface::GetInstance() {
+void UInterstitialInterface::GetInstance() {
     #if PLATFORM_ANDROID && USE_ANDROID_JNI
     mEnv = FAndroidApplication::GetJavaEnv();
     
@@ -42,31 +80,31 @@ void FInterstitialInterface::GetInstance() {
     mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _zoneId);
     mEnv->DeleteLocalRef(_zoneId);
     #elif PLATFORM_IOS
-    unrealInterstitial = [[BidmadInterstitialInterface getSharedInstance] getInterstitialByZone:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
+    unrealInterstitial = [[BidmadInterstitialInterface getSharedInstance] getInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
     #endif
 }
 
 //Only Android Funtion START
 #if PLATFORM_ANDROID && USE_ANDROID_JNI
-void FInterstitialInterface::SetActivity() {
+void UInterstitialInterface::SetActivity() {
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setActivity", "(Landroid/app/Activity;)V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet, FAndroidApplication::GetGameActivityThis());
 }
 
-void FInterstitialInterface::MakeInterstitial() {
+void UInterstitialInterface::MakeInterstitial() {
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "makeInterstitial", "()V", false);
     mEnv->CallVoidMethod(mJObj, midGet);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
 }
 
-void FInterstitialInterface::DeleteRefMember(){
+void UInterstitialInterface::DeleteRefMember(){
     mEnv->DeleteLocalRef(mJObj);
     mEnv->DeleteGlobalRef(mJCls);
 }
 #endif
 //Only Android Funtion END
 
-void FInterstitialInterface::SetAdInfo() {
+void UInterstitialInterface::SetAdInfo() {
     #if PLATFORM_ANDROID && USE_ANDROID_JNI
     jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setAdInfo", "(Ljava/lang/String;)V", false);
@@ -79,7 +117,7 @@ void FInterstitialInterface::SetAdInfo() {
     #endif
 }
 
-void FInterstitialInterface::Load() {
+void UInterstitialInterface::Load() {
     GetInstance();
     #if PLATFORM_ANDROID && USE_ANDROID_JNI
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "load", "()V", false);
@@ -88,17 +126,11 @@ void FInterstitialInterface::Load() {
 
     DeleteRefMember();
     #elif PLATFORM_IOS
-    if([unrealInterstitial isShowing]){
-        UE_LOG(LogTemp,Display, TEXT("[FInterstitialInterface] Current Zone Is Showing() #####"));
-        [[BidmadInterstitialInterface getSharedInstance] loadSameZone:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
-    }else{
-        UE_LOG(LogTemp,Display, TEXT("[FInterstitialInterface] Current Zone Is Not Showing() #####"));
-        [unrealInterstitial load];
-    }
+    [unrealInterstitial load];
     #endif
 }
 
-void FInterstitialInterface::Show() {
+void UInterstitialInterface::Show() {
     GetInstance();
     #if PLATFORM_ANDROID && USE_ANDROID_JNI
     
@@ -116,7 +148,7 @@ void FInterstitialInterface::Show() {
     #endif
 }
 
-bool FInterstitialInterface::IsLoaded() {
+bool UInterstitialInterface::IsLoaded() {
     bool result = false;
     GetInstance();
     #if PLATFORM_ANDROID && USE_ANDROID_JNI
@@ -141,7 +173,13 @@ extern "C"{
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
 
-        FInterstitialCallback::OnLoadAd.Broadcast(zoneId);
+        for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
+        {
+            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
+            {
+                Itr->OnLoadBidmadInterstitialAd.Broadcast(zoneId);
+            }
+        }
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_interstitial_UnrealInterstitial_onShowAdCb(JNIEnv *env, jobject obj, jstring str){
@@ -149,11 +187,14 @@ extern "C"{
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
 
-        FInterstitialCallback::OnShowAd.Broadcast(zoneId);
-
-        //Ad ReLoad
-        FInterstitialInterface ii = FInterstitialInterface(zoneId);
-        ii.Load();
+        for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
+        {
+            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
+            {
+                Itr->OnShowBidmadInterstitialAd.Broadcast(zoneId);
+                Itr->Load(); //Ad Reload
+            }
+        }
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_interstitial_UnrealInterstitial_onFailedAdCb(JNIEnv *env, jobject obj, jstring str){
@@ -161,7 +202,13 @@ extern "C"{
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
 
-        FInterstitialCallback::OnFailedAd.Broadcast(zoneId);
+        for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
+        {
+            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
+            {
+                Itr->OnFailedBidmadInterstitialAd.Broadcast(zoneId);
+            }
+        }
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_interstitial_UnrealInterstitial_onCloseAdCb(JNIEnv *env, jobject obj, jstring str){
@@ -169,7 +216,13 @@ extern "C"{
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
 
-        FInterstitialCallback::OnCloseAd.Broadcast(zoneId);
+        for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
+        {
+            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
+            {
+                Itr->OnCloseBidmadInterstitialAd.Broadcast(zoneId);
+            }
+        }
     }
 }
 #elif PLATFORM_IOS
@@ -183,64 +236,65 @@ extern "C"{
 
     return sharedInstance;
 }
-
 -(id)init{
-    if(self = [super init]){
-        NSLog(@"BidmadRewardInterface init");
-        interstitialList = [[NSMutableDictionary alloc] init];
-        tempInterstitial = nil;
-    }
+    self = [super init];
     return self;
 }
-
-- (UnrealReward *)getInterstitialByZone:(NSString *)zoneID {
-    if([interstitialList objectForKey:zoneID] == nil){
-        NSLog(@"NewZoneID: %@ ", zoneID);
-        UnrealInterstitial * interstitial = [[UnrealInterstitial alloc] init];
-        [interstitial setDelegate:self];
-        [interstitialList setObject:interstitial forKey:zoneID];
-    }
-    return [interstitialList objectForKey:zoneID];
+- (UnrealInterstitial *)newInstance:(NSString *)zoneID {
+    UnrealInterstitial * interstitial = [[UnrealInterstitial alloc] initWithZoneId:zoneID];
+    [interstitial setDelegate:self];
+    return interstitial;
 }
-- (void) loadSameZone:(NSString *)zoneId{
-    tempInterstitial = [[UnrealInterstitial alloc] init];
-    [tempInterstitial setZoneID:zoneId];
-    [tempInterstitial setDelegate:self];
-    [tempInterstitial setShowing:false];
-    [tempInterstitial load];
-}
-- (void) updateInterstitialList:(NSString *) zoneId{
-    UnrealInterstitial * temp = [interstitialList objectForKey:zoneId];
-   
-    if([temp isShowing]){
-        if(tempInterstitial != nil){
-            NSLog(@"[FInterstitial Same/Diff Object ");
-            [tempInterstitial setShowing:false];
-            [interstitialList setObject:tempInterstitial forKey:zoneId];
-            tempInterstitial = nil;
-        }
-    }
+- (UnrealInterstitial *)getInstance:(NSString *)zoneID {
+    UnrealInterstitial * interstitial = [UnrealInterstitial getInstance:zoneID];
+    return interstitial;
 }
 
 - (void)BIDMADInterstitialClose:(BIDMADInterstitial *)core{
     NSString* nsZoneId = core.zoneID;
-    [self updateInterstitialList:nsZoneId];
-    FInterstitialCallback::OnCloseAd.Broadcast(nsZoneId);
+
+    for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
+    {
+        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
+        {
+            Itr->OnCloseBidmadInterstitialAd.Broadcast(nsZoneId);
+        }
+    }
 }
 - (void)BIDMADInterstitialShow:(BIDMADInterstitial *)core{
     NSString* nsZoneId = core.zoneID;
-    FInterstitialCallback::OnShowAd.Broadcast(nsZoneId);
     
-    FInterstitialInterface ii = FInterstitialInterface(nsZoneId);
-    ii.Load();
+    for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
+    {
+        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
+        {
+            Itr->OnShowBidmadInterstitialAd.Broadcast(nsZoneId);
+            Itr->InitInterstitial(nil, nsZoneId);
+            Itr->Load(); //Ad Reload
+        }
+    }
 }
 -(void)BIDMADInterstitialLoad:(BIDMADInterstitial *)core{
     NSString* nsZoneId = core.zoneID;
-    FInterstitialCallback::OnLoadAd.Broadcast(nsZoneId);
+
+    for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
+    {
+        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
+        {
+            Itr->OnLoadBidmadInterstitialAd.Broadcast(nsZoneId);
+        }
+    }
 }
 - (void)BIDMADInterstitialAllFail:(BIDMADInterstitial *)core{
     NSString* nsZoneId = core.zoneID;
-    FInterstitialCallback::OnFailedAd.Broadcast(nsZoneId);
+
+    for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
+    {
+        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
+        {
+            Itr->OnFailedBidmadInterstitialAd.Broadcast(nsZoneId);
+        }
+    }
 }
 @end
 

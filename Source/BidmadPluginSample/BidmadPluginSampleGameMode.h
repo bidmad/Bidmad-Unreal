@@ -14,19 +14,6 @@ class ABidmadPluginSampleGameMode : public AGameModeBase
 
 public:
 	ABidmadPluginSampleGameMode();
-    
-    void OnRewardLoadAd(const FString&);
-    void OnRewardShowAd(const FString&);
-    void OnRewardFailedAd(const FString&);
-    void OnRewardCompleteAd(const FString&);
-    void OnRewardCloseAd(const FString&);
-    void OnRewardClickAd(const FString&);
-    void OnRewardSkippedAd(const FString&);
-    
-    void OnInterstitialLoadAd(const FString&);
-    void OnInterstitialShowAd(const FString&);
-    void OnInterstitialFailedAd(const FString&);
-    void OnInterstitialCloseAd(const FString&);
 };
 
 

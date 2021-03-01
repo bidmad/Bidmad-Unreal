@@ -1,3 +1,11 @@
+v.1.1.0
+-------------
+*Unreal<br>
+-Change Reward / Interface Interface<br><br>
+*iOS<br>
+-Support for App Tracking Transparency.<br>
+-Support for SKAdNetwork..
+
 v.1.0.2
 -------------
 *iOS<br>

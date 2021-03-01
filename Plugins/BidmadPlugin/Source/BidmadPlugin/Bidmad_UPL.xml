@@ -29,7 +29,7 @@
 		}
 
 		dependencies {
-		    implementation ('com.adop.sdk:bidmad-androidx-g:1.0.2')
+		    implementation ('com.adop.sdk:bidmad-androidx-g:1.0.7')
 		}
 
 		android {

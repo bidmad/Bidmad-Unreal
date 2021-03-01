@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InterstitialCallback.h"
+#include "Components/SceneComponent.h"
+
 #if PLATFORM_ANDROID
 #include "Android/AndroidApplication.h"
 
@@ -24,8 +25,20 @@
 
 #endif
 
-class BIDMADPLUGIN_API FInterstitialInterface
+#include "InterstitialInterface.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLoadBidmadInterstitialAd, const FString&, ZoneId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShowBidmadInterstitialAd, const FString&, ZoneId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFailedBidmadInterstitialAd, const FString&, ZoneId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCloseBidmadInterstitialAd, const FString&, ZoneId);
+
+UCLASS(Blueprintable, BlueprintType, ClassGroup=(Bidmad), meta=(BlueprintSpawnableComponent))
+class BIDMADPLUGIN_API UInterstitialInterface : public USceneComponent
 {
+    GENERATED_BODY()
+protected:
+    // Called when the game starts
+    virtual void BeginPlay() override;
 private:
 #if PLATFORM_ANDROID && USE_ANDROID_JNI
     void DeleteRefMember();
@@ -38,17 +51,35 @@ private:
 #elif PLATFORM_IOS
     UnrealInterstitial* unrealInterstitial;
 #endif
+    void NewiOSInstance();
     void GetInstance();
     void SetAdInfo();
     FString mZoneId;
 public:
-    static TMap <FString, FInterstitialInterface*> mInterstitialInterfaceMap;
+    // Sets default values for this component's properties
+    UInterstitialInterface();
+    // Called every frame
+    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-    FInterstitialInterface(FString);
-
+    //Bidmad Function
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void InitInterstitial(FString androidZoneId, FString iosZoneId);
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
     void Load();
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
     void Show();
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
     bool IsLoaded();
+
+    //Bidmad Callback
+    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadInterstitial")
+    FOnLoadBidmadInterstitialAd OnLoadBidmadInterstitialAd;
+    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadInterstitial")
+    FOnShowBidmadInterstitialAd OnShowBidmadInterstitialAd;
+    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadInterstitial")
+    FOnFailedBidmadInterstitialAd OnFailedBidmadInterstitialAd;
+    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadInterstitial")
+    FOnCloseBidmadInterstitialAd OnCloseBidmadInterstitialAd;
 };
 
 #if PLATFORM_ANDROID && USE_ANDROID_JNI
@@ -60,13 +91,10 @@ extern "C"{
 }
 #elif PLATFORM_IOS
 @interface BidmadInterstitialInterface : NSObject <BIDMADInterstitialDelegate>{
-    NSMutableDictionary* interstitialList;
     id<BIDMADInterstitialDelegate> delegate;
-    UnrealInterstitial * tempInterstitial;
 }
 + (BidmadInterstitialInterface *) getSharedInstance;
-- (UnrealInterstitial *)getInterstitialByZone:(NSString *)zoneID;
-- (void) loadSameZone:(NSString *)zoneId;
-- (void) updateInterstitialList:(NSString *) zoneId;
+- (UnrealInterstitial *)newInstance:(NSString *)zoneID;
+- (UnrealInterstitial *)getInstance:(NSString *)zoneID;
 @end
 #endif

@@ -17,5 +17,4 @@ public:
 	virtual void ShutdownModule() override;
     
     static bool isBidmadModuleStart;
-    static void SetDebugging(bool);
 };

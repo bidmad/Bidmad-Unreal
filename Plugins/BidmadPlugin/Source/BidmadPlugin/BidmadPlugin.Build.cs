@@ -61,18 +61,6 @@ public class BidmadPlugin : ModuleRules
         }else if (Target.Platform == UnrealTargetPlatform.IOS){
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "AdColony",
-                    "../../ThirdParty/IOS/AdColony.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "AdColonyAdapter",
-                    "../../ThirdParty/IOS/AdColonyAdapter.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
                     "AppLovinSDK",
                     "../../ThirdParty/IOS/AppLovinSDK.embeddedframework.zip"
                 )
@@ -91,18 +79,6 @@ public class BidmadPlugin : ModuleRules
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "Chartboost",
-                    "../../ThirdParty/IOS/Chartboost.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "ChartboostAdapter",
-                    "../../ThirdParty/IOS/ChartboostAdapter.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
                     "FBSDKCoreKit",
                     "../../ThirdParty/IOS/FBSDKCoreKit.embeddedframework.zip"
                 )
@@ -117,12 +93,6 @@ public class BidmadPlugin : ModuleRules
                 new Framework(
                     "FacebookAdapter",
                     "../../ThirdParty/IOS/FacebookAdapter.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "FBAudienceNetworkBiddingKit",
-                    "../../ThirdParty/IOS/FBAudienceNetworkBiddingKit.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
@@ -176,26 +146,8 @@ public class BidmadPlugin : ModuleRules
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "VungleSDK",
-                    "../../ThirdParty/IOS/VungleSDK.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "VungleAdapter",
-                    "../../ThirdParty/IOS/VungleAdapter.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "IronSource",
-                    "../../ThirdParty/IOS/IronSource.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "IronSourceAdapter",
-                    "../../ThirdParty/IOS/IronSourceAdapter.embeddedframework.zip"
+                    "PersonalizedAdConsent",
+                    "../../ThirdParty/IOS/PersonalizedAdConsent.embeddedframework.zip"
                 )
             );
         }

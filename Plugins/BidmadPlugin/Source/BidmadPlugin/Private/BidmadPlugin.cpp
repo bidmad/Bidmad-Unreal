@@ -36,20 +36,6 @@ void FBidmadPluginModule::ShutdownModule()
     FBidmadPluginModule::isBidmadModuleStart = false;
 }
 
-void FBidmadPluginModule::SetDebugging(bool isDebugMod){
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
-    JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
-    
-    jclass mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/Common");
-    jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "setDebugging", "(Z)V", false);
-    mEnv->CallStaticVoidMethod(mJCls, jniM, isDebugMod);
-
-    mEnv->DeleteGlobalRef(mJCls);
-    #elif PLATFORM_IOS
-        [[BIDMADSetting sharedInstance]setIsDebug:isDebugMod];
-    #endif
-}
-
 #undef LOCTEXT_NAMESPACE
 	
 IMPLEMENT_MODULE(FBidmadPluginModule, BidmadPlugin)
