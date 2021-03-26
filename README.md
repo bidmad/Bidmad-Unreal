@@ -23,8 +23,9 @@ PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engi
 
 #### 2.1 iOS 설정
 
-iOS의 경우 아래와 같이 추가 프로젝트 설정이 필요합니다.
-​
+iOS의 경우 아래와 같이 추가 프로젝트 설정이 필요합니다.<br>
+​*Apple Store에서 요구하는 개인정보 보호에 관한 가이드가 필요한 경우 [이곳](https://github.com/bidmad/Bidmad-Unreal/wiki/Apple-privacy-survey%5BKOR%5D)을 참고하세요.
+
 1. **DefaultEngine.ini** 파일에 다음과 같이 프로젝트 설정을 추가합니다.
 
 *기본 설정
