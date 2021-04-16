@@ -144,12 +144,6 @@ public class BidmadPlugin : ModuleRules
                     "../../ThirdParty/IOS/UnityAdapter.embeddedframework.zip"
                 )
             );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "PersonalizedAdConsent",
-                    "../../ThirdParty/IOS/PersonalizedAdConsent.embeddedframework.zip"
-                )
-            );
         }
 	}
 }

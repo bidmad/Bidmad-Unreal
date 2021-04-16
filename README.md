@@ -277,3 +277,7 @@ Plugin에서 제공하는 ReqAdTrackingAuthorization이 아닌 다른 방법을 
 SetAdvertiserTrackingEnabled을 통해 세팅한 값을 확인합니다.
 
 ![CommonGetAdvertiserTrackingEnabled](./Readme_Contents/Common_GetAdvertiserTrackingEnabled.png)
+
+#### References
+- [Unreal GDPR Guide KOR](./Readme_Contents/Unreal_GDPR_Guide_[KOR].md)
+- [Unreal GDPR Guide ENG](./Readme_Contents/Unreal_GDPR_Guide_[ENG].md)

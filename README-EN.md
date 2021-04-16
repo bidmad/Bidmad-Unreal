@@ -279,3 +279,7 @@ When obtaining app tracking transparency consent through a method other than Req
 Check the value set through SetAdvertiserTrackingEnabled.
 
 ![CommonGetAdvertiserTrackingEnabled](./Readme_Contents/Common_GetAdvertiserTrackingEnabled.png)
+
+#### References
+- [Unreal GDPR Guide KOR](./Readme_Contents/Unreal_GDPR_Guide_[KOR].md)
+- [Unreal GDPR Guide ENG](./Readme_Contents/Unreal_GDPR_Guide_[ENG].md)

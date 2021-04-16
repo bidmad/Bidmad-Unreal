@@ -23,6 +23,7 @@
 #import <UIKit/UIKit.h>
 #pragma clang diagnostic ignored "-Wobjc-property-no-attribute"
 #import <BidmadSDK/BidmadSDK.h>
+#import <BidmadSDK/BIDMADGDPR.h>
 
 #endif
 
@@ -54,6 +55,10 @@ public:
     void SetAdvertiserTrackingEnabled(bool enable);
     UFUNCTION(BlueprintCallable,Category="BidmadCommon")
     bool GetAdvertiserTrackingEnabled();
+	UFUNCTION(BlueprintCallable,Category="BidmadCommon")
+    void SetGdprConsent(bool consent, bool useArea);
+	UFUNCTION(BlueprintCallable,Category="BidmadCommon")
+    int GetGdprConsent(bool useArea);
 
     //Bidmad Callback
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadCommon")
@@ -66,5 +71,8 @@ public:
 @interface BidmadCommonInterface : NSObject <BIDMADUnrealCommonDelegate>{}
 +(BidmadCommonInterface *) getSharedInstance;
 -(UnrealCommon *) getCommon;
+- (void)setUseArea:(bool) useArea;
+- (void)setGDPRSetting:(bool) consent;
+- (int)getGDPRSetting;
 @end
 #endif

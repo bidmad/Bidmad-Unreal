@@ -1,3 +1,9 @@
+v.1.2.0
+-------------
+*Unreal<br>
+-Add GDPR function for Non-Google AdNetworks<br>
+-Add GDPR function for Google AdNetworks<br>
+
 v.1.1.0
 -------------
 *Unreal<br>

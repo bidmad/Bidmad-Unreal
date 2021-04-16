@@ -22,14 +22,24 @@
 	<buildGradleAdditions>
 		<insert>
 		allprojects {
-		    repositories {
-		        maven { url "https://dl.bintray.com/adop-repo/SDK" } //bidmad
-		        maven { url "https://adcolony.bintray.com/AdColony" } //adcolony
-		    }
+            repositories {
+                google()
+                jcenter()
+                maven { url "https://dl.bintray.com/adop-repo/SDK" } //bidmad
+                maven { url "http://devrepo.kakao.com:8088/nexus/content/groups/public/" } //Adift
+                maven {
+                    url "s3://repo.cauly.net/releases"
+                    credentials(AwsCredentials) {
+                        accessKey "AKIAWRZUK5MFKYVSUOLB"
+                        secretKey "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"
+                    }
+                } //Cauly
+                maven { url "https://tapjoy.bintray.com/maven" } //Tapjoy
+            }
 		}
 
 		dependencies {
-		    implementation ('com.adop.sdk:bidmad-androidx-g:1.0.7')
+            implementation 'com.adop.sdk:bidmad-androidx:1.13.0'
 		}
 
 		android {

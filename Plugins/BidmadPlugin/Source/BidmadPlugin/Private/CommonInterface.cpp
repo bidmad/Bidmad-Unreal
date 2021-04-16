@@ -47,26 +47,91 @@ void UCommonInterface::SetDebugging(bool isDebugMod){
 
 void UCommonInterface::ReqAdTrackingAuthorization(){
     #if PLATFORM_ANDROID && USE_ANDROID_JNI
+
     #elif PLATFORM_IOS
+
     UnrealCommon* unrealCommon = [[BidmadCommonInterface getSharedInstance] getCommon];
     [unrealCommon reqAdTrackingAuthorization];
+
     #endif
 }
 
 void UCommonInterface::SetAdvertiserTrackingEnabled(bool enable){
     #if PLATFORM_ANDROID && USE_ANDROID_JNI
+
     #elif PLATFORM_IOS
+
     UnrealCommon* unrealCommon = [[BidmadCommonInterface getSharedInstance] getCommon];
     [unrealCommon setAdvertiserTrackingEnabled:enable];
+
     #endif
 }
 
 bool UCommonInterface::GetAdvertiserTrackingEnabled(){
 	bool result = false;
+
     #if PLATFORM_ANDROID && USE_ANDROID_JNI
+
     #elif PLATFORM_IOS
+
     UnrealCommon* unrealCommon = [[BidmadCommonInterface getSharedInstance] getCommon];
     result = [unrealCommon getAdvertiserTrackingEnabled];
+    #endif
+
+    return result;
+}
+
+void UCommonInterface::SetGdprConsent(bool consent, bool useArea){
+
+    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+
+    JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
+            UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] SetGdprConsent 1 #####"));
+    jclass mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/userinfo/consent/Consent");
+    jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/app/Activity;Z)Lcom/adop/sdk/userinfo/consent/Consent;", false);
+    jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), useArea);
+        UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] SetGdprConsent 2 #####"));
+    jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setGdprConsent", "(Z)V", false);
+    FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet, consent);
+
+        UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] SetGdprConsent 3 #####"));
+    mEnv->DeleteLocalRef(mJObj);
+    mEnv->DeleteGlobalRef(mJCls);
+    
+    #elif PLATFORM_IOS
+
+    BidmadCommonInterface* unrealCommonInterface = [BidmadCommonInterface getSharedInstance];
+    [unrealCommonInterface setUseArea: useArea];
+    [unrealCommonInterface setGDPRSetting: consent];
+
+    #endif
+}
+
+int UCommonInterface::GetGdprConsent(bool useArea){
+    int result = -2;
+
+    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+
+    JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
+    
+        UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] GetGdprConsent 1 #####"));
+    jclass mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/userinfo/consent/Consent");
+    jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/app/Activity;Z)Lcom/adop/sdk/userinfo/consent/Consent;", false);
+    jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), useArea);
+
+        UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] GetGdprConsent 2 #####"));
+    jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "getGdprConsentForOtherPlatform", "()I", false);
+    result = FJavaWrapper::CallIntMethod(mEnv, mJObj, midGet);
+
+        UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] GetGdprConsent 3 #####"));
+    mEnv->DeleteLocalRef(mJObj);
+    mEnv->DeleteGlobalRef(mJCls);
+
+    #elif PLATFORM_IOS
+
+    BidmadCommonInterface* unrealCommonInterface = [BidmadCommonInterface getSharedInstance];
+    result = [unrealCommonInterface getGDPRSetting];
+
     #endif
 
     return result;
@@ -129,6 +194,19 @@ bool UCommonInterface::GetAdvertiserTrackingEnabled(){
         }
     }
 }
+
+- (void)setUseArea:(bool) useArea {
+    [BIDMADGDPR setUseArea: useArea == true ? YES : NO];
+}
+
+- (void)setGDPRSetting:(bool) consent {
+    [BIDMADGDPR setGDPRSetting: consent == true ? YES : NO];
+}
+
+- (int)getGDPRSetting {
+    return [BIDMADGDPR getGDPRSetting];
+}
+
 @end
 
 #endif
