@@ -26,13 +26,7 @@
 		    	google()
 				jcenter()
 				mavenCentral()
-				maven {
-				    url "s3://bidmad-sdk"
-				    credentials(AwsCredentials) {
-				        accessKey "AKIAWNMRMGA2MIX2A2PZ"
-				        secretKey "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"
-				    }
-				} //bidmad
+    			maven { url "https://bidmad-sdk.s3.amazonaws.com/" } //bidmad
 		    }
 		}
 
