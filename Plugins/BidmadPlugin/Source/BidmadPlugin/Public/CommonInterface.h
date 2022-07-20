@@ -8,29 +8,22 @@
 
 #if PLATFORM_ANDROID
 #include "Android/AndroidApplication.h"
-
-#if USE_ANDROID_JNI
 #include "Android/AndroidJNI.h"
-
-#endif
 #endif
 
 #if PLATFORM_IOS
-
 #include "IOS/IOSAppDelegate.h"
-#include "IOS/IOSView.h"
 #include <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #pragma clang diagnostic ignored "-Wobjc-property-no-attribute"
 #import <BidmadSDK/BidmadSDK.h>
 #import <BidmadSDK/BIDMADGDPR.h>
-
 #endif
 
 #include "CommonInterface.generated.h"
-/**
- * 
- */
+
+DECLARE_LOG_CATEGORY_EXTERN(FBidmadCommon, Log, All);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAdTrackingAuthorizationResponseDynamic, const EBidmadTrackingAuthorizationStatus, Response);
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Bidmad), meta=(BlueprintSpawnableComponent))
@@ -65,7 +58,7 @@ public:
 	FOnAdTrackingAuthorizationResponseDynamic OnAdTrackingAuthorizationResponseDynamic;
 };
 
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
 
 #elif PLATFORM_IOS
 @interface BidmadCommonInterface : NSObject <BIDMADUnrealCommonDelegate>{}

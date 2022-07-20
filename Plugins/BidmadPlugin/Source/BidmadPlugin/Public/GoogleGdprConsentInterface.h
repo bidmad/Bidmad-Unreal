@@ -7,24 +7,17 @@
 
 #if PLATFORM_ANDROID
 #include "Android/AndroidApplication.h"
-
-#if USE_ANDROID_JNI
 #include "Android/AndroidJNI.h"
-
-#endif
 #endif
 
 #if PLATFORM_IOS
-
 #include "IOS/IOSAppDelegate.h"
-#include "IOS/IOSView.h"
 #include <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <BidmadSDK/BidmadSDK.h>
 #import <BidmadSDK/UnrealGDPRforGoogle.h>
 #import <BidmadSDK/BIDMADGDPRforGoogle.h>
 #pragma clang diagnostic ignored "-Wobjc-property-no-attribute"
-
 #endif
 
 #include "GoogleGdprConsentInterface.generated.h"
@@ -45,7 +38,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 private:
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
     void DeleteRefMember();
     
     JNIEnv* mEnv;
@@ -91,13 +84,13 @@ public:
 	FOnConsentFormDismissed OnConsentFormDismissed;
 };
 
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
 extern "C"{
-    JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConcent_onConsentInfoUpdateSuccessCb(JNIEnv *, jobject);
-    JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConcent_onConsentInfoUpdateFailureCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConcent_onConsentFormLoadSuccessCb(JNIEnv *, jobject);
-    JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConcent_onConsentFormLoadFailureCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConcent_onConsentFormDismissedCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentInfoUpdateSuccessCb(JNIEnv *, jobject);
+    JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentInfoUpdateFailureCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormLoadSuccessCb(JNIEnv *, jobject);
+    JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormLoadFailureCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormDismissedCb(JNIEnv *, jobject, jstring);
 }
 #elif PLATFORM_IOS
 @interface BidmadGdprConsentInterface : NSObject<BIDMADGDPRforGoogleProtocol>{}

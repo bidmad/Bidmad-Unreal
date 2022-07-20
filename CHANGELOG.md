@@ -1,3 +1,13 @@
+v.1.3.0
+-------------
+*Unreal<br>
+-Fix Reward Callback Error<br>
+-Fix Google GDPR Callback Error<br><br>
+*Android<br>
+-Update BidmadSDK 2.6.1.0<br><br>
+*iOS<br>
+-Update BidmadSDK 4.4.0.0
+
 v.1.2.0
 -------------
 *Unreal<br>

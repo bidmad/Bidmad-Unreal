@@ -7,25 +7,20 @@
 
 #if PLATFORM_ANDROID
 #include "Android/AndroidApplication.h"
-
-#if USE_ANDROID_JNI
 #include "Android/AndroidJNI.h"
-
-#endif
 #endif
 
 #if PLATFORM_IOS
-
 #include "IOS/IOSAppDelegate.h"
-#include "IOS/IOSView.h"
 #include <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #pragma clang diagnostic ignored "-Wobjc-property-no-attribute"
-#import <BidmadSDK/BidmadSDK.h>
-
+#import <OpenBiddingHelper/OpenBiddingHelper.h>
 #endif
 
 #include "RewardInterface.generated.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(FBidmadReward, Log, All);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLoadBidmadRewardAd, const FString&, ZoneId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShowBidmadRewardAd, const FString&, ZoneId);
@@ -33,7 +28,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFailedBidmadRewardAd, const FStri
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCompleteBidmadRewardAd, const FString&, ZoneId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOpenBidmadRewardAd, const FString&, ZoneId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCloseBidmadRewardAd, const FString&, ZoneId);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnClickBidmadRewardAd, const FString&, ZoneId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkippedBidmadRewardAd, const FString&, ZoneId);
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Bidmad), meta=(BlueprintSpawnableComponent))
@@ -44,7 +38,7 @@ protected:
     // Called when the game starts
     virtual void BeginPlay() override;
 private:
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
     void DeleteRefMember();
     void SetActivity();
     void MakeReward();
@@ -53,7 +47,7 @@ private:
     jobject mJObj;
     jclass mJCls;
 #elif PLATFORM_IOS
-    UnrealReward* unrealReward;
+    OpenBiddingUnrealReward* unrealReward;
 #endif
     void NewiOSInstance();
     void GetInstance();
@@ -90,21 +84,21 @@ public:
     FOnSkippedBidmadRewardAd OnSkippedBidmadRewardAd;
 };
 
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
 extern "C"{
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onLoadAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onShowAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onFailedAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onCompleteAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onCloseAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onSkippedAdCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadAdCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onShowAdCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onFailedAdCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCompleteAdCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCloseAdCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onSkippedAdCb(JNIEnv *, jobject, jstring);
 }
 #elif PLATFORM_IOS
-@interface BidmadRewardInterface : NSObject <BIDMADRewardVideoDelegate>{
-    id<BIDMADRewardVideoDelegate> delegate;
+@interface BidmadRewardInterface : NSObject <BIDMADOpenBiddingRewardVideoDelegate>{
+    id<BIDMADOpenBiddingRewardVideoDelegate> delegate;
 }
 + (BidmadRewardInterface*)getSharedInstance;
-- (UnrealReward *)newInstance:(NSString *)zoneID;
-- (UnrealReward *)getInstance:(NSString *)zoneID;
+- (OpenBiddingUnrealReward *)newInstance:(NSString *)zoneID;
+- (OpenBiddingUnrealReward *)getInstance:(NSString *)zoneID;
 @end
 #endif

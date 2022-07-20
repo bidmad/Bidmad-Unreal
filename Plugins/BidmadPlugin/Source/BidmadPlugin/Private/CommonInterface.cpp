@@ -1,8 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "CommonInterface.h"
 #include "Engine.h"
+
+DEFINE_LOG_CATEGORY(FBidmadCommon);
 
 UCommonInterface::UCommonInterface()
 {
@@ -31,10 +30,10 @@ void UCommonInterface::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 }
 
 void UCommonInterface::SetDebugging(bool isDebugMod){
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
     
-    jclass mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/Common");
+    jclass mJCls = FAndroidApplication::FindJavaClassGlobalRef("ad/helper/openbidding/BidmadCommon");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "setDebugging", "(Z)V", false);
     mEnv->CallStaticVoidMethod(mJCls, jniM, isDebugMod);
 
@@ -46,7 +45,7 @@ void UCommonInterface::SetDebugging(bool isDebugMod){
 }
 
 void UCommonInterface::ReqAdTrackingAuthorization(){
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
 
     #elif PLATFORM_IOS
 
@@ -57,7 +56,7 @@ void UCommonInterface::ReqAdTrackingAuthorization(){
 }
 
 void UCommonInterface::SetAdvertiserTrackingEnabled(bool enable){
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
 
     #elif PLATFORM_IOS
 
@@ -70,7 +69,7 @@ void UCommonInterface::SetAdvertiserTrackingEnabled(bool enable){
 bool UCommonInterface::GetAdvertiserTrackingEnabled(){
 	bool result = false;
 
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
 
     #elif PLATFORM_IOS
 
@@ -83,18 +82,18 @@ bool UCommonInterface::GetAdvertiserTrackingEnabled(){
 
 void UCommonInterface::SetGdprConsent(bool consent, bool useArea){
 
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
 
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
-            UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] SetGdprConsent 1 #####"));
+    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] SetGdprConsent 1 #####"));
     jclass mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/userinfo/consent/Consent");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/app/Activity;Z)Lcom/adop/sdk/userinfo/consent/Consent;", false);
     jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), useArea);
-        UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] SetGdprConsent 2 #####"));
+    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] SetGdprConsent 2 #####"));
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setGdprConsent", "(Z)V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet, consent);
 
-        UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] SetGdprConsent 3 #####"));
+    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] SetGdprConsent 3 #####"));
     mEnv->DeleteLocalRef(mJObj);
     mEnv->DeleteGlobalRef(mJCls);
     
@@ -110,20 +109,20 @@ void UCommonInterface::SetGdprConsent(bool consent, bool useArea){
 int UCommonInterface::GetGdprConsent(bool useArea){
     int result = -2;
 
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
 
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
     
-        UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] GetGdprConsent 1 #####"));
+    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] GetGdprConsent 1 #####"));
     jclass mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/userinfo/consent/Consent");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/app/Activity;Z)Lcom/adop/sdk/userinfo/consent/Consent;", false);
     jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), useArea);
 
-        UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] GetGdprConsent 2 #####"));
+    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] GetGdprConsent 2 #####"));
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "getGdprConsentForOtherPlatform", "()I", false);
     result = FJavaWrapper::CallIntMethod(mEnv, mJObj, midGet);
 
-        UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] GetGdprConsent 3 #####"));
+    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] GetGdprConsent 3 #####"));
     mEnv->DeleteLocalRef(mJObj);
     mEnv->DeleteGlobalRef(mJCls);
 
@@ -138,7 +137,7 @@ int UCommonInterface::GetGdprConsent(bool useArea){
 }
 
 
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
 #elif PLATFORM_IOS
 @implementation BidmadCommonInterface
 +(BidmadCommonInterface *) getSharedInstance {

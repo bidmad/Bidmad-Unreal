@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GoogleGdprConsentInterface.h"
 #include "Engine.h"
 
@@ -31,7 +28,7 @@ void UGoogleGdprConsentInterface::TickComponent(float DeltaTime, ELevelTick Tick
 }
 
 void UGoogleGdprConsentInterface::GetInstance(){
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     mEnv = FAndroidApplication::GetJavaEnv();
     mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/userinfo/consent/GoogleGDPRConsent");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/app/Activity;)Lcom/adop/sdk/userinfo/consent/GoogleGDPRConsent;", false);
@@ -45,7 +42,7 @@ void UGoogleGdprConsentInterface::GetInstance(){
 
 void UGoogleGdprConsentInterface::SetDebug(FString testDeviceId, bool isEEA){
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jstring _testDeviceId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*testDeviceId));
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setDebug", "(Ljava/lang/String;Z)V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet, _testDeviceId, isEEA);
@@ -62,7 +59,7 @@ bool UGoogleGdprConsentInterface::IsConsentFormAvailable(){
     bool result = false;
 
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "isConsentFormAvailable", "()Z", false);
     result = FJavaWrapper::CallBooleanMethod(mEnv, mJObj, midGet);
     DeleteRefMember();
@@ -79,7 +76,7 @@ int UGoogleGdprConsentInterface::GetConsentStatus(){
     int result = 0;
 
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "getConsentStatus", "()I", false);
     result = FJavaWrapper::CallIntMethod(mEnv, mJObj, midGet);
     DeleteRefMember();
@@ -94,7 +91,7 @@ int UGoogleGdprConsentInterface::GetConsentStatus(){
 
 void UGoogleGdprConsentInterface::Reset(){
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "reset", "()V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
     DeleteRefMember();
@@ -107,7 +104,7 @@ void UGoogleGdprConsentInterface::Reset(){
 
 void UGoogleGdprConsentInterface::RequestConsentInfoUpdate(){
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "requestConsentInfoUpdate", "()V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
     DeleteRefMember();
@@ -120,7 +117,7 @@ void UGoogleGdprConsentInterface::RequestConsentInfoUpdate(){
 
 void UGoogleGdprConsentInterface::LoadForm(){
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "loadForm", "()V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
     DeleteRefMember();
@@ -133,7 +130,7 @@ void UGoogleGdprConsentInterface::LoadForm(){
 
 void UGoogleGdprConsentInterface::ShowForm(){
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "showForm", "()V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
     DeleteRefMember();
@@ -146,8 +143,8 @@ void UGoogleGdprConsentInterface::ShowForm(){
 
 void UGoogleGdprConsentInterface::SetListener(){
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
-    jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setListenerForUnreal", "()V", false);
+    #if PLATFORM_ANDROID
+    jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setListenerForCpp", "()V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
     DeleteRefMember();
     #elif PLATFORM_IOS
@@ -158,14 +155,14 @@ void UGoogleGdprConsentInterface::SetListener(){
     #endif
 }
 
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
 void UGoogleGdprConsentInterface::DeleteRefMember(){
     mEnv->DeleteLocalRef(mJObj);
     mEnv->DeleteGlobalRef(mJCls);
 }
 #endif
 
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
 extern "C"{
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentInfoUpdateSuccessCb(JNIEnv *env, jobject obj){
 

@@ -1,9 +1,6 @@
-
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "RewardInterface.h"
 
+DEFINE_LOG_CATEGORY(FBidmadReward);
 
 URewardInterface::URewardInterface()
 {
@@ -39,7 +36,7 @@ void URewardInterface::InitReward(FString androidZoneId, FString iosZoneId)
     checkf(!iosZoneId.IsEmpty(), TEXT("[URewardInterface::InitReward] ZoneId is Empty #####"));
     #else
     if(androidZoneId.IsEmpty() || androidZoneId.IsEmpty()){
-        UE_LOG(FBidmadPlugin, Error, TEXT("[URewardInterface::InitReward] ZoneId is Empty #####"));
+        UE_LOG(FBidmadReward, Error, TEXT("[URewardInterface::InitReward] ZoneId is Empty #####"));
     }
     #endif
 
@@ -50,7 +47,7 @@ void URewardInterface::InitReward(FString androidZoneId, FString iosZoneId)
     #endif
 
     //Android JNI Start
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     GetInstance(); 
     SetActivity();
     MakeReward();
@@ -60,25 +57,25 @@ void URewardInterface::InitReward(FString androidZoneId, FString iosZoneId)
     
     SetAdInfo(); //AOS&iOS
     
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     DeleteRefMember(); //Android JNI END
     #endif
 }
 
 void URewardInterface::NewiOSInstance() {
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     #elif PLATFORM_IOS
     unrealReward = [[BidmadRewardInterface getSharedInstance] newInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
     #endif
 }
 
 void URewardInterface::GetInstance() {
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     mEnv = FAndroidApplication::GetJavaEnv();
     
-    mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/reward/UnrealReward");
+    mJCls = FAndroidApplication::FindJavaClassGlobalRef("ad/helper/openbidding/reward/UnrealReward");
 
-    jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;)Lcom/adop/sdk/reward/UnrealReward;", false);
+    jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;)Lad/helper/openbidding/reward/UnrealReward;", false);
 
     jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
     mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _zoneId);
@@ -88,7 +85,7 @@ void URewardInterface::GetInstance() {
     #endif
 }
 //Only Android Funtion START
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
 void URewardInterface::SetActivity() {
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setActivity", "(Landroid/app/Activity;)V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet, FAndroidApplication::GetGameActivityThis());
@@ -108,7 +105,7 @@ void URewardInterface::DeleteRefMember(){
 //Only Android Funtion END
 
 void URewardInterface::SetAdInfo() {
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
     jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setAdInfo", "(Ljava/lang/String;)V", false);
 
@@ -122,7 +119,7 @@ void URewardInterface::SetAdInfo() {
 
 void URewardInterface::Load() {
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "load", "()V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
 
@@ -134,7 +131,7 @@ void URewardInterface::Load() {
 
 void URewardInterface::Show() {
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "show", "()V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
 
@@ -149,7 +146,7 @@ void URewardInterface::Show() {
 bool URewardInterface::IsLoaded() {
     bool result = false;
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
    
     
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "isLoaded", "()Z", false);
@@ -163,9 +160,9 @@ bool URewardInterface::IsLoaded() {
     return result;
 }
 
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
 extern "C"{
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onLoadAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadAdCb(JNIEnv *env, jobject obj, jstring str){
         
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
@@ -179,7 +176,7 @@ extern "C"{
         }
     }
 
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onShowAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onShowAdCb(JNIEnv *env, jobject obj, jstring str){
 
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
@@ -194,7 +191,7 @@ extern "C"{
         }
     }
 
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onFailedAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onFailedAdCb(JNIEnv *env, jobject obj, jstring str){
 
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
@@ -208,7 +205,7 @@ extern "C"{
         }
     }
 
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onCompleteAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCompleteAdCb(JNIEnv *env, jobject obj, jstring str){
 
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
@@ -222,7 +219,7 @@ extern "C"{
         }
     }
 
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onCloseAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCloseAdCb(JNIEnv *env, jobject obj, jstring str){
 
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
@@ -236,7 +233,7 @@ extern "C"{
         }
     }
 
-    JNIEXPORT void JNICALL Java_com_adop_sdk_reward_UnrealReward_onSkippedAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onSkippedAdCb(JNIEnv *env, jobject obj, jstring str){
 
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
@@ -265,16 +262,16 @@ extern "C"{
     self = [super init];
     return self;
 }
-- (UnrealReward *)newInstance:(NSString *)zoneID {
-    UnrealReward * unrealReward = [[UnrealReward alloc] initWithZoneId:zoneID];
+- (OpenBiddingUnrealReward *)newInstance:(NSString *)zoneID {
+    OpenBiddingUnrealReward * unrealReward = [[OpenBiddingUnrealReward alloc] initWithZoneId:zoneID];
     [unrealReward setDelegate:self];
     return unrealReward;
 }
-- (UnrealReward *)getInstance:(NSString *)zoneID {
-    UnrealReward * unrealReward = [UnrealReward getInstance:zoneID];
+- (OpenBiddingUnrealReward *)getInstance:(NSString *)zoneID {
+    OpenBiddingUnrealReward * unrealReward = [OpenBiddingUnrealReward getInstance:zoneID];
     return unrealReward;
 }
-- (void)BIDMADRewardSkipped:(BIDMADRewardVideo *)core {
+- (void)BIDMADOpenBiddingRewardSkipped:(OpenBiddingRewardVideo *)core {
     NSString* nsZoneId = core.zoneID;
     for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
@@ -284,7 +281,7 @@ extern "C"{
         }
     }
 }
-- (void)BIDMADRewardVideoSucceed:(BIDMADRewardVideo *)core {
+- (void)BIDMADOpenBiddingRewardVideoSucceed:(OpenBiddingRewardVideo *)core {
     NSString* nsZoneId = core.zoneID;
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
@@ -294,7 +291,7 @@ extern "C"{
         }
     }
 }
-- (void)BIDMADRewardVideoClose:(BIDMADRewardVideo *)core {
+- (void)BIDMADOpenBiddingRewardVideoClose:(OpenBiddingRewardVideo *)core {
     NSString* nsZoneId = core.zoneID;
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
@@ -304,7 +301,7 @@ extern "C"{
         }
     }
 }
-- (void)BIDMADRewardVideoShow:(BIDMADRewardVideo *)core {
+- (void)BIDMADOpenBiddingRewardVideoShow:(OpenBiddingRewardVideo *)core {
     NSString* nsZoneId = core.zoneID;
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
@@ -316,9 +313,9 @@ extern "C"{
         }
     }
 }
-- (void)BIDMADRewardVideoLoad:(BIDMADRewardVideo *)core{
+- (void)BIDMADOpenBiddingRewardVideoLoad:(OpenBiddingRewardVideo *)core{
     NSString* nsZoneId = core.zoneID;
-    UE_LOG(LogTemp,Display, TEXT("[URewardInterface] BIDMADRewardVideoLoad() #####"));
+    UE_LOG(FBidmadReward, Display, TEXT("[URewardInterface] BIDMADReward Load #####"));
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
@@ -327,9 +324,9 @@ extern "C"{
         }
     }
 }
-- (void)BIDMADRewardVideoAllFail:(BIDMADRewardVideo *)core {
+- (void)BIDMADOpenBiddingRewardVideoAllFail:(OpenBiddingRewardVideo *)core {
     NSString* nsZoneId = core.zoneID;
-    UE_LOG(LogTemp,Display, TEXT("[URewardInterface] BIDMADRewardVideoLoad() #####"));
+    UE_LOG(FBidmadReward, Display, TEXT("[URewardInterface] BIDMADReward Load Fail #####"));
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))

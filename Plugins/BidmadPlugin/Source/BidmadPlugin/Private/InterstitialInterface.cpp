@@ -1,7 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "InterstitialInterface.h"
+
+DEFINE_LOG_CATEGORY(FBidmadInterstitial);
 
 UInterstitialInterface::UInterstitialInterface()
 {
@@ -36,7 +35,7 @@ void UInterstitialInterface::InitInterstitial(FString androidZoneId, FString ios
     checkf(!iosZoneId.IsEmpty(), TEXT("[UInterstitialInterface::InitInterstitial] ZoneId is Empty #####"));
     #else
     if(androidZoneId.IsEmpty() || androidZoneId.IsEmpty()){
-        UE_LOG(FBidmadPlugin, Error, TEXT("[UInterstitialInterface::InitInterstitial] ZoneId is Empty #####"));
+        UE_LOG(FBidmadInterstitial, Error, TEXT("[UInterstitialInterface::InitInterstitial] ZoneId is Empty #####"));
     }
     #endif
 
@@ -46,7 +45,7 @@ void UInterstitialInterface::InitInterstitial(FString androidZoneId, FString ios
     mZoneId = iosZoneId;
     #endif
 
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     GetInstance();
     SetActivity();//Android JNI Start
     MakeInterstitial();
@@ -56,25 +55,25 @@ void UInterstitialInterface::InitInterstitial(FString androidZoneId, FString ios
     
     SetAdInfo(); //AOS&iOS
     
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     DeleteRefMember(); //Android JNI END
     #endif 
 }
 
 void UInterstitialInterface::NewiOSInstance() {
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     #elif PLATFORM_IOS
     unrealInterstitial = [[BidmadInterstitialInterface getSharedInstance] newInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
     #endif
 }
 
 void UInterstitialInterface::GetInstance() {
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     mEnv = FAndroidApplication::GetJavaEnv();
     
-    mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/interstitial/UnrealInterstitial");
+    mJCls = FAndroidApplication::FindJavaClassGlobalRef("ad/helper/openbidding/interstitial/UnrealInterstitial");
     
-    jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;)Lcom/adop/sdk/interstitial/UnrealInterstitial;", false);
+    jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;)Lad/helper/openbidding/interstitial/UnrealInterstitial;", false);
 
     jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
     mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _zoneId);
@@ -85,7 +84,7 @@ void UInterstitialInterface::GetInstance() {
 }
 
 //Only Android Funtion START
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
 void UInterstitialInterface::SetActivity() {
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setActivity", "(Landroid/app/Activity;)V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet, FAndroidApplication::GetGameActivityThis());
@@ -105,7 +104,7 @@ void UInterstitialInterface::DeleteRefMember(){
 //Only Android Funtion END
 
 void UInterstitialInterface::SetAdInfo() {
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setAdInfo", "(Ljava/lang/String;)V", false);
 
@@ -119,7 +118,7 @@ void UInterstitialInterface::SetAdInfo() {
 
 void UInterstitialInterface::Load() {
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "load", "()V", false);
 
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
@@ -132,9 +131,7 @@ void UInterstitialInterface::Load() {
 
 void UInterstitialInterface::Show() {
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
-    
-    UE_LOG(LogTemp, Warning, TEXT("Interstitial Ad Show!!!!!! #####"));
+    #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "show", "()V", false);
 
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
@@ -151,9 +148,9 @@ void UInterstitialInterface::Show() {
 bool UInterstitialInterface::IsLoaded() {
     bool result = false;
     GetInstance();
-    #if PLATFORM_ANDROID && USE_ANDROID_JNI
+    #if PLATFORM_ANDROID
     
-    UE_LOG(LogTemp, Warning, TEXT("Interstitial Ad IsLoaded!!!!!! #####"));
+    UE_LOG(FBidmadInterstitial, Warning, TEXT("Interstitial Ad IsLoaded!!!!!! #####"));
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "isLoaded", "()Z", false);
     result = FJavaWrapper::CallBooleanMethod(mEnv, mJObj, midGet);
 
@@ -166,9 +163,9 @@ bool UInterstitialInterface::IsLoaded() {
 }
 
 
-#if PLATFORM_ANDROID && USE_ANDROID_JNI
+#if PLATFORM_ANDROID
 extern "C"{
-    JNIEXPORT void JNICALL Java_com_adop_sdk_interstitial_UnrealInterstitial_onLoadAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadAdCb(JNIEnv *env, jobject obj, jstring str){
         
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
@@ -182,7 +179,7 @@ extern "C"{
         }
     }
 
-    JNIEXPORT void JNICALL Java_com_adop_sdk_interstitial_UnrealInterstitial_onShowAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onShowAdCb(JNIEnv *env, jobject obj, jstring str){
         
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
@@ -197,7 +194,7 @@ extern "C"{
         }
     }
 
-    JNIEXPORT void JNICALL Java_com_adop_sdk_interstitial_UnrealInterstitial_onFailedAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onFailedAdCb(JNIEnv *env, jobject obj, jstring str){
         
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
@@ -211,7 +208,7 @@ extern "C"{
         }
     }
 
-    JNIEXPORT void JNICALL Java_com_adop_sdk_interstitial_UnrealInterstitial_onCloseAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onCloseAdCb(JNIEnv *env, jobject obj, jstring str){
         
         const char *zoneId = env->GetStringUTFChars(str, NULL);
         env->ReleaseStringUTFChars(str, zoneId);
@@ -240,17 +237,17 @@ extern "C"{
     self = [super init];
     return self;
 }
-- (UnrealInterstitial *)newInstance:(NSString *)zoneID {
-    UnrealInterstitial * interstitial = [[UnrealInterstitial alloc] initWithZoneId:zoneID];
+- (OpenBiddingUnrealInterstitial *)newInstance:(NSString *)zoneID {
+    OpenBiddingUnrealInterstitial * interstitial = [[OpenBiddingUnrealInterstitial alloc] initWithZoneId:zoneID];
     [interstitial setDelegate:self];
     return interstitial;
 }
-- (UnrealInterstitial *)getInstance:(NSString *)zoneID {
-    UnrealInterstitial * interstitial = [UnrealInterstitial getInstance:zoneID];
+- (OpenBiddingUnrealInterstitial *)getInstance:(NSString *)zoneID {
+    OpenBiddingUnrealInterstitial * interstitial = [OpenBiddingUnrealInterstitial getInstance:zoneID];
     return interstitial;
 }
 
-- (void)BIDMADInterstitialClose:(BIDMADInterstitial *)core{
+- (void)BIDMADOpenBiddingInterstitialClose:(OpenBiddingInterstitial *)core{
     NSString* nsZoneId = core.zoneID;
 
     for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
@@ -261,7 +258,7 @@ extern "C"{
         }
     }
 }
-- (void)BIDMADInterstitialShow:(BIDMADInterstitial *)core{
+- (void)BIDMADOpenBiddingInterstitialShow:(OpenBiddingInterstitial *)core{
     NSString* nsZoneId = core.zoneID;
     
     for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
@@ -274,7 +271,7 @@ extern "C"{
         }
     }
 }
--(void)BIDMADInterstitialLoad:(BIDMADInterstitial *)core{
+- (void)BIDMADOpenBiddingInterstitialLoad:(OpenBiddingInterstitial *)core{
     NSString* nsZoneId = core.zoneID;
 
     for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
@@ -285,7 +282,7 @@ extern "C"{
         }
     }
 }
-- (void)BIDMADInterstitialAllFail:(BIDMADInterstitial *)core{
+- (void)BIDMADOpenBiddingInterstitialAllFail:(OpenBiddingInterstitial *)core{
     NSString* nsZoneId = core.zoneID;
 
     for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)

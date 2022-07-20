@@ -3,9 +3,7 @@
 #include "BidmadPlugin.h"
 #if PLATFORM_ANDROID
 #include "Android/AndroidApplication.h"
-#if USE_ANDROID_JNI
 #include "Android/AndroidJNI.h"
-#endif
 #endif
 
 
