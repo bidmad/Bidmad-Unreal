@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
+#include "Misc/Guid.h"
 
 #if PLATFORM_ANDROID
 #include "Android/AndroidApplication.h"
@@ -22,10 +23,10 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(FBidmadInterstitial, Log, All);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLoadBidmadInterstitialAd, const FString&, ZoneId);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShowBidmadInterstitialAd, const FString&, ZoneId);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFailedBidmadInterstitialAd, const FString&, ZoneId);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCloseBidmadInterstitialAd, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadInterstitialLoadDelegate, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadInterstitialShowDelegate, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadInterstitialFailDelegate, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadInterstitialCloseDelegate, const FString&, ZoneId);
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Bidmad), meta=(BlueprintSpawnableComponent))
 class BIDMADPLUGIN_API UInterstitialInterface : public USceneComponent
@@ -50,7 +51,9 @@ private:
     void GetInstance();
     void SetAdInfo();
     FString mZoneId;
+    FString mId;
 public:
+    bool CheckMyId(const FString&);
     // Sets default values for this component's properties
     UInterstitialInterface();
     // Called every frame
@@ -66,30 +69,34 @@ public:
     UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
     bool IsLoaded();
 
-    //Bidmad Callback
-    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadInterstitial")
-    FOnLoadBidmadInterstitialAd OnLoadBidmadInterstitialAd;
-    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadInterstitial")
-    FOnShowBidmadInterstitialAd OnShowBidmadInterstitialAd;
-    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadInterstitial")
-    FOnFailedBidmadInterstitialAd OnFailedBidmadInterstitialAd;
-    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadInterstitial")
-    FOnCloseBidmadInterstitialAd OnCloseBidmadInterstitialAd;
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void BindEventToOnLoad(const FOnBidmadInterstitialLoadDelegate& OnLoad);
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void BindEventToOnShow(const FOnBidmadInterstitialShowDelegate& OnShow);
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void BindEventToOnFail(const FOnBidmadInterstitialFailDelegate& OnFail);
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void BindEventToOnClose(const FOnBidmadInterstitialCloseDelegate& OnClose);
+
+    FOnBidmadInterstitialLoadDelegate mOnLoadDelegate;
+    FOnBidmadInterstitialShowDelegate mOnShowDelegate;
+    FOnBidmadInterstitialFailDelegate mOnFailDelegate;
+    FOnBidmadInterstitialCloseDelegate mOnCloseDelegate;
 };
 
 #if PLATFORM_ANDROID
 extern "C"{
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onShowAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onFailedAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onCloseAdCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadAdCb(JNIEnv *, jobject, jstring, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onShowAdCb(JNIEnv *, jobject, jstring, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onFailedAdCb(JNIEnv *, jobject, jstring, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onCloseAdCb(JNIEnv *, jobject, jstring, jstring);
 }
 #elif PLATFORM_IOS
-@interface BidmadInterstitialInterface : NSObject <BIDMADOpenBiddingInterstitialDelegate>{
-    id<BIDMADOpenBiddingInterstitialDelegate> delegate;
+@interface BidmadInterstitialInterface : NSObject <BidmadInterstitialUECallback>{
+    id<BidmadInterstitialUECallback> delegate;
 }
 + (BidmadInterstitialInterface *) getSharedInstance;
-- (OpenBiddingUnrealInterstitial *)newInstance:(NSString *)zoneID;
-- (OpenBiddingUnrealInterstitial *)getInstance:(NSString *)zoneID;
+- (OpenBiddingUnrealInterstitial *)newInstance:(NSString *)zoneID uuid:(NSString *)uuid;
+- (OpenBiddingUnrealInterstitial *)getInstance:(NSString *)uuid;
 @end
 #endif

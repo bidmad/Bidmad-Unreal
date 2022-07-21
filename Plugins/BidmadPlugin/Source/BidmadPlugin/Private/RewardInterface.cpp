@@ -45,6 +45,10 @@ void URewardInterface::InitReward(FString androidZoneId, FString iosZoneId)
     #else //PLATFORM_IOS 
     mZoneId = iosZoneId;
     #endif
+    
+    if(mId.IsEmpty()){
+      mId = FGuid::NewGuid().ToString();  
+    }
 
     //Android JNI Start
     #if PLATFORM_ANDROID
@@ -65,7 +69,7 @@ void URewardInterface::InitReward(FString androidZoneId, FString iosZoneId)
 void URewardInterface::NewiOSInstance() {
     #if PLATFORM_ANDROID
     #elif PLATFORM_IOS
-    unrealReward = [[BidmadRewardInterface getSharedInstance] newInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
+    unrealReward = [[BidmadRewardInterface getSharedInstance] newInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)] uuid:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mId)]];
     #endif
 }
 
@@ -77,11 +81,11 @@ void URewardInterface::GetInstance() {
 
     jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;)Lad/helper/openbidding/reward/UnrealReward;", false);
 
-    jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
-    mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _zoneId);
-    mEnv->DeleteLocalRef(_zoneId);
+    jstring _mId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mId));
+    mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _mId);
+    mEnv->DeleteLocalRef(_mId);
     #elif PLATFORM_IOS
-    unrealReward = [[BidmadRewardInterface getSharedInstance] getInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
+    unrealReward = [[BidmadRewardInterface getSharedInstance] getInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mId)]];
     #endif
 }
 //Only Android Funtion START
@@ -160,89 +164,172 @@ bool URewardInterface::IsLoaded() {
     return result;
 }
 
+void URewardInterface::BindEventToOnLoad(const FOnBidmadRewardLoadDelegate& OnLoad) {
+    mOnLoadDelegate = OnLoad;
+}
+
+void URewardInterface::BindEventToOnShow(const FOnBidmadRewardShowDelegate& OnShow) {
+    mOnShowDelegate = OnShow;
+}
+
+void URewardInterface::BindEventToOnFail(const FOnBidmadRewardFailDelegate& OnFail) {
+    mOnFailDelegate = OnFail;
+}
+
+void URewardInterface::BindEventToOnComplete(const FOnBidmadRewardCompleteDelegate& OnComplete) {
+    mOnCompleteDelegate = OnComplete;
+}
+
+void URewardInterface::BindEventToOnClose(const FOnBidmadRewardCloseDelegate& OnClose) {
+    mOnCloseDelegate = OnClose;
+}
+
+void URewardInterface::BindEventToOnSkip(const FOnBidmadRewardSkipDelegate& OnSkip) {
+    mOnSkipDelegate = OnSkip;
+}
+
+bool URewardInterface::CheckMyId(const FString& getId){
+    bool result = false;
+    UE_LOG(FBidmadInterstitial, Warning, TEXT("CheckMyId!!!!!! %s #####"), &getId);
+    if(!mId.IsEmpty() && !getId.IsEmpty()){
+        result = (mId == getId);
+    }
+
+    UE_LOG(FBidmadInterstitial, Error, TEXT("[URewardInterface::URewardInterface] checkMyId : %d #####"), result);
+
+    return result;
+}
+
 #if PLATFORM_ANDROID
 extern "C"{
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        if(str1 == NULL || str2 == NULL){
+            return;
+        }
         
-        const char *zoneId = env->GetStringUTFChars(str, NULL);
-        env->ReleaseStringUTFChars(str, zoneId);
+        const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        env->ReleaseStringUTFChars(str1, zoneId);
+
+        const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        env->ReleaseStringUTFChars(str2, unrealId);
 
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
         {
             if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
             {
-                Itr->OnLoadBidmadRewardAd.Broadcast(zoneId);
+                if(Itr->CheckMyId(unrealId)){
+                    Itr->mOnLoadDelegate.ExecuteIfBound(zoneId);
+                }
             }
         }
     }
 
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onShowAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onShowAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        if(str1 == NULL || str2 == NULL){
+            return;
+        }
 
-        const char *zoneId = env->GetStringUTFChars(str, NULL);
-        env->ReleaseStringUTFChars(str, zoneId);
+        const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        env->ReleaseStringUTFChars(str1, zoneId);
+
+        const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        env->ReleaseStringUTFChars(str2, unrealId);
 
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
         {
             if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
             {
-                Itr->OnShowBidmadRewardAd.Broadcast(zoneId);
-                Itr->Load(); //Ad Reload
+                if(Itr->CheckMyId(unrealId)){
+                    Itr->mOnShowDelegate.ExecuteIfBound(zoneId);
+                    Itr->Load(); //Ad Reload
+                }
             }
         }
     }
 
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onFailedAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onFailedAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        if(str1 == NULL || str2 == NULL){
+            return;
+        }
 
-        const char *zoneId = env->GetStringUTFChars(str, NULL);
-        env->ReleaseStringUTFChars(str, zoneId);
+        const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        env->ReleaseStringUTFChars(str1, zoneId);
+
+        const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        env->ReleaseStringUTFChars(str2, unrealId);
 
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
         {
             if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
             {
-                Itr->OnFailedBidmadRewardAd.Broadcast(zoneId);
+                if(Itr->CheckMyId(unrealId)){
+                    Itr->mOnFailDelegate.ExecuteIfBound(zoneId);
+                }
             }
         }
     }
 
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCompleteAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCompleteAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        if(str1 == NULL || str2 == NULL){
+            return;
+        }
+        const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        env->ReleaseStringUTFChars(str1, zoneId);
 
-        const char *zoneId = env->GetStringUTFChars(str, NULL);
-        env->ReleaseStringUTFChars(str, zoneId);
+        const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        env->ReleaseStringUTFChars(str2, unrealId);
 
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
         {
             if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
             {
-                Itr->OnCompleteBidmadRewardAd.Broadcast(zoneId);
+                if(Itr->CheckMyId(unrealId)){
+                    Itr->mOnCompleteDelegate.ExecuteIfBound(zoneId);
+                }
             }
         }
     }
 
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCloseAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCloseAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        if(str1 == NULL || str2 == NULL){
+            return;
+        }
+        
+        const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        env->ReleaseStringUTFChars(str1, zoneId);
 
-        const char *zoneId = env->GetStringUTFChars(str, NULL);
-        env->ReleaseStringUTFChars(str, zoneId);
+        const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        env->ReleaseStringUTFChars(str2, unrealId);
 
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
         {
             if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
             {
-                Itr->OnCloseBidmadRewardAd.Broadcast(zoneId);
+                if(Itr->CheckMyId(unrealId)){
+                    Itr->mOnCloseDelegate.ExecuteIfBound(zoneId);
+                }
             }
         }
     }
 
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onSkippedAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onSkippedAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        if(str1 == NULL || str2 == NULL){
+            return;
+        }
+        
+        const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        env->ReleaseStringUTFChars(str1, zoneId);
 
-        const char *zoneId = env->GetStringUTFChars(str, NULL);
-        env->ReleaseStringUTFChars(str, zoneId);
+        const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        env->ReleaseStringUTFChars(str2, unrealId);
 
         for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
         {
             if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
             {
-                Itr->OnSkippedBidmadRewardAd.Broadcast(zoneId);
+                if(Itr->CheckMyId(unrealId)){
+                    Itr->mOnSkipDelegate.ExecuteIfBound(zoneId);
+                }
             }
         }
     }
@@ -262,76 +349,82 @@ extern "C"{
     self = [super init];
     return self;
 }
-- (OpenBiddingUnrealReward *)newInstance:(NSString *)zoneID {
-    OpenBiddingUnrealReward * unrealReward = [[OpenBiddingUnrealReward alloc] initWithZoneId:zoneID];
+- (OpenBiddingUnrealReward *)newInstance:(NSString *)zoneID uuid:(NSString *)uuid {
+    OpenBiddingUnrealReward * unrealReward = [[OpenBiddingUnrealReward alloc] initWithZoneId:zoneID uuid:uuid];
     [unrealReward setDelegate:self];
     return unrealReward;
 }
-- (OpenBiddingUnrealReward *)getInstance:(NSString *)zoneID {
-    OpenBiddingUnrealReward * unrealReward = [OpenBiddingUnrealReward getInstance:zoneID];
+- (OpenBiddingUnrealReward *)getInstance:(NSString *)uuid {
+    OpenBiddingUnrealReward * unrealReward = [OpenBiddingUnrealReward getInstance:uuid];
     return unrealReward;
 }
-- (void)BIDMADOpenBiddingRewardSkipped:(OpenBiddingRewardVideo *)core {
-    NSString* nsZoneId = core.zoneID;
+- (void)bidmadRewardUESkipped:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
     for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
         {
-            Itr->OnSkippedBidmadRewardAd.Broadcast(nsZoneId);
+            if(Itr->CheckMyId(uuid)){
+                Itr->mOnSkipDelegate.ExecuteIfBound(mZoneId);
+            }
         }
     }
 }
-- (void)BIDMADOpenBiddingRewardVideoSucceed:(OpenBiddingRewardVideo *)core {
-    NSString* nsZoneId = core.zoneID;
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
+- (void)bidmadRewardUESucceed:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
         {
-            Itr->OnCompleteBidmadRewardAd.Broadcast(nsZoneId);
+            if(Itr->CheckMyId(uuid)){
+                Itr->mOnCompleteDelegate.ExecuteIfBound(mZoneId);
+            }
         }
     }
 }
-- (void)BIDMADOpenBiddingRewardVideoClose:(OpenBiddingRewardVideo *)core {
-    NSString* nsZoneId = core.zoneID;
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
+- (void)bidmadRewardUEClose:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
         {
-            Itr->OnCloseBidmadRewardAd.Broadcast(nsZoneId);
+            if(Itr->CheckMyId(uuid)){
+                Itr->mOnCloseDelegate.ExecuteIfBound(mZoneId);
+            }
         }
     }
 }
-- (void)BIDMADOpenBiddingRewardVideoShow:(OpenBiddingRewardVideo *)core {
-    NSString* nsZoneId = core.zoneID;
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
+- (void)bidmadRewardUEShow:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
         {
-            Itr->OnShowBidmadRewardAd.Broadcast(nsZoneId);
-            Itr->InitReward(nil, nsZoneId);
-            Itr->Load(); //Ad Reload
+            if(Itr->CheckMyId(uuid)){
+                Itr->mOnShowDelegate.ExecuteIfBound(mZoneId);
+                Itr->InitReward(nil, mZoneId);
+                Itr->Load(); //Ad Reload
+            }
         }
     }
 }
-- (void)BIDMADOpenBiddingRewardVideoLoad:(OpenBiddingRewardVideo *)core{
-    NSString* nsZoneId = core.zoneID;
+- (void)bidmadRewardUELoad:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
     UE_LOG(FBidmadReward, Display, TEXT("[URewardInterface] BIDMADReward Load #####"));
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
+    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
         {
-            Itr->OnLoadBidmadRewardAd.Broadcast(nsZoneId);
+            if(Itr->CheckMyId(uuid)){
+                Itr->mOnLoadDelegate.ExecuteIfBound(mZoneId);
+            }
         }
     }
 }
-- (void)BIDMADOpenBiddingRewardVideoAllFail:(OpenBiddingRewardVideo *)core {
-    NSString* nsZoneId = core.zoneID;
+- (void)bidmadRewardUEAllFail:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
     UE_LOG(FBidmadReward, Display, TEXT("[URewardInterface] BIDMADReward Load Fail #####"));
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
+    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
         {
-            Itr->OnFailedBidmadRewardAd.Broadcast(nsZoneId);
+            if(Itr->CheckMyId(uuid)){
+                Itr->mOnFailDelegate.ExecuteIfBound(mZoneId);
+            }
         }
     }
 }

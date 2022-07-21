@@ -1,3 +1,12 @@
+v.1.3.1
+-------------
+*Unreal<br>
+-Change Unreal Callback Interface<br><br>
+*Android<br>
+-Update OBH 2.6.1.1<br><br>
+*iOS<br>
+-Update OBH 4.4.0.1
+
 v.1.3.0
 -------------
 *Unreal<br>

@@ -635,7 +635,7 @@ Load 함수를 통해 광고요청에 성공하였다면, 광고를 노출시킵
 
 Interstitial에서는 Load / Show / Close / Failed 4종의 Callback을 제공합니다.
 
-![InterstitialCallbacks](./Readme_Contents/Interstitial_Callbacks.png)
+![InterstitialCallbacks](https://i.imgur.com/8uQRt2e.png)
 
 ### 4. Reward
 
@@ -674,7 +674,7 @@ Load 함수를 통해 광고요청에 성공하였다면, 광고를 노출시킵
 
 Reward에서는 Load / Show / Close / Failed / Complete / Skipped 6종의 Callback을 제공합니다.
 
-![RewardCallbacks](./Readme_Contents/Reward_Callbacks.png)
+![RewardCallbacks](https://i.imgur.com/p6NsRPi.png)
 
 ### 5. Common
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
+#include "Misc/Guid.h"
 
 #if PLATFORM_ANDROID
 #include "Android/AndroidApplication.h"
@@ -22,13 +23,12 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(FBidmadReward, Log, All);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLoadBidmadRewardAd, const FString&, ZoneId);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShowBidmadRewardAd, const FString&, ZoneId);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFailedBidmadRewardAd, const FString&, ZoneId);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCompleteBidmadRewardAd, const FString&, ZoneId);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOpenBidmadRewardAd, const FString&, ZoneId);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCloseBidmadRewardAd, const FString&, ZoneId);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkippedBidmadRewardAd, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardLoadDelegate, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardShowDelegate, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardFailDelegate, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardCompleteDelegate, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardCloseDelegate, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardSkipDelegate, const FString&, ZoneId);
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Bidmad), meta=(BlueprintSpawnableComponent))
 class BIDMADPLUGIN_API URewardInterface : public USceneComponent   
@@ -53,7 +53,9 @@ private:
     void GetInstance();
     void SetAdInfo();
     FString mZoneId;
+    FString mId;
 public:
+    bool CheckMyId(const FString&);
     // Sets default values for this component's properties
     URewardInterface();
     // Called every frame
@@ -69,36 +71,42 @@ public:
     UFUNCTION(BlueprintCallable,Category="BidmadReward")
     bool IsLoaded();
 
-    //Bidmad Callback
-    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadReward")
-    FOnLoadBidmadRewardAd OnLoadBidmadRewardAd;
-    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadReward")
-    FOnShowBidmadRewardAd OnShowBidmadRewardAd;
-    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadReward")
-    FOnFailedBidmadRewardAd OnFailedBidmadRewardAd;
-    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadReward")
-    FOnCompleteBidmadRewardAd OnCompleteBidmadRewardAd;
-    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadReward")
-    FOnCloseBidmadRewardAd OnCloseBidmadRewardAd;
-    UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadReward")
-    FOnSkippedBidmadRewardAd OnSkippedBidmadRewardAd;
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void BindEventToOnLoad(const FOnBidmadRewardLoadDelegate& OnLoad);
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void BindEventToOnShow(const FOnBidmadRewardShowDelegate& OnShow);
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void BindEventToOnFail(const FOnBidmadRewardFailDelegate& OnFail);
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void BindEventToOnComplete(const FOnBidmadRewardCompleteDelegate& OnComplete);
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void BindEventToOnClose(const FOnBidmadRewardCloseDelegate& OnClose);
+    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    void BindEventToOnSkip(const FOnBidmadRewardSkipDelegate& OnSkip);
+
+    FOnBidmadRewardLoadDelegate mOnLoadDelegate;
+    FOnBidmadRewardShowDelegate mOnShowDelegate;
+    FOnBidmadRewardFailDelegate mOnFailDelegate;
+    FOnBidmadRewardCompleteDelegate mOnCompleteDelegate;
+    FOnBidmadRewardCloseDelegate mOnCloseDelegate;
+    FOnBidmadRewardSkipDelegate mOnSkipDelegate;
 };
 
 #if PLATFORM_ANDROID
 extern "C"{
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onShowAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onFailedAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCompleteAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCloseAdCb(JNIEnv *, jobject, jstring);
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onSkippedAdCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadAdCb(JNIEnv *, jobject, jstring, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onShowAdCb(JNIEnv *, jobject, jstring, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onFailedAdCb(JNIEnv *, jobject, jstring, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCompleteAdCb(JNIEnv *, jobject, jstring, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCloseAdCb(JNIEnv *, jobject, jstring, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onSkippedAdCb(JNIEnv *, jobject, jstring, jstring);
 }
 #elif PLATFORM_IOS
-@interface BidmadRewardInterface : NSObject <BIDMADOpenBiddingRewardVideoDelegate>{
-    id<BIDMADOpenBiddingRewardVideoDelegate> delegate;
+@interface BidmadRewardInterface : NSObject <BidmadRewardUECallback>{
+    id<BidmadRewardUECallback> delegate;
 }
 + (BidmadRewardInterface*)getSharedInstance;
-- (OpenBiddingUnrealReward *)newInstance:(NSString *)zoneID;
+- (OpenBiddingUnrealReward *)newInstance:(NSString *)zoneID uuid:(NSString *)uuid;
 - (OpenBiddingUnrealReward *)getInstance:(NSString *)zoneID;
 @end
 #endif

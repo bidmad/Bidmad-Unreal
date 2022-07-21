@@ -635,7 +635,7 @@ At this time, if the result of the called Load is Fail, Load is not called again
 
 Interstitial provides 4 types of Callbacks: Load / Show / Close / Failed.
 
-![InterstitialCallbacks](./Readme_Contents/Interstitial_Callbacks.png)
+![InterstitialCallbacks](https://i.imgur.com/8uQRt2e.png)
 
 ### 4. Reward
 
@@ -677,7 +677,7 @@ At this time, if the result of the called Load is Fail, Load is not called again
 
 Reward provides 6 types of Callbacks: Load / Show / Close / Failed / Complete / Skipped.
 
-![RewardCallbacks](./Readme_Contents/Reward_Callbacks.png)
+![RewardCallbacks](https://i.imgur.com/p6NsRPi.png)
 
 ### 5. Common
 

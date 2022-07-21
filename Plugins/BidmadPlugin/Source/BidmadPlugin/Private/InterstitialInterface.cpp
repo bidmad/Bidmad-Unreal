@@ -45,6 +45,10 @@ void UInterstitialInterface::InitInterstitial(FString androidZoneId, FString ios
     mZoneId = iosZoneId;
     #endif
 
+    if(mId.IsEmpty()){
+      mId = FGuid::NewGuid().ToString();  
+    }
+
     #if PLATFORM_ANDROID
     GetInstance();
     SetActivity();//Android JNI Start
@@ -63,7 +67,7 @@ void UInterstitialInterface::InitInterstitial(FString androidZoneId, FString ios
 void UInterstitialInterface::NewiOSInstance() {
     #if PLATFORM_ANDROID
     #elif PLATFORM_IOS
-    unrealInterstitial = [[BidmadInterstitialInterface getSharedInstance] newInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
+    unrealInterstitial = [[BidmadInterstitialInterface getSharedInstance] newInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)] uuid:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mId)]];
     #endif
 }
 
@@ -75,11 +79,11 @@ void UInterstitialInterface::GetInstance() {
     
     jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;)Lad/helper/openbidding/interstitial/UnrealInterstitial;", false);
 
-    jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
-    mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _zoneId);
-    mEnv->DeleteLocalRef(_zoneId);
+    jstring _mId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mId));
+    mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _mId);
+    mEnv->DeleteLocalRef(_mId);
     #elif PLATFORM_IOS
-    unrealInterstitial = [[BidmadInterstitialInterface getSharedInstance] getInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
+    unrealInterstitial = [[BidmadInterstitialInterface getSharedInstance] getInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mId)]];
     #endif
 }
 
@@ -162,62 +166,120 @@ bool UInterstitialInterface::IsLoaded() {
     return result;
 }
 
+void UInterstitialInterface::BindEventToOnLoad(const FOnBidmadInterstitialLoadDelegate& OnLoad) {
+    mOnLoadDelegate = OnLoad;
+}
+
+void UInterstitialInterface::BindEventToOnShow(const FOnBidmadInterstitialShowDelegate& OnShow) {
+    mOnShowDelegate = OnShow;
+}
+
+void UInterstitialInterface::BindEventToOnFail(const FOnBidmadInterstitialFailDelegate& OnFail) {
+    mOnFailDelegate = OnFail;
+}
+
+void UInterstitialInterface::BindEventToOnClose(const FOnBidmadInterstitialCloseDelegate& OnClose) {
+    mOnCloseDelegate = OnClose;
+}
+
+bool UInterstitialInterface::CheckMyId(const FString& getId){
+    bool result = false;
+
+    if(!mId.IsEmpty() && !getId.IsEmpty()){
+        result = (mId == getId);
+    }
+
+    return result;
+}
+
 
 #if PLATFORM_ANDROID
 extern "C"{
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        if(str1 == NULL || str2 == NULL){
+            return;
+        }
         
-        const char *zoneId = env->GetStringUTFChars(str, NULL);
-        env->ReleaseStringUTFChars(str, zoneId);
+        const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        env->ReleaseStringUTFChars(str1, zoneId);
+
+        const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        env->ReleaseStringUTFChars(str2, unrealId);
 
         for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
         {
             if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
             {
-                Itr->OnLoadBidmadInterstitialAd.Broadcast(zoneId);
+                if(Itr->CheckMyId(unrealId)){
+                    Itr->mOnLoadDelegate.ExecuteIfBound(zoneId);
+                }
             }
         }
     }
 
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onShowAdCb(JNIEnv *env, jobject obj, jstring str){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onShowAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        if(str1 == NULL || str2 == NULL){
+            return;
+        }
         
-        const char *zoneId = env->GetStringUTFChars(str, NULL);
-        env->ReleaseStringUTFChars(str, zoneId);
+        const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        env->ReleaseStringUTFChars(str1, zoneId);
+
+        const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        env->ReleaseStringUTFChars(str2, unrealId);
 
         for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
         {
             if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
             {
-                Itr->OnShowBidmadInterstitialAd.Broadcast(zoneId);
-                Itr->Load(); //Ad Reload
+                if(Itr->CheckMyId(unrealId)){
+                    Itr->mOnShowDelegate.ExecuteIfBound(zoneId);
+                    Itr->Load(); //Ad Reload
+                }
             }
         }
     }
 
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onFailedAdCb(JNIEnv *env, jobject obj, jstring str){
-        
-        const char *zoneId = env->GetStringUTFChars(str, NULL);
-        env->ReleaseStringUTFChars(str, zoneId);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onFailedAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        if(str1 == NULL || str2 == NULL){
+            return;
+        }
+
+        const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        env->ReleaseStringUTFChars(str1, zoneId);
+
+        const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        env->ReleaseStringUTFChars(str2, unrealId);
 
         for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
         {
             if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
             {
-                Itr->OnFailedBidmadInterstitialAd.Broadcast(zoneId);
+                if(Itr->CheckMyId(unrealId)){
+                    Itr->mOnFailDelegate.ExecuteIfBound(zoneId);
+                }
             }
         }
     }
 
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onCloseAdCb(JNIEnv *env, jobject obj, jstring str){
-        
-        const char *zoneId = env->GetStringUTFChars(str, NULL);
-        env->ReleaseStringUTFChars(str, zoneId);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onCloseAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        if(str1 == NULL || str2 == NULL){
+            return;
+        }
+
+        const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        env->ReleaseStringUTFChars(str1, zoneId);
+
+        const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        env->ReleaseStringUTFChars(str2, unrealId);
 
         for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
         {
             if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
             {
-                Itr->OnCloseBidmadInterstitialAd.Broadcast(zoneId);
+                if(Itr->CheckMyId(unrealId)){
+                    Itr->mOnCloseDelegate.ExecuteIfBound(zoneId);
+                }
             }
         }
     }
@@ -237,59 +299,59 @@ extern "C"{
     self = [super init];
     return self;
 }
-- (OpenBiddingUnrealInterstitial *)newInstance:(NSString *)zoneID {
-    OpenBiddingUnrealInterstitial * interstitial = [[OpenBiddingUnrealInterstitial alloc] initWithZoneId:zoneID];
+- (OpenBiddingUnrealInterstitial *)newInstance:(NSString *)zoneID uuid:(NSString *)uuid {
+    OpenBiddingUnrealInterstitial * interstitial = [[OpenBiddingUnrealInterstitial alloc] initWithZoneId:zoneID uuid:uuid];
     [interstitial setDelegate:self];
     return interstitial;
 }
-- (OpenBiddingUnrealInterstitial *)getInstance:(NSString *)zoneID {
-    OpenBiddingUnrealInterstitial * interstitial = [OpenBiddingUnrealInterstitial getInstance:zoneID];
+- (OpenBiddingUnrealInterstitial *)getInstance:(NSString *)uuid {
+    OpenBiddingUnrealInterstitial * interstitial = [OpenBiddingUnrealInterstitial getInstance:uuid];
     return interstitial;
 }
 
-- (void)BIDMADOpenBiddingInterstitialClose:(OpenBiddingInterstitial *)core{
-    NSString* nsZoneId = core.zoneID;
-
+- (void)bidmadInterstitialUEClose:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
     for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
         {
-            Itr->OnCloseBidmadInterstitialAd.Broadcast(nsZoneId);
+            if(Itr->CheckMyId(uuid)){
+                Itr->mOnCloseDelegate.ExecuteIfBound(mZoneId);
+            }
         }
     }
 }
-- (void)BIDMADOpenBiddingInterstitialShow:(OpenBiddingInterstitial *)core{
-    NSString* nsZoneId = core.zoneID;
-    
+- (void)bidmadInterstitialUEShow:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
     for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
         {
-            Itr->OnShowBidmadInterstitialAd.Broadcast(nsZoneId);
-            Itr->InitInterstitial(nil, nsZoneId);
-            Itr->Load(); //Ad Reload
+            if(Itr->CheckMyId(uuid)){
+                Itr->mOnShowDelegate.ExecuteIfBound(mZoneId);
+                Itr->InitInterstitial(nil, mZoneId);
+                Itr->Load(); //Ad Reload
+            }
         }
     }
 }
-- (void)BIDMADOpenBiddingInterstitialLoad:(OpenBiddingInterstitial *)core{
-    NSString* nsZoneId = core.zoneID;
-
+- (void)bidmadInterstitialUELoad:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
     for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
         {
-            Itr->OnLoadBidmadInterstitialAd.Broadcast(nsZoneId);
+            if(Itr->CheckMyId(uuid)){
+                Itr->mOnLoadDelegate.ExecuteIfBound(mZoneId);
+            }
         }
     }
 }
-- (void)BIDMADOpenBiddingInterstitialAllFail:(OpenBiddingInterstitial *)core{
-    NSString* nsZoneId = core.zoneID;
-
+- (void)bidmadInterstitialUEAllFail:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
     for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
     {
         if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
         {
-            Itr->OnFailedBidmadInterstitialAd.Broadcast(nsZoneId);
+            if(Itr->CheckMyId(uuid)){
+                Itr->mOnFailDelegate.ExecuteIfBound(mZoneId);
+            }
         }
     }
 }
