@@ -603,7 +603,7 @@ The following is how to request (Load) an interstitial advertisement and show th
 
 Bidmad is issued each ZoneId for Android / iOS, and sets the issued ZoneId in the Init function according to the OS.
 
-![InitInterstitial](./Readme_Contents/Interstitial_InitInterstitial.png)
+![InitInterstitial](https://i.imgur.com/bg5oJAS.png)
 
 #### 3.2 AD Load
 
@@ -611,7 +611,7 @@ If you have called the Init function, then the Load function is called to reques
 *For iOS14 or higher, it is recommended to load after confirming that the user has consented to app tracking authorization.
 You can check the load result through Callback.
 
-![InterstitialLoad](./Readme_Contents/Interstitial_Load.png)
+![InterstitialLoad](https://i.imgur.com/qrTIWL4.png)
 
 *After requesting Interstitial advertisement, there is a certain time delay until advertisement is loaded.<br>
 In order not to expose the load delay to the view, it is recommended to request an advertisement immediately when the app starts.
@@ -620,13 +620,13 @@ In order not to expose the load delay to the view, it is recommended to request 
 
 Before calling the Show function, the IsLoaded function is called to check whether the advertisement is loaded.
 
-![InterstitialIsLoad](./Readme_Contents/Interstitial_IsLoaded.png)
+![InterstitialIsLoad](https://i.imgur.com/kZIpv0j.png)
 
 #### 3.4 Ad Show
 
 If the advertisement request is successful through the Load function, the advertisement is displayed.
 
-![InterstitialShow](./Readme_Contents/Interstitial_Show.png)
+![InterstitialShow](https://i.imgur.com/PzZn4GS.png)
 
 *If the advertisement is shown, the plugin loads again.<br>
 At this time, if the result of the called Load is Fail, Load is not called again.
@@ -635,7 +635,7 @@ At this time, if the result of the called Load is Fail, Load is not called again
 
 Interstitial provides 4 types of Callbacks: Load / Show / Close / Failed.
 
-![InterstitialCallbacks](https://i.imgur.com/8uQRt2e.png)
+![InterstitialCallbacks](https://i.imgur.com/3jvL5Ds.png)
 
 ### 4. Reward
 
@@ -645,7 +645,7 @@ The following is how to request (Load) rewarded advertisement through plugin and
 
 Bidmad is issued each ZoneId for Android / iOS, and sets the issued ZoneId in the Init function according to the OS.
 
-![RewardInitReward](./Readme_Contents/Reward_InitReward.png)
+![RewardInitReward](https://i.imgur.com/lNGm4KF.png)
 
 #### 4.2 Load
 
@@ -653,7 +653,7 @@ If you have called the Init function, then the Load function is called to reques
 *For iOS14 or higher, it is recommended to load after confirming that the user has consented to app tracking authorization.
 You can check the load result through Callback.
 
-![RewardLoad](./Readme_Contents/Reward_Load.png)
+![RewardLoad](https://i.imgur.com/t27Bkzr.png)
 
 *After requesting Reward advertisement, there is a certain time delay until advertisement is loaded.<br>
 In order not to expose the load delay to the view, it is recommended to request an advertisement immediately when the app starts.
@@ -662,13 +662,13 @@ In order not to expose the load delay to the view, it is recommended to request 
 
 Before calling the Show function, the IsLoaded function is called to check whether the advertisement is loaded.
 
-![RewardIsLoaded](./Readme_Contents/Reward_IsLoaded.png)
+![RewardIsLoaded](https://i.imgur.com/5ZJlmXT.png)
 
 #### 4.4 Show
 
 If the advertisement request is successful through the Load function, the advertisement is displayed.
 
-![RewardShow](./Readme_Contents/Reward_Show.png)
+![RewardShow](https://i.imgur.com/daz2mqc.png)
 
 *If the advertisement is shown, the plugin loads again.<br>
 At this time, if the result of the called Load is Fail, Load is not called again.
@@ -677,7 +677,7 @@ At this time, if the result of the called Load is Fail, Load is not called again
 
 Reward provides 6 types of Callbacks: Load / Show / Close / Failed / Complete / Skipped.
 
-![RewardCallbacks](https://i.imgur.com/p6NsRPi.png)
+![RewardCallbacks](https://i.imgur.com/RiGEi7I.png)
 
 ### 5. Common
 
@@ -687,27 +687,28 @@ Common is a component that provides functions other than advertisements such as 
 
 Debugging log is output when calling SetDebugging True.
 
-![CommonSetDebugging](./Readme_Contents/Common_SetDebugging.png)
+![CommonSetDebugging](https://i.imgur.com/44l5cnY.png)
 
 #### 5.2 ReqAdTrackingAuthorization
 
 In iOS 14, the app tracking transparency consent popup is exposed, and the resulting callback is provided.
 
-![CommonReqAdTrackingAuthorization](./Readme_Contents/Common_ReqAdTrackingAuthorization.png)
+![CommonReqAdTrackingAuthorization](https://i.imgur.com/m5IosKZ.png)
 
 #### 5.2 SetAdvertiserTrackingEnabled
 
 When obtaining app tracking transparency consent through a method other than ReqAdTrackingAuthorization provided by Plugin, 
 <br>pass agrees(True) and rejected(False) through SetAdvertiserTrackingEnabled.
 
-![CommonSetAdvertiserTrackingEnabled](./Readme_Contents/Common_SetAdvertiserTrackingEnabled.png)
+![CommonSetAdvertiserTrackingEnabled](https://i.imgur.com/duXWELF.png)
 
 #### 5.2 GetAdvertiserTrackingEnabled
 
 Check the value set through SetAdvertiserTrackingEnabled.
 
-![CommonGetAdvertiserTrackingEnabled](./Readme_Contents/Common_GetAdvertiserTrackingEnabled.png)
+![CommonGetAdvertiserTrackingEnabled](https://i.imgur.com/Dpg5T23.png)
 
 #### References
-- [Unreal GDPR Guide KOR](./Readme_Contents/Unreal_GDPR_Guide_[KOR].md)
-- [Unreal GDPR Guide ENG](./Readme_Contents/Unreal_GDPR_Guide_[ENG].md)
+- Unreal GDPR Guide [KOR](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BKOR%5D) | [ENG](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BENG%5D)
+- [Blueprint Sample Image](https://github.com/bidmad/Bidmad-Unreal/wiki/Blueprint-Sample-Image)
+- C++ Sample Code [KOR](https://github.com/bidmad/Bidmad-Unreal/wiki/CPP-%EC%BD%94%EB%93%9C-%EC%83%98%ED%94%8C) | [ENG](https://github.com/bidmad/Bidmad-Unreal/wiki/CPP-Code-Sample)

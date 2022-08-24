@@ -603,7 +603,7 @@ Plugin을 통해 전면 광고를 요청(Load)하고 광고를 노출(Show)하�
 
 Bidmad는 Android / iOS에 대한 ZoneId가 각각 발급되며, 발급 받은 ZoneId를 OS에 맞게 Init 함수에 세팅합니다.
 
-![InitInterstitial](./Readme_Contents/Interstitial_InitInterstitial.png)
+![InitInterstitial](https://i.imgur.com/bg5oJAS.png)
 
 #### 3.2 AD Load
 
@@ -611,7 +611,7 @@ Init 함수를 호출했다면 그 다음으로 Load 함수를 호출하여 광�
 *iOS14 이상에서는 사용자가 앱 추적 승인에 동의한 것을 확인 후 Load 하기를 권장 드립니다. 
 Load에 대한 결과는 Callback을 통해서 확인할 수 있습니다.
 
-![InterstitialLoad](./Readme_Contents/Interstitial_Load.png)
+![InterstitialLoad](https://i.imgur.com/qrTIWL4.png)
 
 *Reward / Interstitial 광고 요청 후 광고가 Load 되기까지 일정 시간 딜레이가 발생합니다.<br>
 Load 딜레이를 View단에 노출시키지 않기 위해 앱 시작 시 바로 광고를 요청하는 것을 권장 드립니다.
@@ -620,13 +620,13 @@ Load 딜레이를 View단에 노출시키지 않기 위해 앱 시작 시 바로
 
 Show 함수를 호출하기전 IsLoaded 함수를 호출하여 광고 Load 여부를 확인합니다.
 
-![InterstitialIsLoad](./Readme_Contents/Interstitial_IsLoaded.png)
+![InterstitialIsLoad](https://i.imgur.com/kZIpv0j.png)
 
 #### 3.4 Ad Show
 
 Load 함수를 통해 광고요청에 성공하였다면, 광고를 노출시킵니다.
 
-![InterstitialShow](./Readme_Contents/Interstitial_Show.png)
+![InterstitialShow](https://i.imgur.com/PzZn4GS.png)
 
 *광고를 Show했다면 Plugin에서 다시 Load를 수행합니다.<br>
 이때 호출된 Load의 결과가 Fail인 경우에는 Load를 재호출 하지 않습니다.
@@ -635,7 +635,7 @@ Load 함수를 통해 광고요청에 성공하였다면, 광고를 노출시킵
 
 Interstitial에서는 Load / Show / Close / Failed 4종의 Callback을 제공합니다.
 
-![InterstitialCallbacks](https://i.imgur.com/8uQRt2e.png)
+![InterstitialCallbacks](https://i.imgur.com/3jvL5Ds.png)
 
 ### 4. Reward
 
@@ -645,7 +645,7 @@ Plugin을 통해 보상형 광고를 요청(Load)하고 광고를 노출(Show)�
 
 Bidmad는 Android / iOS에 대한 ZoneId가 각각 발급되며, 발급 받은 ZoneId를 OS에 맞게 Init 함수에 세팅합니다.
 
-![RewardInitReward](./Readme_Contents/Reward_InitReward.png)
+![RewardInitReward](https://i.imgur.com/lNGm4KF.png)
 
 #### 4.2 Load
 
@@ -653,19 +653,19 @@ Init 함수를 호출했다면 그 다음으로 Load 함수를 호출하여 광�
 *iOS14 이상에서는 사용자가 앱 추적 승인에 동의한 것을 확인 후 Load 하기를 권장 드립니다. 
 Load에 대한 결과는 Callback을 통해서 확인할 수 있습니다.
 
-![RewardLoad](./Readme_Contents/Reward_Load.png)
+![RewardLoad](https://i.imgur.com/t27Bkzr.png)
 
 #### 4.3 IsLoaded
 
 Show 함수를 호출하기전 IsLoaded 함수를 호출하여 광고 Load 여부를 확인합니다.
 
-![RewardIsLoaded](./Readme_Contents/Reward_IsLoaded.png)
+![RewardIsLoaded](https://i.imgur.com/5ZJlmXT.png)
 
 #### 4.4 Show
 
 Load 함수를 통해 광고요청에 성공하였다면, 광고를 노출시킵니다.
 
-![RewardShow](./Readme_Contents/Reward_Show.png)
+![RewardShow](https://i.imgur.com/daz2mqc.png)
 
 *광고를 Show했다면 Plugin에서 다시 Load를 수행합니다.<br>
 이때 호출된 Load의 결과가 Fail인 경우에는 Load를 재호출 하지 않습니다.
@@ -674,7 +674,7 @@ Load 함수를 통해 광고요청에 성공하였다면, 광고를 노출시킵
 
 Reward에서는 Load / Show / Close / Failed / Complete / Skipped 6종의 Callback을 제공합니다.
 
-![RewardCallbacks](https://i.imgur.com/p6NsRPi.png)
+![RewardCallbacks](https://i.imgur.com/RiGEi7I.png)
 
 ### 5. Common
 
@@ -684,27 +684,28 @@ Common는 디버깅 모드, iOS14 AppTrackingAuthorization 기능 등 광고 외
 
 SetDebugging True를 호출 시 디버깅 로그가 출력됩니다.
 
-![CommonSetDebugging](./Readme_Contents/Common_SetDebugging.png)
+![CommonSetDebugging](https://i.imgur.com/44l5cnY.png)
 
 #### 5.2 ReqAdTrackingAuthorization
 
 iOS 14에서 앱 추적 투명성 동의 팝업을 노출 시키고, 그에 대한 결과 Callback을 제공합니다.
 
-![CommonReqAdTrackingAuthorization](./Readme_Contents/Common_ReqAdTrackingAuthorization.png)
+![CommonReqAdTrackingAuthorization](https://i.imgur.com/m5IosKZ.png)
 
 #### 5.2 SetAdvertiserTrackingEnabled
 
 Plugin에서 제공하는 ReqAdTrackingAuthorization이 아닌 다른 방법을 통해 앱 추적 투명성 동의를 얻는 경우,
 <br>사용자가 동의했다면 True, 거부했다면 False를 SetAdvertiserTrackingEnabled를 통해 전달하세요.
 
-![CommonSetAdvertiserTrackingEnabled](./Readme_Contents/Common_SetAdvertiserTrackingEnabled.png)
+![CommonSetAdvertiserTrackingEnabled](https://i.imgur.com/duXWELF.png)
 
 #### 5.2 GetAdvertiserTrackingEnabled
 
 SetAdvertiserTrackingEnabled을 통해 세팅한 값을 확인합니다.
 
-![CommonGetAdvertiserTrackingEnabled](./Readme_Contents/Common_GetAdvertiserTrackingEnabled.png)
+![CommonGetAdvertiserTrackingEnabled](https://i.imgur.com/Dpg5T23.png)
 
 #### References
-- [Unreal GDPR Guide KOR](./Readme_Contents/Unreal_GDPR_Guide_[KOR].md)
-- [Unreal GDPR Guide ENG](./Readme_Contents/Unreal_GDPR_Guide_[ENG].md)
+- Unreal GDPR Guide [KOR](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BKOR%5D) | [ENG](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BENG%5D)
+- [Blueprint Sample Image](https://github.com/bidmad/Bidmad-Unreal/wiki/Blueprint-Sample-Image)
+- C++ Sample Code [KOR](https://github.com/bidmad/Bidmad-Unreal/wiki/CPP-%EC%BD%94%EB%93%9C-%EC%83%98%ED%94%8C) | [ENG](https://github.com/bidmad/Bidmad-Unreal/wiki/CPP-Code-Sample)

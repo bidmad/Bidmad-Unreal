@@ -2,6 +2,8 @@
 
 DEFINE_LOG_CATEGORY(FBidmadReward);
 
+TMap <FString, URewardInterface*> URewardInterface::mRewardInterfaceMap;
+
 URewardInterface::URewardInterface()
 {
     // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -61,6 +63,8 @@ void URewardInterface::InitReward(FString androidZoneId, FString iosZoneId)
     
     SetAdInfo(); //AOS&iOS
     
+    mRewardInterfaceMap.Add(mId, this);
+
     #if PLATFORM_ANDROID
     DeleteRefMember(); //Android JNI END
     #endif
@@ -77,7 +81,7 @@ void URewardInterface::GetInstance() {
     #if PLATFORM_ANDROID
     mEnv = FAndroidApplication::GetJavaEnv();
     
-    mJCls = FAndroidApplication::FindJavaClassGlobalRef("ad/helper/openbidding/reward/UnrealReward");
+    mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/reward/UnrealReward");
 
     jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;)Lad/helper/openbidding/reward/UnrealReward;", false);
 
@@ -103,7 +107,7 @@ void URewardInterface::MakeReward() {
 
 void URewardInterface::DeleteRefMember(){
     mEnv->DeleteLocalRef(mJObj);
-    mEnv->DeleteGlobalRef(mJCls);
+    mEnv->DeleteLocalRef(mJCls);
 }
 #endif
 //Only Android Funtion END
@@ -165,39 +169,27 @@ bool URewardInterface::IsLoaded() {
 }
 
 void URewardInterface::BindEventToOnLoad(const FOnBidmadRewardLoadDelegate& OnLoad) {
-    mOnLoadDelegate = OnLoad;
+    OnLoadDelegate = OnLoad;
 }
 
 void URewardInterface::BindEventToOnShow(const FOnBidmadRewardShowDelegate& OnShow) {
-    mOnShowDelegate = OnShow;
+    OnShowDelegate = OnShow;
 }
 
 void URewardInterface::BindEventToOnFail(const FOnBidmadRewardFailDelegate& OnFail) {
-    mOnFailDelegate = OnFail;
+    OnFailDelegate = OnFail;
 }
 
 void URewardInterface::BindEventToOnComplete(const FOnBidmadRewardCompleteDelegate& OnComplete) {
-    mOnCompleteDelegate = OnComplete;
+    OnCompleteDelegate = OnComplete;
 }
 
 void URewardInterface::BindEventToOnClose(const FOnBidmadRewardCloseDelegate& OnClose) {
-    mOnCloseDelegate = OnClose;
+    OnCloseDelegate = OnClose;
 }
 
 void URewardInterface::BindEventToOnSkip(const FOnBidmadRewardSkipDelegate& OnSkip) {
-    mOnSkipDelegate = OnSkip;
-}
-
-bool URewardInterface::CheckMyId(const FString& getId){
-    bool result = false;
-    UE_LOG(FBidmadInterstitial, Warning, TEXT("CheckMyId!!!!!! %s #####"), &getId);
-    if(!mId.IsEmpty() && !getId.IsEmpty()){
-        result = (mId == getId);
-    }
-
-    UE_LOG(FBidmadInterstitial, Error, TEXT("[URewardInterface::URewardInterface] checkMyId : %d #####"), result);
-
-    return result;
+    OnSkipDelegate = OnSkip;
 }
 
 #if PLATFORM_ANDROID
@@ -208,18 +200,18 @@ extern "C"{
         }
         
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
 
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                if(Itr->CheckMyId(unrealId)){
-                    Itr->mOnLoadDelegate.ExecuteIfBound(zoneId);
-                }
+        if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
+            URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
+            
+            if(reward != nullptr){
+                reward->OnLoadDelegate.ExecuteIfBound(zoneId);
             }
         }
     }
@@ -230,19 +222,19 @@ extern "C"{
         }
 
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
 
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                if(Itr->CheckMyId(unrealId)){
-                    Itr->mOnShowDelegate.ExecuteIfBound(zoneId);
-                    Itr->Load(); //Ad Reload
-                }
+        if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
+            URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
+            
+            if(reward != nullptr){
+                reward->OnShowDelegate.ExecuteIfBound(zoneId);
+                reward->Load(); //Ad Reload
             }
         }
     }
@@ -253,18 +245,18 @@ extern "C"{
         }
 
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
 
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                if(Itr->CheckMyId(unrealId)){
-                    Itr->mOnFailDelegate.ExecuteIfBound(zoneId);
-                }
+        if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
+            URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
+            
+            if(reward != nullptr){
+                reward->OnFailDelegate.ExecuteIfBound(zoneId);
             }
         }
     }
@@ -273,19 +265,20 @@ extern "C"{
         if(str1 == NULL || str2 == NULL){
             return;
         }
+
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
 
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                if(Itr->CheckMyId(unrealId)){
-                    Itr->mOnCompleteDelegate.ExecuteIfBound(zoneId);
-                }
+        if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
+            URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
+            
+            if(reward != nullptr){
+                reward->OnCompleteDelegate.ExecuteIfBound(zoneId);
             }
         }
     }
@@ -296,18 +289,18 @@ extern "C"{
         }
         
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
 
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                if(Itr->CheckMyId(unrealId)){
-                    Itr->mOnCloseDelegate.ExecuteIfBound(zoneId);
-                }
+        if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
+            URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
+            
+            if(reward != nullptr){
+                reward->OnCloseDelegate.ExecuteIfBound(zoneId);
             }
         }
     }
@@ -318,18 +311,18 @@ extern "C"{
         }
         
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
 
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
-        for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                if(Itr->CheckMyId(unrealId)){
-                    Itr->mOnSkipDelegate.ExecuteIfBound(zoneId);
-                }
+        if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
+            URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
+            
+            if(reward != nullptr){
+                reward->OnSkipDelegate.ExecuteIfBound(zoneId);
             }
         }
     }
@@ -359,72 +352,58 @@ extern "C"{
     return unrealReward;
 }
 - (void)bidmadRewardUESkipped:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
-    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            if(Itr->CheckMyId(uuid)){
-                Itr->mOnSkipDelegate.ExecuteIfBound(mZoneId);
-            }
+    if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
+        URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
+
+        if(reward != nullptr){
+            reward->OnSkipDelegate.ExecuteIfBound(mZoneId);
         }
     }
 }
 - (void)bidmadRewardUESucceed:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
-    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            if(Itr->CheckMyId(uuid)){
-                Itr->mOnCompleteDelegate.ExecuteIfBound(mZoneId);
-            }
+    if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
+        URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
+
+        if(reward != nullptr){
+            reward->OnCompleteDelegate.ExecuteIfBound(mZoneId);
         }
     }
 }
 - (void)bidmadRewardUEClose:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
-    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            if(Itr->CheckMyId(uuid)){
-                Itr->mOnCloseDelegate.ExecuteIfBound(mZoneId);
-            }
+    if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
+        URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
+
+        if(reward != nullptr){
+            reward->OnCloseDelegate.ExecuteIfBound(mZoneId);
         }
     }
 }
 - (void)bidmadRewardUEShow:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
-    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            if(Itr->CheckMyId(uuid)){
-                Itr->mOnShowDelegate.ExecuteIfBound(mZoneId);
-                Itr->InitReward(nil, mZoneId);
-                Itr->Load(); //Ad Reload
-            }
+    if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
+        URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
+
+        if(reward != nullptr){
+            reward->OnShowDelegate.ExecuteIfBound(mZoneId);
+            reward->InitReward(nil, mZoneId);
+            reward->Load(); //Ad Reload
         }
     }
 }
 - (void)bidmadRewardUELoad:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
-    UE_LOG(FBidmadReward, Display, TEXT("[URewardInterface] BIDMADReward Load #####"));
-    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            if(Itr->CheckMyId(uuid)){
-                Itr->mOnLoadDelegate.ExecuteIfBound(mZoneId);
-            }
+    if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
+        URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
+
+        if(reward != nullptr){
+            reward->OnLoadDelegate.ExecuteIfBound(mZoneId);
         }
     }
 }
 - (void)bidmadRewardUEAllFail:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
-    UE_LOG(FBidmadReward, Display, TEXT("[URewardInterface] BIDMADReward Load Fail #####"));
-    for (TObjectIterator<URewardInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            if(Itr->CheckMyId(uuid)){
-                Itr->mOnFailDelegate.ExecuteIfBound(mZoneId);
-            }
+    if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
+        URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
+
+        if(reward != nullptr){
+            reward->OnFailDelegate.ExecuteIfBound(mZoneId);
         }
     }
 }

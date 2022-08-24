@@ -1,6 +1,8 @@
 #include "GoogleGdprConsentInterface.h"
 #include "Engine.h"
 
+UGoogleGdprConsentInterface* UGoogleGdprConsentInterface::mGoogleGdprConsentInterface;
+
 UGoogleGdprConsentInterface::UGoogleGdprConsentInterface()
 {
     // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -30,7 +32,7 @@ void UGoogleGdprConsentInterface::TickComponent(float DeltaTime, ELevelTick Tick
 void UGoogleGdprConsentInterface::GetInstance(){
     #if PLATFORM_ANDROID
     mEnv = FAndroidApplication::GetJavaEnv();
-    mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/userinfo/consent/GoogleGDPRConsent");
+    mJCls = FAndroidApplication::FindJavaClass("com/adop/sdk/userinfo/consent/GoogleGDPRConsent");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/app/Activity;)Lcom/adop/sdk/userinfo/consent/GoogleGDPRConsent;", false);
     mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis());
     #elif PLATFORM_IOS
@@ -104,6 +106,9 @@ void UGoogleGdprConsentInterface::Reset(){
 
 void UGoogleGdprConsentInterface::RequestConsentInfoUpdate(){
     GetInstance();
+
+    mGoogleGdprConsentInterface = this;
+
     #if PLATFORM_ANDROID
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "requestConsentInfoUpdate", "()V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
@@ -158,7 +163,7 @@ void UGoogleGdprConsentInterface::SetListener(){
 #if PLATFORM_ANDROID
 void UGoogleGdprConsentInterface::DeleteRefMember(){
     mEnv->DeleteLocalRef(mJObj);
-    mEnv->DeleteGlobalRef(mJCls);
+    mEnv->DeleteLocalRef(mJCls);
 }
 #endif
 
@@ -166,65 +171,48 @@ void UGoogleGdprConsentInterface::DeleteRefMember(){
 extern "C"{
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentInfoUpdateSuccessCb(JNIEnv *env, jobject obj){
 
-        for (TObjectIterator<UGoogleGdprConsentInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                Itr->OnConsentInfoUpdateSuccess.Broadcast();
-            }
+        if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+            UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateSuccess.Broadcast();
         }
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentInfoUpdateFailureCb(JNIEnv *env, jobject obj, jstring errorMsg){
         
         const char *msg = env->GetStringUTFChars(errorMsg, NULL);
+        FString fMsg = FString(msg);
         env->ReleaseStringUTFChars(errorMsg, msg);
 
-        for (TObjectIterator<UGoogleGdprConsentInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                Itr->OnConsentInfoUpdateFailure.Broadcast(msg);
-            }
+        if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+            UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateFailure.Broadcast(fMsg);
         }
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormLoadSuccessCb(JNIEnv *env, jobject obj){
 
-        for (TObjectIterator<UGoogleGdprConsentInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                Itr->OnConsentFormLoadSuccess.Broadcast();
-            }
+        if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+            UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadSuccess.Broadcast();
         }
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormLoadFailureCb(JNIEnv *env, jobject obj, jstring errorMsg){
         
         const char *msg = env->GetStringUTFChars(errorMsg, NULL);
+        FString fMsg = FString(msg);
         env->ReleaseStringUTFChars(errorMsg, msg);
 
-        for (TObjectIterator<UGoogleGdprConsentInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                Itr->OnConsentFormLoadFailure.Broadcast(msg);
-            }
+        if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+            UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadFailure.Broadcast(fMsg);
         }
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormDismissedCb(JNIEnv *env, jobject obj, jstring errorMsg){
         
         const char *msg = env->GetStringUTFChars(errorMsg, NULL);
+        FString fMsg = FString(msg);
         env->ReleaseStringUTFChars(errorMsg, msg);
 
-        for (TObjectIterator<UGoogleGdprConsentInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                Itr->OnConsentFormDismissed.Broadcast(msg);
-            }
+        if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+            UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormDismissed.Broadcast(fMsg);
         }
     }
 }
@@ -287,55 +275,35 @@ extern "C"{
 //Bidmad Callback
 
 - (void)onConsentFormDismissed:(NSError *)formError {
-    for (TObjectIterator<UGoogleGdprConsentInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
-            Itr->OnConsentFormDismissed.Broadcast(FormErrorDescription);
-        }
+    if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+        FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
+        UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormDismissed.Broadcast(FormErrorDescription);
     }
 }
 
 - (void)onConsentFormLoadFailure:(NSError *)formError {
-    for (TObjectIterator<UGoogleGdprConsentInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
-            Itr->OnConsentFormLoadFailure.Broadcast(FormErrorDescription);
-        }
+    if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+        FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
+        UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadFailure.Broadcast(FormErrorDescription);
     }
 }
 
 - (void)onConsentFormLoadSuccess {
-    for (TObjectIterator<UGoogleGdprConsentInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            Itr->OnConsentFormLoadSuccess.Broadcast();
-        }
+    if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+        UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadSuccess.Broadcast();
     }
 }
 
 - (void)onConsentInfoUpdateFailure:(NSError *)formError {
-    for (TObjectIterator<UGoogleGdprConsentInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
-            Itr->OnConsentInfoUpdateFailure.Broadcast(FormErrorDescription);
-        }
+    if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+        FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
+        UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateFailure.Broadcast(FormErrorDescription);
     }
 }
 
 - (void)onConsentInfoUpdateSuccess {
-    for (TObjectIterator<UGoogleGdprConsentInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            Itr->OnConsentInfoUpdateSuccess.Broadcast();
-        }
+    if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+        UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateSuccess.Broadcast();
     }
 }
 

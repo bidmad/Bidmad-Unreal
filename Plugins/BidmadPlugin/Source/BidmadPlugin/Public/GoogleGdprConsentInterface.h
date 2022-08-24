@@ -47,6 +47,7 @@ private:
 #elif PLATFORM_IOS
 #endif
 public:
+    static UGoogleGdprConsentInterface* mGoogleGdprConsentInterface;
 	// Sets default values for this component's properties
 	UGoogleGdprConsentInterface();
 	// Called every frame

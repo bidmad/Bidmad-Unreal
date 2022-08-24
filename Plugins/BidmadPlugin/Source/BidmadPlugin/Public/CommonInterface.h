@@ -24,7 +24,7 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(FBidmadCommon, Log, All);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAdTrackingAuthorizationResponseDynamic, const EBidmadTrackingAuthorizationStatus, Response);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAdTrackingAuthorizationResponse, const EBidmadTrackingAuthorizationStatus, Response);
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Bidmad), meta=(BlueprintSpawnableComponent))
 class BIDMADPLUGIN_API UCommonInterface : public USceneComponent
@@ -34,6 +34,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 public:
+    static UCommonInterface* mCommonInterface;
 	// Sets default values for this component's properties
 	UCommonInterface();
 	// Called every frame
@@ -55,7 +56,7 @@ public:
 
     //Bidmad Callback
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadCommon")
-	FOnAdTrackingAuthorizationResponseDynamic OnAdTrackingAuthorizationResponseDynamic;
+	FOnAdTrackingAuthorizationResponse OnAdTrackingAuthorizationResponse;
 };
 
 #if PLATFORM_ANDROID

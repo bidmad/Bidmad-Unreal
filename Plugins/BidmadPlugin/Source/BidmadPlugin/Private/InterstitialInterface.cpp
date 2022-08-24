@@ -2,6 +2,8 @@
 
 DEFINE_LOG_CATEGORY(FBidmadInterstitial);
 
+TMap <FString, UInterstitialInterface*> UInterstitialInterface::mInterstitialInterfaceMap;
+
 UInterstitialInterface::UInterstitialInterface()
 {
     // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -58,6 +60,8 @@ void UInterstitialInterface::InitInterstitial(FString androidZoneId, FString ios
     #endif
     
     SetAdInfo(); //AOS&iOS
+
+    mInterstitialInterfaceMap.Add(mId, this);
     
     #if PLATFORM_ANDROID
     DeleteRefMember(); //Android JNI END
@@ -75,7 +79,7 @@ void UInterstitialInterface::GetInstance() {
     #if PLATFORM_ANDROID
     mEnv = FAndroidApplication::GetJavaEnv();
     
-    mJCls = FAndroidApplication::FindJavaClassGlobalRef("ad/helper/openbidding/interstitial/UnrealInterstitial");
+    mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/interstitial/UnrealInterstitial");
     
     jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;)Lad/helper/openbidding/interstitial/UnrealInterstitial;", false);
 
@@ -102,7 +106,7 @@ void UInterstitialInterface::MakeInterstitial() {
 
 void UInterstitialInterface::DeleteRefMember(){
     mEnv->DeleteLocalRef(mJObj);
-    mEnv->DeleteGlobalRef(mJCls);
+    mEnv->DeleteLocalRef(mJCls);
 }
 #endif
 //Only Android Funtion END
@@ -167,31 +171,20 @@ bool UInterstitialInterface::IsLoaded() {
 }
 
 void UInterstitialInterface::BindEventToOnLoad(const FOnBidmadInterstitialLoadDelegate& OnLoad) {
-    mOnLoadDelegate = OnLoad;
+    OnLoadDelegate = OnLoad;
 }
 
 void UInterstitialInterface::BindEventToOnShow(const FOnBidmadInterstitialShowDelegate& OnShow) {
-    mOnShowDelegate = OnShow;
+    OnShowDelegate = OnShow;
 }
 
 void UInterstitialInterface::BindEventToOnFail(const FOnBidmadInterstitialFailDelegate& OnFail) {
-    mOnFailDelegate = OnFail;
+    OnFailDelegate = OnFail;
 }
 
 void UInterstitialInterface::BindEventToOnClose(const FOnBidmadInterstitialCloseDelegate& OnClose) {
-    mOnCloseDelegate = OnClose;
+    OnCloseDelegate = OnClose;
 }
-
-bool UInterstitialInterface::CheckMyId(const FString& getId){
-    bool result = false;
-
-    if(!mId.IsEmpty() && !getId.IsEmpty()){
-        result = (mId == getId);
-    }
-
-    return result;
-}
-
 
 #if PLATFORM_ANDROID
 extern "C"{
@@ -199,20 +192,21 @@ extern "C"{
         if(str1 == NULL || str2 == NULL){
             return;
         }
-        
+
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
 
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
-        for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                if(Itr->CheckMyId(unrealId)){
-                    Itr->mOnLoadDelegate.ExecuteIfBound(zoneId);
-                }
+        if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(fUnrealId)){
+
+            UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[fUnrealId];
+        
+            if(interstitial != nullptr){
+                interstitial->OnLoadDelegate.ExecuteIfBound(fZoneId);
             }
         }
     }
@@ -223,19 +217,19 @@ extern "C"{
         }
         
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
 
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
-        for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                if(Itr->CheckMyId(unrealId)){
-                    Itr->mOnShowDelegate.ExecuteIfBound(zoneId);
-                    Itr->Load(); //Ad Reload
-                }
+        if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(fUnrealId)){
+            UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[fUnrealId];
+
+            if(interstitial != nullptr){
+                interstitial->OnShowDelegate.ExecuteIfBound(zoneId);
+                interstitial->Load(); //Ad Reload
             }
         }
     }
@@ -246,18 +240,18 @@ extern "C"{
         }
 
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
 
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
-        for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                if(Itr->CheckMyId(unrealId)){
-                    Itr->mOnFailDelegate.ExecuteIfBound(zoneId);
-                }
+        if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(fUnrealId)){
+            UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[fUnrealId];
+
+            if(interstitial != nullptr){
+                interstitial->OnFailDelegate.ExecuteIfBound(zoneId);
             }
         }
     }
@@ -268,18 +262,18 @@ extern "C"{
         }
 
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
+        FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
 
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
+        FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
-        for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
-        {
-            if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-            {
-                if(Itr->CheckMyId(unrealId)){
-                    Itr->mOnCloseDelegate.ExecuteIfBound(zoneId);
-                }
+        if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(fUnrealId)){
+            UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[fUnrealId];
+
+            if(interstitial != nullptr){
+                interstitial->OnCloseDelegate.ExecuteIfBound(zoneId);
             }
         }
     }
@@ -310,48 +304,40 @@ extern "C"{
 }
 
 - (void)bidmadInterstitialUEClose:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
-    for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            if(Itr->CheckMyId(uuid)){
-                Itr->mOnCloseDelegate.ExecuteIfBound(mZoneId);
-            }
+    if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
+        UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
+
+        if(interstitial != nullptr){
+            interstitial->OnCloseDelegate.ExecuteIfBound(mZoneId);
         }
     }
 }
 - (void)bidmadInterstitialUEShow:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
-    for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            if(Itr->CheckMyId(uuid)){
-                Itr->mOnShowDelegate.ExecuteIfBound(mZoneId);
-                Itr->InitInterstitial(nil, mZoneId);
-                Itr->Load(); //Ad Reload
-            }
+    if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
+        UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
+
+        if(interstitial != nullptr){
+            interstitial->OnShowDelegate.ExecuteIfBound(mZoneId);
+            interstitial->InitInterstitial(nil, mZoneId);
+            interstitial->Load(); //Ad Reload
         }
     }
 }
 - (void)bidmadInterstitialUELoad:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
-    for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            if(Itr->CheckMyId(uuid)){
-                Itr->mOnLoadDelegate.ExecuteIfBound(mZoneId);
-            }
+    if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
+        UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
+
+        if(interstitial != nullptr){
+            interstitial->OnLoadDelegate.ExecuteIfBound(mZoneId);
         }
     }
 }
 - (void)bidmadInterstitialUEAllFail:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
-    for (TObjectIterator<UInterstitialInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            if(Itr->CheckMyId(uuid)){
-                Itr->mOnFailDelegate.ExecuteIfBound(mZoneId);
-            }
+    if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
+        UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
+
+        if(interstitial != nullptr){
+            interstitial->OnFailDelegate.ExecuteIfBound(mZoneId);
         }
     }
 }

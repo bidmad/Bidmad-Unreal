@@ -53,7 +53,7 @@ private:
     FString mZoneId;
     FString mId;
 public:
-    bool CheckMyId(const FString&);
+    static TMap <FString, UInterstitialInterface*> mInterstitialInterfaceMap;
     // Sets default values for this component's properties
     UInterstitialInterface();
     // Called every frame
@@ -78,10 +78,10 @@ public:
     UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
     void BindEventToOnClose(const FOnBidmadInterstitialCloseDelegate& OnClose);
 
-    FOnBidmadInterstitialLoadDelegate mOnLoadDelegate;
-    FOnBidmadInterstitialShowDelegate mOnShowDelegate;
-    FOnBidmadInterstitialFailDelegate mOnFailDelegate;
-    FOnBidmadInterstitialCloseDelegate mOnCloseDelegate;
+    FOnBidmadInterstitialLoadDelegate OnLoadDelegate;
+    FOnBidmadInterstitialShowDelegate OnShowDelegate;
+    FOnBidmadInterstitialFailDelegate OnFailDelegate;
+    FOnBidmadInterstitialCloseDelegate OnCloseDelegate;
 };
 
 #if PLATFORM_ANDROID

@@ -55,7 +55,7 @@ private:
     FString mZoneId;
     FString mId;
 public:
-    bool CheckMyId(const FString&);
+    static TMap <FString, URewardInterface*> mRewardInterfaceMap;
     // Sets default values for this component's properties
     URewardInterface();
     // Called every frame
@@ -84,12 +84,12 @@ public:
     UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
     void BindEventToOnSkip(const FOnBidmadRewardSkipDelegate& OnSkip);
 
-    FOnBidmadRewardLoadDelegate mOnLoadDelegate;
-    FOnBidmadRewardShowDelegate mOnShowDelegate;
-    FOnBidmadRewardFailDelegate mOnFailDelegate;
-    FOnBidmadRewardCompleteDelegate mOnCompleteDelegate;
-    FOnBidmadRewardCloseDelegate mOnCloseDelegate;
-    FOnBidmadRewardSkipDelegate mOnSkipDelegate;
+    FOnBidmadRewardLoadDelegate OnLoadDelegate;
+    FOnBidmadRewardShowDelegate OnShowDelegate;
+    FOnBidmadRewardFailDelegate OnFailDelegate;
+    FOnBidmadRewardCompleteDelegate OnCompleteDelegate;
+    FOnBidmadRewardCloseDelegate OnCloseDelegate;
+    FOnBidmadRewardSkipDelegate OnSkipDelegate;
 };
 
 #if PLATFORM_ANDROID

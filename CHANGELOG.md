@@ -1,3 +1,15 @@
+v.1.4.0
+-------------
+*Unreal<br>
+-Update callback interface to work in C++ code<br><br>
+-Change ATT Callback Name<br><br>
+*Android<br>
+-Update Ad Network Library Version<br>
+-Update BidmadSDK 2.7.0.0<br><br>
+*iOS<br>
+-Update BidmadSDK 4.4.0.1<br>
+-IronSource Network SDK Version Update
+
 v.1.3.1
 -------------
 *Unreal<br>

@@ -3,6 +3,8 @@
 
 DEFINE_LOG_CATEGORY(FBidmadCommon);
 
+UCommonInterface* UCommonInterface::mCommonInterface;
+
 UCommonInterface::UCommonInterface()
 {
     // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -33,11 +35,11 @@ void UCommonInterface::SetDebugging(bool isDebugMod){
     #if PLATFORM_ANDROID
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
     
-    jclass mJCls = FAndroidApplication::FindJavaClassGlobalRef("ad/helper/openbidding/BidmadCommon");
+    jclass mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/BidmadCommon");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "setDebugging", "(Z)V", false);
     mEnv->CallStaticVoidMethod(mJCls, jniM, isDebugMod);
 
-    mEnv->DeleteGlobalRef(mJCls);
+    mEnv->DeleteLocalRef(mJCls);
     #elif PLATFORM_IOS
     UnrealCommon* unrealCommon = [[BidmadCommonInterface getSharedInstance] getCommon];
     [unrealCommon setDebugMode:isDebugMod];
@@ -48,7 +50,8 @@ void UCommonInterface::ReqAdTrackingAuthorization(){
     #if PLATFORM_ANDROID
 
     #elif PLATFORM_IOS
-
+    mCommonInterface = this;
+    
     UnrealCommon* unrealCommon = [[BidmadCommonInterface getSharedInstance] getCommon];
     [unrealCommon reqAdTrackingAuthorization];
 
@@ -86,7 +89,7 @@ void UCommonInterface::SetGdprConsent(bool consent, bool useArea){
 
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
     UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] SetGdprConsent 1 #####"));
-    jclass mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/userinfo/consent/Consent");
+    jclass mJCls = FAndroidApplication::FindJavaClass("com/adop/sdk/userinfo/consent/Consent");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/app/Activity;Z)Lcom/adop/sdk/userinfo/consent/Consent;", false);
     jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), useArea);
     UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] SetGdprConsent 2 #####"));
@@ -95,7 +98,7 @@ void UCommonInterface::SetGdprConsent(bool consent, bool useArea){
 
     UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] SetGdprConsent 3 #####"));
     mEnv->DeleteLocalRef(mJObj);
-    mEnv->DeleteGlobalRef(mJCls);
+    mEnv->DeleteLocalRef(mJCls);
     
     #elif PLATFORM_IOS
 
@@ -114,7 +117,7 @@ int UCommonInterface::GetGdprConsent(bool useArea){
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
     
     UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] GetGdprConsent 1 #####"));
-    jclass mJCls = FAndroidApplication::FindJavaClassGlobalRef("com/adop/sdk/userinfo/consent/Consent");
+    jclass mJCls = FAndroidApplication::FindJavaClass("com/adop/sdk/userinfo/consent/Consent");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/app/Activity;Z)Lcom/adop/sdk/userinfo/consent/Consent;", false);
     jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), useArea);
 
@@ -124,7 +127,7 @@ int UCommonInterface::GetGdprConsent(bool useArea){
 
     UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] GetGdprConsent 3 #####"));
     mEnv->DeleteLocalRef(mJObj);
-    mEnv->DeleteGlobalRef(mJCls);
+    mEnv->DeleteLocalRef(mJCls);
 
     #elif PLATFORM_IOS
 
@@ -185,12 +188,8 @@ int UCommonInterface::GetGdprConsent(bool useArea){
         break;
     }
 
-    for (TObjectIterator<UCommonInterface> Itr; Itr; ++Itr)
-    {
-        if (Itr->GetWorld() != nullptr && (Itr->GetWorld()->WorldType == EWorldType::Game || Itr->GetWorld()->WorldType == EWorldType::PIE) && (!Itr->IsPendingKill()))
-        {
-            Itr->OnAdTrackingAuthorizationResponseDynamic.Broadcast(status);
-        }
+    if(UCommonInterface::mCommonInterface != nullptr){
+        UCommonInterface::mCommonInterface->OnAdTrackingAuthorizationResponse.Broadcast(status);
     }
 }
 
