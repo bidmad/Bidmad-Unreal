@@ -1,3 +1,11 @@
+v.1.4.1
+-------------
+*Android<br>
+-Fix Bugs
+-Update BidmadSDK 2.7.0.0<br><br>
+*iOS<br>
+-Update BidmadSDK 4.5.0.0<br>
+
 v.1.4.0
 -------------
 *Unreal<br>
