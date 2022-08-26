@@ -9,7 +9,7 @@ v.1.4.1
 v.1.4.0
 -------------
 *Unreal<br>
--Update callback interface to work in C++ code<br><br>
+-Update callback interface to work in C++ code<br>
 -Change ATT Callback Name<br><br>
 *Android<br>
 -Update Ad Network Library Version<br>
