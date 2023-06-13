@@ -733,6 +733,24 @@ SetAdvertiserTrackingEnabled을 통해 세팅한 값을 확인합니다.
 
 ![CommonSetChildDirected](https://i.imgur.com/pa9cb2d.jpg)
 
+#### 5.7 BindEventToOnInitializeSdk
+
+InitializeSdkWithCallback 메서드 사용 시, 콜백을 받을 수 있는 이벤트를 설정. bool 값은 초기화 여부를 의미 
+
+![CommonBindEventToOnInitializeSdk](https://i.imgur.com/9cm6mJB.jpg)
+
+#### 5.8 InitializeSdkWithCallback
+
+SDK 초기화 호출 이후, 콜백 이벤트 발생.
+
+![CommonInitializeSdkWithCallback](https://i.imgur.com/27BwYnj.jpg)
+
+#### 5.9 InitializeSdk
+
+콜백 없이, SDK 초기화 메서드 호출
+
+![CommonInitializeSdk](https://i.imgur.com/J0doVoZ.jpg)
+
 #### References
 - Unreal GDPR Guide [KOR](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BKOR%5D) | [ENG](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BENG%5D)
 - [Blueprint Sample Image](https://github.com/bidmad/Bidmad-Unreal/wiki/Blueprint-Sample-Image)

@@ -737,6 +737,24 @@ Set if your app is for child or not
 
 ![CommonSetChildDirected](https://i.imgur.com/pa9cb2d.jpg)
 
+#### 5.7 BindEventToOnInitializeSdk
+
+When using the InitializeSdkWithCallback method, set up events that can receive callbacks. A bool value means whether to initialize
+
+![CommonBindEventToOnInitializeSdk](https://i.imgur.com/9cm6mJB.jpg)
+
+#### 5.8 InitializeSdkWithCallback
+
+Callback event occurs after calling SDK initialization.
+
+![CommonInitializeSdkWithCallback](https://i.imgur.com/27BwYnj.jpg)
+
+#### 5.9 InitializeSdk
+
+Calling SDK initialization methods, without callbacks
+
+![CommonInitializeSdk](https://i.imgur.com/J0doVoZ.jpg)
+
 #### References
 - Unreal GDPR Guide [KOR](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BKOR%5D) | [ENG](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BENG%5D)
 - [Blueprint Sample Image](https://github.com/bidmad/Bidmad-Unreal/wiki/Blueprint-Sample-Image)
