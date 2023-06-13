@@ -6,14 +6,7 @@ You can use the plugin to serve interstitial/rewarded ads in Unreal mobile apps.
 - [Download the latest version and sample project](https://github.com/bidmad/Bidmad-Unreal/archive/master.zip)
 
 ## Get started
-### 1. Requirements 
-
-|OS|Version|Note|
-|---|---|---|
-|Android|TargetSDK 30 / MinSDK 21||
-|iOS|Target iOS 12 / Xcode 13||
-
-### 2. Plugin addition and setting
+### 1. Plugin addition and setting
 Copy the folder and file of **Plugins/BidmadPlugin** included in the downloaded sample project to the Plugins folder of the project to which the plugin will be applied.<br>
 And, add BidmadPlugin to PublicDependencyModuleNames.AddRange declared in the **Source/Project.Build.cs** file in the project.
 
@@ -21,7 +14,19 @@ And, add BidmadPlugin to PublicDependencyModuleNames.AddRange declared in the **
 PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "BidmadPlugin" });
 ```
 
-#### 2.1 iOS settings
+#### 1.1 Android 설정
+
+For AOS, additional settings are required in AndroidManifest.xml for Admob Application ID settings. <br>
+*Check the value of com.google.android.gms.ads.APPLICATION_ID in the Admob dashboard.
+
+
+1. Edit → ProjectSettings → Platform-Android → Advance APK Package → Extra Settings for <application> section, add the project settings by putting the following values : <br>
+![Bidmad-AOS-Guide-1](https://i.imgur.com/kUhtsXg.png)<br>
+```
+<meta-data \n android:name="com.google.android.gms.ads.APPLICATION_ID" \n android:value="Your GAID"/>
+```
+
+#### 1.2 iOS settings
 
 For iOS setup, additional steps are required.<br>
 ​*Please refer to the following link if you need a guide on Apple Store Privacy Survey: [Link](https://github.com/bidmad/Bidmad-Unreal/wiki/Apple-privacy-survey%5BKOR%5D).
@@ -595,6 +600,18 @@ For iOS setup, additional steps are required.<br>
 
 ![Bidmad-iOS-Guide-4](https://i.imgur.com/UhdG6dG.png)<br>
 
+### 2. BidmadSDK Initialization (v1.5.0 or above)
+
+Performs tasks required to run BidmadSDK. The SDK won't allow ads to load unless you call the initializeSdk method.<br>
+The initializeSdk method receives the App Key as a parameter, and the App Key can be copied from ADOP Insight. You can get the App Key by referring to the [Find your App Key](https://github.com/bidmad/SDK/wiki/Find-your-app-key%5BEN%5D) guide.<br>
+Before loading ads, call the initializeSdk method as shown in the following example at the beginning of app.
+
+![InitializeSdkUnrealWithoutCallback](https://i.imgur.com/0ZxacUu.jpg)
+
+Or, you can check the initialization status by calling initializeSdkWithCallback
+
+![InitializeSdkUnrealWithCallback](https://i.imgur.com/IVgftHM.jpg)
+
 ### 3. Interstitial
 
 The following is how to request (Load) an interstitial advertisement and show the advertisement through the plugin.<br>
@@ -702,11 +719,23 @@ When obtaining app tracking transparency consent through a method other than Req
 
 ![CommonSetAdvertiserTrackingEnabled](https://i.imgur.com/duXWELF.png)
 
-#### 5.2 GetAdvertiserTrackingEnabled
+#### 5.4 GetAdvertiserTrackingEnabled
 
 Check the value set through SetAdvertiserTrackingEnabled.
 
 ![CommonGetAdvertiserTrackingEnabled](https://i.imgur.com/Dpg5T23.png)
+
+#### 5.5 SetCUID 
+
+Set the customer id for server-side callbacks
+
+![CommonSetCUID](https://i.imgur.com/r0Qgcvg.jpg)
+
+#### 5.6 SetChildDirected
+
+Set if your app is for child or not
+
+![CommonSetChildDirected](https://i.imgur.com/pa9cb2d.jpg)
 
 #### References
 - Unreal GDPR Guide [KOR](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BKOR%5D) | [ENG](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BENG%5D)

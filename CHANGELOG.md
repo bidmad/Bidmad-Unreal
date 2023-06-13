@@ -1,7 +1,22 @@
+v.1.5.0
+-------------
+*Unreal<br>
+-(CommonInterface)InitializeSdk Method added<br>
+-(CommonInterface)SetCUID / SetChildDirected Method added<br>
+-Improve Monitoring related functions<br>
+-Error Code Support For Ad Failure<br>
+*Android<br>
+-Update BidmadSDK 3.6.0<br>
+-Android target Api Level 33 Support<br>
+-AdNetwork support (PubMatic)<br><br>
+*iOS<br>
+-Update BidmadSDK 6.2.1<br>
+-AdNetwork support (Teads, PubMatic, Pangle)
+
 v.1.4.1
 -------------
 *Android<br>
--Fix Bugs
+-Fix Bugs<br>
 -Update BidmadSDK 2.7.0.0<br><br>
 *iOS<br>
 -Update BidmadSDK 4.5.0.0<br>
@@ -9,7 +24,7 @@ v.1.4.1
 v.1.4.0
 -------------
 *Unreal<br>
--Update callback interface to work in C++ code<br>
+-Update callback interface to work in C++ code<br><br>
 -Change ATT Callback Name<br><br>
 *Android<br>
 -Update Ad Network Library Version<br>

@@ -6,22 +6,26 @@ Plugin을 사용하여 Unreal 모바일 앱에서 전면 / 보상형 광고를 �
 - [최신 버전 및 샘플 프로젝트 다운로드](https://github.com/bidmad/Bidmad-Unreal/archive/master.zip)
 
 ## 시작하기
-### 1. 요구 사항 
-
-|OS|버전|참고사항|
-|---|---|---|
-|Android|TargetSDK 30 / MinSDK 21||
-|iOS|Target iOS 12 / Xcode 13||
-
-### 2. Plugin 추가 및 설정
+### 1. Plugin 추가 및 설정
 샘플 프로젝트에 포함된 **Plugins/BidmadPlugin**의 폴더와 파일을 Plugin을 적용할 프로젝트의 Plugins폴더로 복사합니다.<br>
 그리고, 프로젝트 내 **Source/프로젝트.Build.cs**파일에 선언된 PublicDependencyModuleNames.AddRange에 BidmadPlugin을 추가합니다.
 
 ```
 PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "BidmadPlugin" });
 ```
+#### 1.1 Android 설정
 
-#### 2.1 iOS 설정
+AOS의 경우 Admob Application ID Settings 을 위한 AndroidManifest.xml에 추가 설정이 필요합니다. <br>
+*com.google.android.gms.ads.APPLICATION_ID의 value는 Admob 대시보드에서 확인 바랍니다.
+
+
+1. Edit → ProjectSettings → Platform-Android → Advance APK Package → Extra Settings for <application> section 에서, 다음과 같은 값을 넣어 프로젝트 설정을 추가합니다. <br>
+![Bidmad-AOS-Guide-1](https://i.imgur.com/kUhtsXg.png)<br>
+```
+<meta-data \n android:name="com.google.android.gms.ads.APPLICATION_ID" \n android:value="Your GAID"/>
+```
+
+#### 1.2 iOS 설정
 
 iOS의 경우 아래와 같이 추가 프로젝트 설정이 필요합니다.<br>
 ​*Apple Store에서 요구하는 개인정보 보호에 관한 가이드가 필요한 경우 [이곳](https://github.com/bidmad/Bidmad-Unreal/wiki/Apple-privacy-survey%5BKOR%5D)을 참고하세요.
@@ -595,6 +599,18 @@ iOS의 경우 아래와 같이 추가 프로젝트 설정이 필요합니다.<br
 
 ![Bidmad-iOS-Guide-4](https://i.imgur.com/UhdG6dG.png)<br>
 
+### 2. BidmadSDK 초기화 (v1.5.0 이상)
+
+BidmadSDK 실행에 필요한 작업을 수행합니다. initializeSdk 메서드를 호출하지 않은 경우, SDK는 광고 로드를 허용하지 않습니다.<br>
+initializeSdk 메서드는 ADOP Insight 에서 확인가능한 App Key를 인자값으로 받고 있습니다. App Key는 [App Key 찾기](https://github.com/bidmad/SDK/wiki/Find-your-app-key%5BKR%5D) 가이드를 참고해 가져올 수 있습니다.<br>
+광고를 로드하기 전, 앱 실행 초기에 다음 예시와 같이 initializeSdk 메서드를 호출해주십시오.
+
+![InitializeSdkUnrealWithoutCallback](https://i.imgur.com/0ZxacUu.jpg)
+
+혹은, initializeSdkWithCallback 메서드를 호출해 SDK의 초기화 여부를 확인할 수 있습니다.
+
+![InitializeSdkUnrealWithCallback](https://i.imgur.com/IVgftHM.jpg)
+
 ### 3. Interstitial
 
 Plugin을 통해 전면 광고를 요청(Load)하고 광고를 노출(Show)하는 방법은 다음과 같습니다.<br>
@@ -692,18 +708,30 @@ iOS 14에서 앱 추적 투명성 동의 팝업을 노출 시키고, 그에 대�
 
 ![CommonReqAdTrackingAuthorization](https://i.imgur.com/m5IosKZ.png)
 
-#### 5.2 SetAdvertiserTrackingEnabled
+#### 5.3 SetAdvertiserTrackingEnabled
 
 Plugin에서 제공하는 ReqAdTrackingAuthorization이 아닌 다른 방법을 통해 앱 추적 투명성 동의를 얻는 경우,
 <br>사용자가 동의했다면 True, 거부했다면 False를 SetAdvertiserTrackingEnabled를 통해 전달하세요.
 
 ![CommonSetAdvertiserTrackingEnabled](https://i.imgur.com/duXWELF.png)
 
-#### 5.2 GetAdvertiserTrackingEnabled
+#### 5.4 GetAdvertiserTrackingEnabled
 
 SetAdvertiserTrackingEnabled을 통해 세팅한 값을 확인합니다.
 
 ![CommonGetAdvertiserTrackingEnabled](https://i.imgur.com/Dpg5T23.png)
+
+#### 5.5 SetCUID 
+
+서버 사이드 콜백을 위한 CUID 설정
+
+![CommonSetCUID](https://i.imgur.com/r0Qgcvg.jpg)
+
+#### 5.6 SetChildDirected
+
+어린이 사용이 가능한 앱인지 설정
+
+![CommonSetChildDirected](https://i.imgur.com/pa9cb2d.jpg)
 
 #### References
 - Unreal GDPR Guide [KOR](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BKOR%5D) | [ENG](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BENG%5D)
