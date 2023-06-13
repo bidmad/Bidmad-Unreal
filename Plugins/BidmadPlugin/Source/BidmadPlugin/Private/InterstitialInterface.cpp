@@ -3,7 +3,6 @@
 DEFINE_LOG_CATEGORY(FBidmadInterstitial);
 
 TMap <FString, UInterstitialInterface*> UInterstitialInterface::mInterstitialInterfaceMap;
-
 UInterstitialInterface::UInterstitialInterface()
 {
     // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -26,7 +25,7 @@ void UInterstitialInterface::BeginPlay()
 void UInterstitialInterface::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+    
     // ...
 }
 
@@ -37,13 +36,12 @@ void UInterstitialInterface::InitInterstitial(FString androidZoneId, FString ios
     checkf(!iosZoneId.IsEmpty(), TEXT("[UInterstitialInterface::InitInterstitial] ZoneId is Empty #####"));
     #else
     if(androidZoneId.IsEmpty() || androidZoneId.IsEmpty()){
-        UE_LOG(FBidmadInterstitial, Error, TEXT("[UInterstitialInterface::InitInterstitial] ZoneId is Empty #####"));
-    }
+        UE_LOG(FBidmadInterstitial, Error, TEXT("[UInterstitialInterface::InitInterstitial] ZoneId is Empty #####"));    }
     #endif
 
     #if PLATFORM_ANDROID
     mZoneId = androidZoneId;
-    #else //PLATFORM_IOS 
+    #elif PLATFORM_IOS 
     mZoneId = iosZoneId;
     #endif
 
@@ -59,8 +57,6 @@ void UInterstitialInterface::InitInterstitial(FString androidZoneId, FString ios
     NewiOSInstance();
     #endif
     
-    SetAdInfo(); //AOS&iOS
-
     mInterstitialInterfaceMap.Add(mId, this);
     
     #if PLATFORM_ANDROID
@@ -79,12 +75,15 @@ void UInterstitialInterface::GetInstance() {
     #if PLATFORM_ANDROID
     mEnv = FAndroidApplication::GetJavaEnv();
     
-    mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/interstitial/UnrealInterstitial");
-    
-    jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;)Lad/helper/openbidding/interstitial/UnrealInterstitial;", false);
+    mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/interstitial/UnrealInterstitial");    
+    jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;Ljava/lang/String;)Lad/helper/openbidding/interstitial/UnrealInterstitial;", false);
 
     jstring _mId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mId));
-    mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _mId);
+    jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
+
+    mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _zoneId, _mId);
+    
+    mEnv->DeleteLocalRef(_zoneId);
     mEnv->DeleteLocalRef(_mId);
     #elif PLATFORM_IOS
     unrealInterstitial = [[BidmadInterstitialInterface getSharedInstance] getInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mId)]];
@@ -94,6 +93,8 @@ void UInterstitialInterface::GetInstance() {
 //Only Android Funtion START
 #if PLATFORM_ANDROID
 void UInterstitialInterface::SetActivity() {
+        UE_LOG(FBidmadInterstitial, Error, TEXT("[UInterstitialInterface::InitInterstitial] SetActivity #####"));
+
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setActivity", "(Landroid/app/Activity;)V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet, FAndroidApplication::GetGameActivityThis());
 }
@@ -109,20 +110,6 @@ void UInterstitialInterface::DeleteRefMember(){
     mEnv->DeleteLocalRef(mJCls);
 }
 #endif
-//Only Android Funtion END
-
-void UInterstitialInterface::SetAdInfo() {
-    #if PLATFORM_ANDROID
-    jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
-    jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setAdInfo", "(Ljava/lang/String;)V", false);
-
-    FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet, _zoneId);
-    
-    mEnv->DeleteLocalRef(_zoneId);
-    #elif PLATFORM_IOS
-    [unrealInterstitial setZoneID:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
-    #endif
-}
 
 void UInterstitialInterface::Load() {
     GetInstance();
@@ -186,6 +173,7 @@ void UInterstitialInterface::BindEventToOnClose(const FOnBidmadInterstitialClose
     OnCloseDelegate = OnClose;
 }
 
+
 #if PLATFORM_ANDROID
 extern "C"{
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
@@ -205,7 +193,7 @@ extern "C"{
 
             UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[fUnrealId];
         
-            if(interstitial != nullptr){
+            if(IsValid(interstitial)){
                 interstitial->OnLoadDelegate.ExecuteIfBound(fZoneId);
             }
         }
@@ -214,7 +202,7 @@ extern "C"{
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onShowAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
         if(str1 == NULL || str2 == NULL){
             return;
-        }
+        }        
         
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
         FString fZoneId = FString(zoneId);
@@ -227,14 +215,14 @@ extern "C"{
         if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(fUnrealId)){
             UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[fUnrealId];
 
-            if(interstitial != nullptr){
-                interstitial->OnShowDelegate.ExecuteIfBound(zoneId);
+            if(IsValid(interstitial)){
+                interstitial->OnShowDelegate.ExecuteIfBound(fZoneId);
                 interstitial->Load(); //Ad Reload
             }
         }
     }
 
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onFailedAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadFailAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2, jstring error){
         if(str1 == NULL || str2 == NULL){
             return;
         }
@@ -247,12 +235,17 @@ extern "C"{
         FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
 
+        const char *errorInfo = env->GetStringUTFChars(error, NULL);
+        FString fError = FString(errorInfo);
+        env->ReleaseStringUTFChars(error, errorInfo);
+
         if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(fUnrealId)){
             UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[fUnrealId];
 
-            if(interstitial != nullptr){
-                interstitial->OnFailDelegate.ExecuteIfBound(zoneId);
+            if(IsValid(interstitial)){
+                interstitial->OnFailDelegate.ExecuteIfBound(fZoneId, fError);
             }
+
         }
     }
 
@@ -272,8 +265,8 @@ extern "C"{
         if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(fUnrealId)){
             UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[fUnrealId];
 
-            if(interstitial != nullptr){
-                interstitial->OnCloseDelegate.ExecuteIfBound(zoneId);
+            if(IsValid(interstitial)){
+                interstitial->OnCloseDelegate.ExecuteIfBound(fZoneId);
             }
         }
     }
@@ -307,7 +300,7 @@ extern "C"{
     if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
         UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
 
-        if(interstitial != nullptr){
+        if(IsValid(interstitial)){
             interstitial->OnCloseDelegate.ExecuteIfBound(mZoneId);
         }
     }
@@ -316,10 +309,8 @@ extern "C"{
     if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
         UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
 
-        if(interstitial != nullptr){
+        if(IsValid(interstitial)){
             interstitial->OnShowDelegate.ExecuteIfBound(mZoneId);
-            interstitial->InitInterstitial(nil, mZoneId);
-            interstitial->Load(); //Ad Reload
         }
     }
 }
@@ -327,17 +318,17 @@ extern "C"{
     if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
         UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
 
-        if(interstitial != nullptr){
+        if(IsValid(interstitial)){
             interstitial->OnLoadDelegate.ExecuteIfBound(mZoneId);
         }
     }
 }
-- (void)bidmadInterstitialUEAllFail:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+- (void)bidmadInterstitialUEAllFail:(NSString * _Nullable)mZoneId errorReason:(NSString *)reason uuid:(NSString * _Nullable)uuid {
     if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
         UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
 
-        if(interstitial != nullptr){
-            interstitial->OnFailDelegate.ExecuteIfBound(mZoneId);
+        if(IsValid(interstitial)){
+            interstitial->OnFailDelegate.ExecuteIfBound(mZoneId, reason);
         }
     }
 }

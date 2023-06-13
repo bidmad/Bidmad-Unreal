@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	<init>
+		<log text="Bidmad Plugin Init"/>
+	</init>
+
+	<androidManifestUpdates>
+		<addPermission android:name="android.permission.ACCESS_WIFI_STATE"/>
+		<addPermission android:name="android.permission.INTERNET"/>
+		<addPermission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+		<addPermission android:name="android.permission.WAKE_LOCK"/>
+		<addPermission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+	</androidManifestUpdates>
+
+	<gradleProperties>
+		<insert>
+			android.useAndroidX=true
+			android.enableJetifier=true
+		</insert>
+	</gradleProperties>
+
+	<buildGradleAdditions>
+		<insert>
+		allprojects {
+		    repositories {
+		    	google()
+		        jcenter()
+		        mavenCentral()
+		        flatDir{
+		            dirs "libs"
+		        }
+				maven { url "https://devrepo.kakao.com/nexus/content/groups/public/" } //Adift
+				maven { url "https://bidmad-sdk.s3.amazonaws.com/" } //bidmad
+				maven { url "https://sdk.tapjoy.com/" } //Tapjoy
+				maven { url "https://artifact.bytedance.com/repository/pangle" } //Pangle
+				maven { url 'https://jitpack.io' } //adpie
+				maven { url "https://android-sdk.is.com/" } //ironsource
+				maven { url 'https://repo.pubmatic.com/artifactory/public-repos' } //PubMatic
+		    }
+		}
+
+		dependencies {
+		    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    		implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    		implementation "androidx.appcompat:appcompat:1.2.0"
+    		implementation 'ad.helper.openbidding:admob-obh:3.6.2'
+		    implementation 'com.adop.sdk:bidmad-androidx:3.6.0'
+		    implementation 'com.adop.adapter.fc:fcNetwork-adapter:3.6.0'
+    		implementation 'com.adop.adapter.fnc:fncNetwork-adapter:3.6.0'
+		}
+
+		android {
+		    compileOptions {
+	        	sourceCompatibility JavaVersion.VERSION_1_8
+	        	targetCompatibility JavaVersion.VERSION_1_8
+			}
+		    defaultConfig {
+		        multiDexEnabled true
+    		}
+		}
+		</insert>
+	</buildGradleAdditions>
+
+
+	<proguardAdditions>   
+		<insert>
+			<![CDATA[
+-keep class com.adop.sdk.** { *; }
+-keep class ad.helper.openbidding.** { *; }
+-keep class com.adop.adapter.fc.** { *; }
+-keep class com.adop.adapter.fnc.** { *; }
+-keepnames class * implements java.io.Serializable
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    !static !transient <fields>;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+# Pangle
+-keep class com.bytedance.sdk.** { *; }
+-keep class com.bykv.vk.openvk.component.video.api.** { *; }
+# Tapjoy
+-keep class com.tapjoy.** { *; }
+-keep class com.moat.** { *; }
+-keepattributes JavascriptInterface
+-keepattributes *Annotation*
+-keep class * extends java.util.ListResourceBundle {
+protected Object[][] getContents();
+}
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+public static final *** NULL;
+}
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+@com.google.android.gms.common.annotation.KeepName *;
+}
+-keepnames class * implements android.os.Parcelable {
+public static final ** CREATOR;
+}
+-keep class com.google.android.gms.ads.identifier.** { *; }
+-dontwarn com.tapjoy.**
+			]]>
+		</insert>
+	</proguardAdditions>
+</root>
+

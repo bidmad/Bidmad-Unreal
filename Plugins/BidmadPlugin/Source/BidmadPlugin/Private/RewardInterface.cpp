@@ -61,8 +61,6 @@ void URewardInterface::InitReward(FString androidZoneId, FString iosZoneId)
     NewiOSInstance();
     #endif
     
-    SetAdInfo(); //AOS&iOS
-    
     mRewardInterfaceMap.Add(mId, this);
 
     #if PLATFORM_ANDROID
@@ -83,10 +81,13 @@ void URewardInterface::GetInstance() {
     
     mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/reward/UnrealReward");
 
-    jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;)Lad/helper/openbidding/reward/UnrealReward;", false);
+    jmethodID midGet = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Ljava/lang/String;Ljava/lang/String;)Lad/helper/openbidding/reward/UnrealReward;", false);
 
     jstring _mId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mId));
-    mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _mId);
+    jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
+    mJObj = mEnv->CallStaticObjectMethod(mJCls, midGet, _zoneId, _mId);
+
+    mEnv->DeleteLocalRef(_zoneId);
     mEnv->DeleteLocalRef(_mId);
     #elif PLATFORM_IOS
     unrealReward = [[BidmadRewardInterface getSharedInstance] getInstance:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mId)]];
@@ -110,20 +111,6 @@ void URewardInterface::DeleteRefMember(){
     mEnv->DeleteLocalRef(mJCls);
 }
 #endif
-//Only Android Funtion END
-
-void URewardInterface::SetAdInfo() {
-#if PLATFORM_ANDROID
-    jstring _zoneId = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mZoneId));
-    jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setAdInfo", "(Ljava/lang/String;)V", false);
-
-    FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet, _zoneId);
-    
-    mEnv->DeleteLocalRef(_zoneId);
-    #elif PLATFORM_IOS
-    [unrealReward setZoneID:[NSString stringWithUTF8String: TCHAR_TO_UTF8(*mZoneId)]];
-    #endif
-}
 
 void URewardInterface::Load() {
     GetInstance();
@@ -210,8 +197,8 @@ extern "C"{
         if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
             URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
             
-            if(reward != nullptr){
-                reward->OnLoadDelegate.ExecuteIfBound(zoneId);
+            if(IsValid(reward)){
+                reward->OnLoadDelegate.ExecuteIfBound(fZoneId);
             }
         }
     }
@@ -232,31 +219,32 @@ extern "C"{
         if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
             URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
             
-            if(reward != nullptr){
-                reward->OnShowDelegate.ExecuteIfBound(zoneId);
+            if(IsValid(reward)){
+                reward->OnShowDelegate.ExecuteIfBound(fZoneId);
                 reward->Load(); //Ad Reload
             }
         }
     }
 
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onFailedAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadFailAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2, jstring error){
         if(str1 == NULL || str2 == NULL){
             return;
         }
-
         const char *zoneId = env->GetStringUTFChars(str1, NULL);
         FString fZoneId = FString(zoneId);
         env->ReleaseStringUTFChars(str1, zoneId);
-
         const char *unrealId = env->GetStringUTFChars(str2, NULL);
         FString fUnrealId = FString(unrealId);
         env->ReleaseStringUTFChars(str2, unrealId);
+        const char *errorInfo = env->GetStringUTFChars(error, NULL);
+        FString fError = FString(errorInfo);
+        env->ReleaseStringUTFChars(error, errorInfo);
 
         if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
             URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
-            
-            if(reward != nullptr){
-                reward->OnFailDelegate.ExecuteIfBound(zoneId);
+
+            if(IsValid(reward)){
+                reward->OnFailDelegate.ExecuteIfBound(fZoneId, fError);
             }
         }
     }
@@ -277,8 +265,8 @@ extern "C"{
         if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
             URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
             
-            if(reward != nullptr){
-                reward->OnCompleteDelegate.ExecuteIfBound(zoneId);
+            if(IsValid(reward)){
+                reward->OnCompleteDelegate.ExecuteIfBound(fZoneId);
             }
         }
     }
@@ -299,8 +287,8 @@ extern "C"{
         if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
             URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
             
-            if(reward != nullptr){
-                reward->OnCloseDelegate.ExecuteIfBound(zoneId);
+            if(IsValid(reward)){
+                reward->OnCloseDelegate.ExecuteIfBound(fZoneId);
             }
         }
     }
@@ -321,8 +309,8 @@ extern "C"{
         if(URewardInterface::mRewardInterfaceMap.Contains(fUnrealId)){
             URewardInterface* reward = URewardInterface::mRewardInterfaceMap[fUnrealId];
             
-            if(reward != nullptr){
-                reward->OnSkipDelegate.ExecuteIfBound(zoneId);
+            if(IsValid(reward)){
+                reward->OnSkipDelegate.ExecuteIfBound(fZoneId);
             }
         }
     }
@@ -355,7 +343,7 @@ extern "C"{
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
-        if(reward != nullptr){
+        if(IsValid(reward)){
             reward->OnSkipDelegate.ExecuteIfBound(mZoneId);
         }
     }
@@ -364,7 +352,7 @@ extern "C"{
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
-        if(reward != nullptr){
+        if(IsValid(reward)){
             reward->OnCompleteDelegate.ExecuteIfBound(mZoneId);
         }
     }
@@ -373,7 +361,7 @@ extern "C"{
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
-        if(reward != nullptr){
+        if(IsValid(reward)){
             reward->OnCloseDelegate.ExecuteIfBound(mZoneId);
         }
     }
@@ -382,10 +370,8 @@ extern "C"{
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
-        if(reward != nullptr){
+        if(IsValid(reward)){
             reward->OnShowDelegate.ExecuteIfBound(mZoneId);
-            reward->InitReward(nil, mZoneId);
-            reward->Load(); //Ad Reload
         }
     }
 }
@@ -393,17 +379,17 @@ extern "C"{
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
-        if(reward != nullptr){
+        if(IsValid(reward)){
             reward->OnLoadDelegate.ExecuteIfBound(mZoneId);
         }
     }
 }
-- (void)bidmadRewardUEAllFail:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+- (void)bidmadRewardUEAllFail:(NSString * _Nullable)mZoneId errorReason:(NSString * _Nullable)reason uuid:(NSString * _Nullable)uuid {
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
-        if(reward != nullptr){
-            reward->OnFailDelegate.ExecuteIfBound(mZoneId);
+        if(IsValid(reward)){
+            reward->OnFailDelegate.ExecuteIfBound(mZoneId, reason);
         }
     }
 }

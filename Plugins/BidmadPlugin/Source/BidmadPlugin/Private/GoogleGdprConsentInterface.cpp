@@ -171,7 +171,7 @@ void UGoogleGdprConsentInterface::DeleteRefMember(){
 extern "C"{
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentInfoUpdateSuccessCb(JNIEnv *env, jobject obj){
 
-        if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+        if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
             UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateSuccess.Broadcast();
         }
     }
@@ -182,14 +182,14 @@ extern "C"{
         FString fMsg = FString(msg);
         env->ReleaseStringUTFChars(errorMsg, msg);
 
-        if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+        if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
             UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateFailure.Broadcast(fMsg);
         }
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormLoadSuccessCb(JNIEnv *env, jobject obj){
 
-        if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+        if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
             UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadSuccess.Broadcast();
         }
     }
@@ -200,7 +200,7 @@ extern "C"{
         FString fMsg = FString(msg);
         env->ReleaseStringUTFChars(errorMsg, msg);
 
-        if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+        if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
             UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadFailure.Broadcast(fMsg);
         }
     }
@@ -211,7 +211,7 @@ extern "C"{
         FString fMsg = FString(msg);
         env->ReleaseStringUTFChars(errorMsg, msg);
 
-        if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+        if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
             UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormDismissed.Broadcast(fMsg);
         }
     }
@@ -275,34 +275,34 @@ extern "C"{
 //Bidmad Callback
 
 - (void)onConsentFormDismissed:(NSError *)formError {
-    if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+    if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
         FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
         UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormDismissed.Broadcast(FormErrorDescription);
     }
 }
 
 - (void)onConsentFormLoadFailure:(NSError *)formError {
-    if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+    if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
         FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
         UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadFailure.Broadcast(FormErrorDescription);
     }
 }
 
 - (void)onConsentFormLoadSuccess {
-    if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+    if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
         UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadSuccess.Broadcast();
     }
 }
 
 - (void)onConsentInfoUpdateFailure:(NSError *)formError {
-    if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+    if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
         FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
         UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateFailure.Broadcast(FormErrorDescription);
     }
 }
 
 - (void)onConsentInfoUpdateSuccess {
-    if(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface != nullptr){
+    if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
         UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateSuccess.Broadcast();
     }
 }

@@ -1,0 +1,6 @@
+framework module ADOPUtility {
+  umbrella header "ADOPUtility.h"
+
+  export *
+  module * { export * }
+}

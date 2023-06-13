@@ -25,7 +25,7 @@ DECLARE_LOG_CATEGORY_EXTERN(FBidmadInterstitial, Log, All);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadInterstitialLoadDelegate, const FString&, ZoneId);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadInterstitialShowDelegate, const FString&, ZoneId);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadInterstitialFailDelegate, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBidmadInterstitialFailDelegate, const FString&, ZoneId, const FString&, ErrorReason);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadInterstitialCloseDelegate, const FString&, ZoneId);
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Bidmad), meta=(BlueprintSpawnableComponent))
@@ -49,7 +49,6 @@ private:
 #endif
     void NewiOSInstance();
     void GetInstance();
-    void SetAdInfo();
     FString mZoneId;
     FString mId;
 public:
@@ -88,7 +87,7 @@ public:
 extern "C"{
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadAdCb(JNIEnv *, jobject, jstring, jstring);
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onShowAdCb(JNIEnv *, jobject, jstring, jstring);
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onFailedAdCb(JNIEnv *, jobject, jstring, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadFailAdCb(JNIEnv *, jobject, jstring, jstring, jstring);
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onCloseAdCb(JNIEnv *, jobject, jstring, jstring);
 }
 #elif PLATFORM_IOS

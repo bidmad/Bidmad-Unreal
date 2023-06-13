@@ -12,11 +12,13 @@
 #endif
 
 #if PLATFORM_IOS
+
 #include "IOS/IOSAppDelegate.h"
 #include <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #pragma clang diagnostic ignored "-Wobjc-property-no-attribute"
 #import <OpenBiddingHelper/OpenBiddingHelper.h>
+
 #endif
 
 #include "RewardInterface.generated.h"
@@ -25,7 +27,7 @@ DECLARE_LOG_CATEGORY_EXTERN(FBidmadReward, Log, All);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardLoadDelegate, const FString&, ZoneId);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardShowDelegate, const FString&, ZoneId);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardFailDelegate, const FString&, ZoneId);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBidmadRewardFailDelegate, const FString&, ZoneId, const FString&, ErrorReason);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardCompleteDelegate, const FString&, ZoneId);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardCloseDelegate, const FString&, ZoneId);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnBidmadRewardSkipDelegate, const FString&, ZoneId);
@@ -51,7 +53,6 @@ private:
 #endif
     void NewiOSInstance();
     void GetInstance();
-    void SetAdInfo();
     FString mZoneId;
     FString mId;
 public:
@@ -96,7 +97,7 @@ public:
 extern "C"{
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadAdCb(JNIEnv *, jobject, jstring, jstring);
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onShowAdCb(JNIEnv *, jobject, jstring, jstring);
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onFailedAdCb(JNIEnv *, jobject, jstring, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadFailAdCb(JNIEnv *, jobject, jstring, jstring, jstring);
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCompleteAdCb(JNIEnv *, jobject, jstring, jstring);
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCloseAdCb(JNIEnv *, jobject, jstring, jstring);
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onSkippedAdCb(JNIEnv *, jobject, jstring, jstring);

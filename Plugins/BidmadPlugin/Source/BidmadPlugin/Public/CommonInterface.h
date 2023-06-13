@@ -25,6 +25,7 @@
 DECLARE_LOG_CATEGORY_EXTERN(FBidmadCommon, Log, All);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAdTrackingAuthorizationResponse, const EBidmadTrackingAuthorizationStatus, Response);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FInitializeSdkCallback, bool, isInitialized);
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Bidmad), meta=(BlueprintSpawnableComponent))
 class BIDMADPLUGIN_API UCommonInterface : public USceneComponent
@@ -33,6 +34,9 @@ class BIDMADPLUGIN_API UCommonInterface : public USceneComponent
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+private: 
+	FString mAppKey;
+	FString mCUID;
 public:
     static UCommonInterface* mCommonInterface;
 	// Sets default values for this component's properties
@@ -41,8 +45,18 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	//Bidmad Function
+    UFUNCTION(BlueprintCallable,Category="BidmadCommon")
+    void InitializeSdkWithCallback(FString androidAppKey, FString iosAppKey);
+    UFUNCTION(BlueprintCallable,Category="BidmadCommon")
+    void BindEventToOnInitializeSdk(const FInitializeSdkCallback& OnInitializeSdk);
+    UFUNCTION(BlueprintCallable,Category="BidmadCommon")
+    void InitializeSdk(FString androidAppKey, FString iosAppKey);
 	UFUNCTION(BlueprintCallable,Category="BidmadCommon")
     void SetDebugging(bool isDebugMod);
+	UFUNCTION(BlueprintCallable,Category="BidmadCommon")
+    void SetCUID(FString id);
+	UFUNCTION(BlueprintCallable,Category="BidmadCommon")
+    void SetChildDirected(bool childDirect);
     UFUNCTION(BlueprintCallable,Category="BidmadCommon")
     void ReqAdTrackingAuthorization();
     UFUNCTION(BlueprintCallable,Category="BidmadCommon")
@@ -57,10 +71,14 @@ public:
     //Bidmad Callback
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadCommon")
 	FOnAdTrackingAuthorizationResponse OnAdTrackingAuthorizationResponse;
+    
+    FInitializeSdkCallback InitializeSdkCallback;
 };
 
 #if PLATFORM_ANDROID
-
+extern "C"{
+	JNIEXPORT void JNICALL Java_ad_helper_openbidding_BidmadCommon_onInitializedCb(JNIEnv *, jobject, jboolean);
+}
 #elif PLATFORM_IOS
 @interface BidmadCommonInterface : NSObject <BIDMADUnrealCommonDelegate>{}
 +(BidmadCommonInterface *) getSharedInstance;

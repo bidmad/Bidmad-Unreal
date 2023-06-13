@@ -5,54 +5,54 @@ using UnrealBuildTool;
 
 public class BidmadPlugin : ModuleRules
 {
-	public BidmadPlugin(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+    public BidmadPlugin(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
         //PrivatePCHHeaderFile = "Public/BidmadPluginPCH.h";
         
-		PublicIncludePaths.AddRange(
-			new string[] {
-				// ... add public include paths required here ...
+        PublicIncludePaths.AddRange(
+            new string[] {
+                // ... add public include paths required here ...
                 Path.Combine(ModuleDirectory, "Public"),
-			}
-		);
-				
-		
-		PrivateIncludePaths.AddRange(
-			new string[] {
-				// ... add other private include paths required here ...
+            }
+        );
+                
+        
+        PrivateIncludePaths.AddRange(
+            new string[] {
+                // ... add other private include paths required here ...
                 Path.Combine(ModuleDirectory, "Private"),
-			}
-		);
-			
-		
-		PublicDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"Core",
-				// ... add other public dependencies that you statically link with here ...
-			}
-		);
-			
-		
-		PrivateDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"CoreUObject",
-				"Engine",
-				"Slate",
-				"SlateCore",
-				// ... add private dependencies that you statically link with here ...	
-			}
-		);
-		
-		
-		DynamicallyLoadedModuleNames.AddRange(
-			new string[]
-			{
-				// ... add any modules that your module loads dynamically here ...
-			}
-		);
+            }
+        );
+            
+        
+        PublicDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "Core",
+                // ... add other public dependencies that you statically link with here ...
+            }
+        );
+            
+        
+        PrivateDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "CoreUObject",
+                "Engine",
+                "Slate",
+                "SlateCore",
+                // ... add private dependencies that you statically link with here ...  
+            }
+        );
+        
+        
+        DynamicallyLoadedModuleNames.AddRange(
+            new string[]
+            {
+                // ... add any modules that your module loads dynamically here ...
+            }
+        );
             
         if (Target.Platform == UnrealTargetPlatform.Android)
         {
@@ -63,16 +63,21 @@ public class BidmadPlugin : ModuleRules
             );
 
             string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
-            AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(PluginPath, "Bidmad_UPL.xml"));
+            AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(PluginPath, "Bidmad_AOS_UPL.xml"));
         }else if (Target.Platform == UnrealTargetPlatform.IOS){
+            AdditionalPropertiesForReceipt.Add("IOSPlugin", Path.Combine(ModuleDirectory, "Bidmad_IOS_UPL.xml"));
 
-            string PluginPathIOS = Path.GetFullPath(Path.Combine(ModuleDirectory, "../.."));
-            PublicIncludePaths.Add(Path.Combine(PluginPathIOS, "ThirdParty/IOS/PromisesObjCHeaders"));
 
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "PromisesObjC",
-                    "../../ThirdParty/IOS/PromisesObjC.embeddedframework.zip"
+                    "UnityAds",
+                    "../../ThirdParty/IOS/UnityAds.embeddedframework.zip"
+                )
+            );
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "FBLPromises",
+                    "../../ThirdParty/IOS/FBLPromises.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
@@ -83,14 +88,8 @@ public class BidmadPlugin : ModuleRules
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "BidmadAdapterFC",
-                    "../../ThirdParty/IOS/BidmadAdapterFC.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "BidmadAdapterFNC",
-                    "../../ThirdParty/IOS/BidmadAdapterFNC.embeddedframework.zip"
+                    "BidmadAdapterDynamic",
+                    "../../ThirdParty/IOS/BidmadAdapterDynamic.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
@@ -105,11 +104,10 @@ public class BidmadPlugin : ModuleRules
                     "../../ThirdParty/IOS/BidmadSDK.embeddedframework.zip"
                 )
             );
-
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "UnityAdapter",
-                    "../../ThirdParty/IOS/UnityAdapter.embeddedframework.zip"
+                    "AdFitSDK",
+                    "../../ThirdParty/IOS/AdFitSDK.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
@@ -139,14 +137,14 @@ public class BidmadPlugin : ModuleRules
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "BURelyAdSDK",
-                    "../../ThirdParty/IOS/BURelyAdSDK.embeddedframework.zip"
+                    "FrameworkWrapper",
+                    "../../ThirdParty/IOS/FrameworkWrapper.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "BURelyFoundation_Global",
-                    "../../ThirdParty/IOS/BURelyFoundation_Global.embeddedframework.zip"
+                    "BURelyAdSDK",
+                    "../../ThirdParty/IOS/BURelyAdSDK.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
@@ -157,14 +155,8 @@ public class BidmadPlugin : ModuleRules
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "BUFoundation",
-                    "../../ThirdParty/IOS/BUFoundation.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "BUVAAuxiliary",
-                    "../../ThirdParty/IOS/BUVAAuxiliary.embeddedframework.zip"
+                    "FBAudienceNetwork",
+                    "../../ThirdParty/IOS/FBAudienceNetwork.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
@@ -236,19 +228,6 @@ public class BidmadPlugin : ModuleRules
             );
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "PAGAdSDK",
-                    "../../ThirdParty/IOS/PAGAdSDK.embeddedframework.zip",
-                    "Resources/PAGAdSDK.bundle"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "PangleAdapter",
-                    "../../ThirdParty/IOS/PangleAdapter.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
                     "Tapjoy",
                     "../../ThirdParty/IOS/Tapjoy.embeddedframework.zip"
                 )
@@ -257,12 +236,6 @@ public class BidmadPlugin : ModuleRules
                 new Framework(
                     "UnityAdapter",
                     "../../ThirdParty/IOS/UnityAdapter.embeddedframework.zip"
-                )
-            );
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "UnityAds",
-                    "../../ThirdParty/IOS/UnityAds.embeddedframework.zip"
                 )
             );
             PublicAdditionalFrameworks.Add(
@@ -281,6 +254,104 @@ public class BidmadPlugin : ModuleRules
                 new Framework(
                     "VungleSDK",
                     "../../ThirdParty/IOS/VungleSDK.embeddedframework.zip"
+                )
+            );
+
+            // MetaAdapter.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "MetaAdapter",
+                    "../../ThirdParty/IOS/MetaAdapter.embeddedframework.zip"
+                )
+            );
+
+            // OMSDK_Pubmatic.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "OMSDK_Pubmatic",
+                    "../../ThirdParty/IOS/OMSDK_Pubmatic.embeddedframework.zip"
+                )
+            );
+
+            // OMSDK_Teadstv.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "OMSDK_Teadstv",
+                    "../../ThirdParty/IOS/OMSDK_Teadstv.embeddedframework.zip"
+                )
+            );
+
+            // OneKit_Pangle.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "OneKit_Pangle",
+                    "../../ThirdParty/IOS/OneKit_Pangle.embeddedframework.zip"
+                )
+            );
+
+            // OpenWrapHandlerDFP.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "OpenWrapHandlerDFP",
+                    "../../ThirdParty/IOS/OpenWrapHandlerDFP.embeddedframework.zip"
+                )
+            );
+
+            // OpenWrapMeasurement.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "OpenWrapMeasurement",
+                    "../../ThirdParty/IOS/OpenWrapMeasurement.embeddedframework.zip"
+                )
+            );
+
+            // OpenWrapSDK.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "OpenWrapSDK",
+                    "../../ThirdParty/IOS/OpenWrapSDK.embeddedframework.zip"
+                )
+            );
+
+            // PAGAdSDK.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "PAGAdSDK",
+                    "../../ThirdParty/IOS/PAGAdSDK.embeddedframework.zip",
+                    "Resources/PAGAdSDK.bundle"
+                )
+            );
+
+            // PangleAdapter.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "PangleAdapter",
+                    "../../ThirdParty/IOS/PangleAdapter.embeddedframework.zip"
+                )
+            );
+
+            // RangersAPM_Pangle.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "RangersAPM_Pangle",
+                    "../../ThirdParty/IOS/RangersAPM_Pangle.embeddedframework.zip",
+                    "Resources/APMInsightCore.bundle"
+                )
+            );
+
+            // RARegisterKit.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "RARegisterKit",
+                    "../../ThirdParty/IOS/RARegisterKit.embeddedframework.zip"
+                )
+            );
+
+            // TeadsSDK.embeddedframework
+            PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "TeadsSDK",
+                    "../../ThirdParty/IOS/TeadsSDK.embeddedframework.zip"
                 )
             );
 
@@ -313,5 +384,5 @@ public class BidmadPlugin : ModuleRules
             PublicAdditionalLibraries.Add(SDKPATH + "/libiconv.tbd");
             PublicAdditionalLibraries.Add(SDKPATH + "/libc++abi.tbd");
         }
-	}
+    }
 }
