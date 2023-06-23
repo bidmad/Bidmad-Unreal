@@ -97,7 +97,6 @@ void UCommonInterface::InitializeSdkWithCallback(FString androidAppKey, FString 
 
     // mInitializeSdkCallback = &callback;
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
-    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] initializeSdkWithUnrealListener #####")); 
     mAppKey = androidAppKey;
     jstring _appKey = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mAppKey));
     jclass mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/BidmadCommon");
@@ -116,7 +115,6 @@ void UCommonInterface::BindEventToOnInitializeSdk(const FInitializeSdkCallback& 
 void UCommonInterface::InitializeSdk(FString androidAppKey, FString iosAppKey) {
     #if PLATFORM_ANDROID
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
-            // UE_LOG(FBidmadPlugin, Error, TEXT("[UCommonInterface] InitializeSdk #####")); 
     mAppKey = androidAppKey;
     jstring _appKey = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mAppKey));
     jclass mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/BidmadCommon");
@@ -153,7 +151,6 @@ void UCommonInterface::SetCUID(FString id){
 void UCommonInterface::SetChildDirected(bool childDirected){
     #if PLATFORM_ANDROID
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
-            UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] SetChildDirected #####"));
     jclass mJCls = FAndroidApplication::FindJavaClass("com/adop/sdk/AdOption");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "()Lcom/adop/sdk/AdOption;", false);
     jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM);
@@ -173,15 +170,12 @@ void UCommonInterface::SetGdprConsent(bool consent, bool useArea){
     #if PLATFORM_ANDROID
 
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
-    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] SetGdprConsent 1 #####"));
     jclass mJCls = FAndroidApplication::FindJavaClass("com/adop/sdk/userinfo/consent/Consent");    
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/app/Activity;Z)Lcom/adop/sdk/userinfo/consent/Consent;", false);
     jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), useArea);
-    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] SetGdprConsent 2 #####"));
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setGdprConsent", "(Z)V", false);
     FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet, consent);
 
-    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] SetGdprConsent 3 #####"));
     mEnv->DeleteLocalRef(mJObj);
     mEnv->DeleteLocalRef(mJCls);
     
@@ -200,16 +194,13 @@ int UCommonInterface::GetGdprConsent(bool useArea){
     #if PLATFORM_ANDROID
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
     
-    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] GetGdprConsent 1 #####"));
     jclass mJCls = FAndroidApplication::FindJavaClass("com/adop/sdk/userinfo/consent/Consent");    
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/app/Activity;Z)Lcom/adop/sdk/userinfo/consent/Consent;", false);
     jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), useArea);
 
-    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] GetGdprConsent 2 #####"));
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "getGdprConsentForOtherPlatform", "()I", false);
     result = FJavaWrapper::CallIntMethod(mEnv, mJObj, midGet);
 
-    UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] GetGdprConsent 3 #####"));
     mEnv->DeleteLocalRef(mJObj);
     mEnv->DeleteLocalRef(mJCls);
 
@@ -297,7 +288,6 @@ int UCommonInterface::GetGdprConsent(bool useArea){
 extern "C"{
     // Java call Methods
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_BidmadCommon_onInitializedCb(JNIEnv *env, jobject obj, jboolean isComplete){
-            UE_LOG(FBidmadCommon, Error, TEXT("[UCommonInterface] Java_ad_helper_openbidding_BidmadCommon_onInitializedCb 1 #####"));
         bool isInitialized = (isComplete != JNI_FALSE); 
         if(IsValid(UCommonInterface::mCommonInterface)){
             UCommonInterface::mCommonInterface->InitializeSdkCallback.ExecuteIfBound(isInitialized);

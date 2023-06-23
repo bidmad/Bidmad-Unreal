@@ -26,9 +26,6 @@
 		    	google()
 		        jcenter()
 		        mavenCentral()
-		        flatDir{
-		            dirs "libs"
-		        }
 				maven { url "https://devrepo.kakao.com/nexus/content/groups/public/" } //Adift
 				maven { url "https://bidmad-sdk.s3.amazonaws.com/" } //bidmad
 				maven { url "https://sdk.tapjoy.com/" } //Tapjoy
@@ -40,10 +37,7 @@
 		}
 
 		dependencies {
-		    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    		implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    		implementation "androidx.appcompat:appcompat:1.2.0"
-    		implementation 'ad.helper.openbidding:admob-obh:3.6.2'
+    		implementation 'ad.helper.openbidding:admob-obh:3.6.3'
 		    implementation 'com.adop.sdk:bidmad-androidx:3.6.0'
 		    implementation 'com.adop.adapter.fc:fcNetwork-adapter:3.6.0'
     		implementation 'com.adop.adapter.fnc:fncNetwork-adapter:3.6.0'

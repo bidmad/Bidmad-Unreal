@@ -1,10 +1,17 @@
+v.1.5.1
+-------------
+*Unreal<br>
+-Fix incorrect Category in RewardInterface<br><br>
+*Android<br>
+-Fix Ad Callback Error <br>
+
 v.1.5.0
 -------------
 *Unreal<br>
 -(CommonInterface)InitializeSdk Method added<br>
 -(CommonInterface)SetCUID / SetChildDirected Method added<br>
 -Improve Monitoring related functions<br>
--Error Code Support For Ad Failure<br>
+-Error Code Support For Ad Failure<br><br>
 *Android<br>
 -Update BidmadSDK 3.6.0<br>
 -Android target Api Level 33 Support<br>

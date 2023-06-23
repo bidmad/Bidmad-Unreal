@@ -144,8 +144,7 @@ bool UInterstitialInterface::IsLoaded() {
     bool result = false;
     GetInstance();
     #if PLATFORM_ANDROID
-    
-    UE_LOG(FBidmadInterstitial, Warning, TEXT("Interstitial Ad IsLoaded!!!!!! #####"));
+
     jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "isLoaded", "()Z", false);
     result = FJavaWrapper::CallBooleanMethod(mEnv, mJObj, midGet);
 

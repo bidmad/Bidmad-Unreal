@@ -72,17 +72,17 @@ public:
     UFUNCTION(BlueprintCallable,Category="BidmadReward")
     bool IsLoaded();
 
-    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    UFUNCTION(BlueprintCallable,Category="BidmadReward")
     void BindEventToOnLoad(const FOnBidmadRewardLoadDelegate& OnLoad);
-    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    UFUNCTION(BlueprintCallable,Category="BidmadReward")
     void BindEventToOnShow(const FOnBidmadRewardShowDelegate& OnShow);
-    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    UFUNCTION(BlueprintCallable,Category="BidmadReward")
     void BindEventToOnFail(const FOnBidmadRewardFailDelegate& OnFail);
-    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    UFUNCTION(BlueprintCallable,Category="BidmadReward")
     void BindEventToOnComplete(const FOnBidmadRewardCompleteDelegate& OnComplete);
-    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    UFUNCTION(BlueprintCallable,Category="BidmadReward")
     void BindEventToOnClose(const FOnBidmadRewardCloseDelegate& OnClose);
-    UFUNCTION(BlueprintCallable,Category="BidmadInterstitial")
+    UFUNCTION(BlueprintCallable,Category="BidmadReward")
     void BindEventToOnSkip(const FOnBidmadRewardSkipDelegate& OnSkip);
 
     FOnBidmadRewardLoadDelegate OnLoadDelegate;
