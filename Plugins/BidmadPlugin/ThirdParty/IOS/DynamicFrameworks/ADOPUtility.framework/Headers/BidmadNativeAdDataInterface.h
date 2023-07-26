@@ -22,6 +22,7 @@
 @property (nonatomic, strong) id _Nullable nativeAdPangle;
 @property (nonatomic, strong) id _Nullable nativeAdTeads;
 @property (nonatomic, strong) id _Nullable nativeAdVungle;
+@property (nonatomic, strong) NSDictionary * _Nullable nativeAdCoupang;
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 - (void)remove;
 @end

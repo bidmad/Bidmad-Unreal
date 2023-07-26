@@ -18,6 +18,7 @@
 #pragma clang diagnostic ignored "-Wobjc-property-no-attribute"
 #import <BidmadSDK/BidmadSDK.h>
 #import <BidmadSDK/BIDMADGDPR.h>
+#import <OpenBiddingHelper/BidmadAdFreeInformation.h>
 #endif
 
 #include "CommonInterface.generated.h"
@@ -26,6 +27,7 @@ DECLARE_LOG_CATEGORY_EXTERN(FBidmadCommon, Log, All);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAdTrackingAuthorizationResponse, const EBidmadTrackingAuthorizationStatus, Response);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FInitializeSdkCallback, bool, isInitialized);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FAdFreeCallback, bool, isAdFree);
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Bidmad), meta=(BlueprintSpawnableComponent))
 class BIDMADPLUGIN_API UCommonInterface : public USceneComponent
@@ -37,10 +39,15 @@ protected:
 private: 
 	FString mAppKey;
 	FString mCUID;
+    
+    UCommonInterface();
+    
 public:
     static UCommonInterface* mCommonInterface;
-	// Sets default values for this component's properties
-	UCommonInterface();
+    
+    UFUNCTION(BlueprintCallable,Category="BidmadCommon")
+    static UCommonInterface* GetCommonInterfaceInstance();
+    
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -67,24 +74,31 @@ public:
     void SetGdprConsent(bool consent, bool useArea);
 	UFUNCTION(BlueprintCallable,Category="BidmadCommon")
     int GetGdprConsent(bool useArea);
+    UFUNCTION(BlueprintCallable,Category="BidmadCommon")
+    void BindEventToOnAdFree(const FAdFreeCallback& OnAdFree);
+    UFUNCTION(BlueprintCallable,Category="BidmadCommon")
+    bool IsAdFree();
 
     //Bidmad Callback
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "BidmadCommon")
 	FOnAdTrackingAuthorizationResponse OnAdTrackingAuthorizationResponse;
     
     FInitializeSdkCallback InitializeSdkCallback;
+    FAdFreeCallback AdFreeCallback;
 };
 
 #if PLATFORM_ANDROID
 extern "C"{
-	JNIEXPORT void JNICALL Java_ad_helper_openbidding_BidmadCommon_onInitializedCb(JNIEnv *, jobject, jboolean);
+	JNIEXPORT void JNICALL Java_ad_helper_openbidding_BidmadCommon_onInitializedCb(JNIEnv *, jobject, jstring);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_AdFreeInformation_onAdFreeCb(JNIEnv *, jobject, jstring);
 }
 #elif PLATFORM_IOS
-@interface BidmadCommonInterface : NSObject <BIDMADUnrealCommonDelegate>{}
+@interface BidmadCommonInterface : NSObject <BIDMADUnrealCommonDelegate, BidmadAdFreeInformationDelegate>{}
 +(BidmadCommonInterface *) getSharedInstance;
 -(UnrealCommon *) getCommon;
 - (void)setUseArea:(bool) useArea;
 - (void)setGDPRSetting:(bool) consent;
 - (int)getGDPRSetting;
+- (void)didAdFreeInformationStatusChange:(BidmadAdFreeInformationStatus)status;
 @end
 #endif

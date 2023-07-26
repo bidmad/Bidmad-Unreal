@@ -1,3 +1,13 @@
+v.1.6.0
+-------------
+*Unreal<br>
+-Add Coupang Ad Network Banner, NativeAd<br>
+-Support for Coupang Ad Network Interface about Ad Block Information<br><br>
+*Android<br>
+-Update BidmadSdk 3.7.1<br>
+*iOS<br>
+-Update BidmadSDK 6.3.0<br>
+
 v.1.5.1
 -------------
 *Unreal<br>

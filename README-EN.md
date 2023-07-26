@@ -14,7 +14,7 @@ And, add BidmadPlugin to PublicDependencyModuleNames.AddRange declared in the **
 PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "BidmadPlugin" });
 ```
 
-#### 1.1 Android 설정
+#### 1.1 Android Settings
 
 For AOS, additional settings are required in AndroidManifest.xml for Admob Application ID settings. <br>
 *Check the value of com.google.android.gms.ads.APPLICATION_ID in the Admob dashboard.
@@ -600,19 +600,29 @@ For iOS setup, additional steps are required.<br>
 
 ![Bidmad-iOS-Guide-4](https://i.imgur.com/UhdG6dG.png)<br>
 
-### 2. BidmadSDK Initialization (v1.5.0 or above)
+### 2. Migration Guide (Only for users updating from v1.5.1 or below to v1.6.0 or higher)
+
+- When referencing CommonInterface class, please call Get Common Interface Instance method first and use the interface from the CommonInterface class instance returned from the method.
+
+![Bidmad-Unreal-Migration-CommonInterface-BP](https://i.imgur.com/na7D1D1.jpg)<br>
+
+```
+UCommonInterface* CommonInterface = UCommonInterface::GetCommonInterfaceInstance(); 
+```
+
+### 3. BidmadSDK Initialization (v1.5.0 or above)
 
 Performs tasks required to run BidmadSDK. The SDK won't allow ads to load unless you call the initializeSdk method.<br>
 The initializeSdk method receives the App Key as a parameter, and the App Key can be copied from ADOP Insight. You can get the App Key by referring to the [Find your App Key](https://github.com/bidmad/SDK/wiki/Find-your-app-key%5BEN%5D) guide.<br>
 Before loading ads, call the initializeSdk method as shown in the following example at the beginning of app.
 
-![InitializeSdkUnrealWithoutCallback](https://i.imgur.com/0ZxacUu.jpg)
+![InitializeSdkUnrealWithoutCallback](https://i.imgur.com/UJhYyPv.jpg)
 
 Or, you can check the initialization status by calling initializeSdkWithCallback
 
-![InitializeSdkUnrealWithCallback](https://i.imgur.com/IVgftHM.jpg)
+![InitializeSdkUnrealWithCallback](https://i.imgur.com/gboXzkq.jpg)
 
-### 3. Interstitial
+### 4. Interstitial
 
 The following is how to request (Load) an interstitial advertisement and show the advertisement through the plugin.<br>
 
@@ -654,7 +664,7 @@ Interstitial provides 4 types of Callbacks: Load / Show / Close / Failed.
 
 ![InterstitialCallbacks](https://i.imgur.com/3jvL5Ds.png)
 
-### 4. Reward
+### 5. Reward
 
 The following is how to request (Load) rewarded advertisement through plugin and show (Show) advertisement.<br>
 
@@ -696,7 +706,7 @@ Reward provides 6 types of Callbacks: Load / Show / Close / Failed / Complete / 
 
 ![RewardCallbacks](https://i.imgur.com/RiGEi7I.png)
 
-### 5. Common
+### 6. Common
 
 Common is a component that provides functions other than advertisements such as debugging mode and iOS14 AppTrackingAuthorization function.
 
@@ -704,56 +714,56 @@ Common is a component that provides functions other than advertisements such as 
 
 Debugging log is output when calling SetDebugging True.
 
-![CommonSetDebugging](https://i.imgur.com/44l5cnY.png)
+![CommonSetDebugging](https://i.imgur.com/ejEIn1w.jpg)
 
 #### 5.2 ReqAdTrackingAuthorization
 
 In iOS 14, the app tracking transparency consent popup is exposed, and the resulting callback is provided.
 
-![CommonReqAdTrackingAuthorization](https://i.imgur.com/m5IosKZ.png)
+![CommonReqAdTrackingAuthorization](https://i.imgur.com/ygbgJQr.png)
 
 #### 5.2 SetAdvertiserTrackingEnabled
 
 When obtaining app tracking transparency consent through a method other than ReqAdTrackingAuthorization provided by Plugin, 
 <br>pass agrees(True) and rejected(False) through SetAdvertiserTrackingEnabled.
 
-![CommonSetAdvertiserTrackingEnabled](https://i.imgur.com/duXWELF.png)
+![CommonSetAdvertiserTrackingEnabled](https://i.imgur.com/N6GdBFG.png)
 
 #### 5.4 GetAdvertiserTrackingEnabled
 
 Check the value set through SetAdvertiserTrackingEnabled.
 
-![CommonGetAdvertiserTrackingEnabled](https://i.imgur.com/Dpg5T23.png)
+![CommonGetAdvertiserTrackingEnabled](https://i.imgur.com/53vlLEU.png)
 
 #### 5.5 SetCUID 
 
 Set the customer id for server-side callbacks
 
-![CommonSetCUID](https://i.imgur.com/r0Qgcvg.jpg)
+![CommonSetCUID](https://i.imgur.com/ftRQ1Ao.png)
 
 #### 5.6 SetChildDirected
 
 Set if your app is for child or not
 
-![CommonSetChildDirected](https://i.imgur.com/pa9cb2d.jpg)
+![CommonSetChildDirected](https://i.imgur.com/UoXFund.png)
 
 #### 5.7 BindEventToOnInitializeSdk
 
 When using the InitializeSdkWithCallback method, set up events that can receive callbacks. A bool value means whether to initialize
 
-![CommonBindEventToOnInitializeSdk](https://i.imgur.com/9cm6mJB.jpg)
+![CommonBindEventToOnInitializeSdk](https://i.imgur.com/YNl8KRZ.png)
 
 #### 5.8 InitializeSdkWithCallback
 
 Callback event occurs after calling SDK initialization.
 
-![CommonInitializeSdkWithCallback](https://i.imgur.com/27BwYnj.jpg)
+![CommonInitializeSdkWithCallback](https://i.imgur.com/DxS1cgR.png)
 
 #### 5.9 InitializeSdk
 
 Calling SDK initialization methods, without callbacks
 
-![CommonInitializeSdk](https://i.imgur.com/J0doVoZ.jpg)
+![CommonInitializeSdk](https://i.imgur.com/LFx7ceN.png)
 
 #### References
 - Unreal GDPR Guide [KOR](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BKOR%5D) | [ENG](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BENG%5D)

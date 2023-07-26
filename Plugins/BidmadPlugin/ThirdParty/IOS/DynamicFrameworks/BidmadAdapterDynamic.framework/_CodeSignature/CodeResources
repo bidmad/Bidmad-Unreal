@@ -14,15 +14,51 @@
 		</data>
 		<key>Headers/BidmadAdapterDynamic.h</key>
 		<data>
-		izpMyBXX6yoB8RoyvDDZcWvjFAA=
+		l6ryDyG9r0KY9ZJ+fh6b2u/swyg=
 		</data>
 		<key>Headers/BidmadAdapterFNCUtility.h</key>
 		<data>
 		VxE6R5F9T9fz5YvRCoupc1YIEAg=
 		</data>
+		<key>Headers/BidmadCoupangAdReportView.h</key>
+		<data>
+		hBxvxenvtV5TJrkoP2Wi0ZWd9h4=
+		</data>
+		<key>Headers/BidmadCoupangBanner.h</key>
+		<data>
+		4gQdDsM1P6nQN/zkPUKRBWBZaoc=
+		</data>
+		<key>Headers/BidmadCoupangFullscreenBase.h</key>
+		<data>
+		EBuve6+4xffeKtimYguXTFJAUTc=
+		</data>
+		<key>Headers/BidmadCoupangInterstitialADOP.h</key>
+		<data>
+		ejko1+Y5Ov8lHuZxTJkvkOwU3k0=
+		</data>
+		<key>Headers/BidmadCoupangNativeAd.h</key>
+		<data>
+		m2gOUp3De4myah+a3tG9IzW7rl8=
+		</data>
+		<key>Headers/BidmadCoupangNativeAdView.h</key>
+		<data>
+		ybLfWCjpuAzCVM0wve3YehuPsXc=
+		</data>
+		<key>Headers/BidmadCoupangProduct.h</key>
+		<data>
+		hMcCyjntpaH7084eCHTeKiopZCU=
+		</data>
+		<key>Headers/BidmadCoupangRewardADOP.h</key>
+		<data>
+		7vbWRt0kwAGdNVwFzQ0dLs/1EQo=
+		</data>
 		<key>Headers/BidmadDynamicUtility.h</key>
 		<data>
 		poeDeKMygC/+GCkQzmvnHhlw/2A=
+		</data>
+		<key>Headers/BidmadMarqueeLabel.h</key>
+		<data>
+		Av4tBpPXf/01wt+RxFFMeokrJE8=
 		</data>
 		<key>Headers/BidmadMobonBanner.h</key>
 		<data>
@@ -40,9 +76,13 @@
 		<data>
 		kZ0wM5eXUImiPkiK2ieMgBWfZOc=
 		</data>
+		<key>Headers/BidmadTeadsNativeAdView.h</key>
+		<data>
+		li4OKorviSGDstz5bA6W4z/2abA=
+		</data>
 		<key>Info.plist</key>
 		<data>
-		Vyc5eHPayNijkl+wwSLhOCLAuSU=
+		mYd4lIUac1rUQ+nNC/E24zEUbKc=
 		</data>
 		<key>MobonSDKBundle.bundle/Assets.car</key>
 		<data>
@@ -125,7 +165,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Zjm/yWAke/47ag6LU8oTtHwHQQBMHU3W5V6PHXhRQ5Q=
+			3upbLv482uhos9BeYbwGS6PHFfOUt8PMLDmkKd7BElI=
 			</data>
 		</dict>
 		<key>Headers/BidmadAdapterFNCUtility.h</key>
@@ -135,11 +175,74 @@
 			xWryiAn+y+GNxLBb+ZuZvyE0vavn3SinJHJwtbwdgEw=
 			</data>
 		</dict>
+		<key>Headers/BidmadCoupangAdReportView.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			0NGJNbhcsBMng2Uw7mab/XmHONYg93ErKJx5ovt68rc=
+			</data>
+		</dict>
+		<key>Headers/BidmadCoupangBanner.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			o6z73IoYcjs3MkGVTE5nkyhlc2pSembeLA95dtnj+lo=
+			</data>
+		</dict>
+		<key>Headers/BidmadCoupangFullscreenBase.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			qYyFzg5LadnwbRbxK6OBq9hdb4W96wRxwVvCooquub8=
+			</data>
+		</dict>
+		<key>Headers/BidmadCoupangInterstitialADOP.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			6lb0mmW37BbujAB+ZH7rpNHUz6+zT0bVytGVGWLwxHI=
+			</data>
+		</dict>
+		<key>Headers/BidmadCoupangNativeAd.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			wvnbt7UILtKLfgHKgoGfnnJDPhpTyqbPkriXgpRkgOQ=
+			</data>
+		</dict>
+		<key>Headers/BidmadCoupangNativeAdView.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			Gzya/rHTlykDrM/iA/vjiI7Qzdx6au+VbU+rukAd2Mk=
+			</data>
+		</dict>
+		<key>Headers/BidmadCoupangProduct.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			s5sbUlf0w0nldFWose4NjYkQ5zIfMMa+LNJYZGRVdkE=
+			</data>
+		</dict>
+		<key>Headers/BidmadCoupangRewardADOP.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			Yylzg8vdD3AatfM9vIOJ+kZCjeXZcdChZi/y9v8IUtE=
+			</data>
+		</dict>
 		<key>Headers/BidmadDynamicUtility.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
 			A2/LtR7IISW7rPr/A3MzS2+SvBP/MTnQqq3TX4qqVVg=
+			</data>
+		</dict>
+		<key>Headers/BidmadMarqueeLabel.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ScFoeuL2v/dV8XUkHIrooMXFWaG23ObGsYKjs/V2POw=
 			</data>
 		</dict>
 		<key>Headers/BidmadMobonBanner.h</key>
@@ -168,6 +271,13 @@
 			<key>hash2</key>
 			<data>
 			r89xkbhRT9pNkCAupdeK/ncP07L0R+5LHAkXlRRDqNk=
+			</data>
+		</dict>
+		<key>Headers/BidmadTeadsNativeAdView.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			qsva9jqOrz6htggUMNBrb21e4dNLx+g022Dof5H9xpE=
 			</data>
 		</dict>
 		<key>MobonSDKBundle.bundle/Assets.car</key>

@@ -34,3 +34,4 @@ FOUNDATION_EXPORT const unsigned char ADOPUtilityVersionString[];
 #import "BidmadMacro.h"
 #import "BidmadNativeAdSupportedAdNetwork.h"
 #import "BidmadNativeAdViewContainerProtocol.h"
+#import "BidmadCoupangTouchdownGestureRecognizer.h"

@@ -14,7 +14,7 @@
 		</data>
 		<key>Headers/ADOPUtility.h</key>
 		<data>
-		RZznWbiSRQ60yvYPtAZBDyBKNVc=
+		8Kx6uEsoU3pcDdQ7xwWbCl3lJhc=
 		</data>
 		<key>Headers/BIDMADNativeAdCommonInterface.h</key>
 		<data>
@@ -48,6 +48,10 @@
 		<data>
 		0LJ6XIazZZj9jwednKQ34G4iZLk=
 		</data>
+		<key>Headers/BidmadCoupangTouchdownGestureRecognizer.h</key>
+		<data>
+		6UyOYFGN/x+wl9BzqLuF17vwZGk=
+		</data>
 		<key>Headers/BidmadInnerCallback.h</key>
 		<data>
 		/xm+zUoVNpLTuL+pMfsTzeJ6jqs=
@@ -66,11 +70,11 @@
 		</data>
 		<key>Headers/BidmadNativeAdDataInterface.h</key>
 		<data>
-		0ByUJ3BuXMdfR2GDdXxvq2hasq0=
+		/VRSlTjk47oA9sXa35h9cYNc7r8=
 		</data>
 		<key>Headers/BidmadNativeAdSupportedAdNetwork.h</key>
 		<data>
-		8av4ESgPL0O8UKqnvlnQbMdUjjM=
+		8CuMm54ozB/PpuIkJrzBaQHIKAA=
 		</data>
 		<key>Headers/BidmadNativeAdViewContainerProtocol.h</key>
 		<data>
@@ -90,7 +94,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		jnGKT8A9WGI/Rmi6OryQLuzeKLY=
+		twSfY+/ZjQTq5s7SG4jQnGj8Y4E=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -117,7 +121,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			cIMwWZk/zKexn8qNkNrnNU7NAhCEnSDXiqThc/Bta20=
+			esYBFV0SdnOk4wzuLbkNG+fUacPjXGLIJnFycMapM4U=
 			</data>
 		</dict>
 		<key>Headers/BIDMADNativeAdCommonInterface.h</key>
@@ -176,6 +180,13 @@
 			jh9zTQvIztOXi2f/v3ReFC81Fu0OYL1IFShszewbLks=
 			</data>
 		</dict>
+		<key>Headers/BidmadCoupangTouchdownGestureRecognizer.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			AfNkbYISbIiEXxadGB6RODj5RPG4dw4Ox/8c9/m3M64=
+			</data>
+		</dict>
 		<key>Headers/BidmadInnerCallback.h</key>
 		<dict>
 			<key>hash2</key>
@@ -208,14 +219,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			FLQVzgD56oImmblk/3/Yp1NOMSe1nxmmPiZ5NB9BpIs=
+			cWS6zEPDgBdCzbCQ97buKD5LDRs8c4PdaAnMYAjWdQY=
 			</data>
 		</dict>
 		<key>Headers/BidmadNativeAdSupportedAdNetwork.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ESFZq5P0q9FfmRw7w7y+5MEnLE/AdtQOimEDQBxsTY0=
+			9THfU2CxhWToGXjg9uMDJdavvWbW96gG80EKJaz9LGw=
 			</data>
 		</dict>
 		<key>Headers/BidmadNativeAdViewContainerProtocol.h</key>

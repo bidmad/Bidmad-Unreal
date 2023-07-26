@@ -21,6 +21,13 @@ void UCommonInterface::BeginPlay()
     // ...
 }
 
+UCommonInterface* UCommonInterface::GetCommonInterfaceInstance() {
+    if (IsValid(UCommonInterface::mCommonInterface) == false) {
+        UCommonInterface::mCommonInterface = NewObject<UCommonInterface>();
+    }
+    
+    return UCommonInterface::mCommonInterface;
+}
 
 // Called every frame
 void UCommonInterface::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -100,7 +107,7 @@ void UCommonInterface::InitializeSdkWithCallback(FString androidAppKey, FString 
     mAppKey = androidAppKey;
     jstring _appKey = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mAppKey));
     jclass mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/BidmadCommon");
-    jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "initializeSdkWithUnrealListener", "(Landroid/app/Activity;Ljava/lang/String;)V", false);
+    jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "initializeSdkWithCbListener", "(Landroid/app/Activity;Ljava/lang/String;)V", false);
     mEnv->CallStaticVoidMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), _appKey);
 
     mEnv->DeleteLocalRef(mJCls);
@@ -214,6 +221,46 @@ int UCommonInterface::GetGdprConsent(bool useArea){
     return result;
 }
 
+void UCommonInterface::BindEventToOnAdFree(const FAdFreeCallback& OnAdFree) {
+    mCommonInterface = this;
+    AdFreeCallback = OnAdFree;
+#if PLATFORM_IOS
+    [BidmadAdFreeInformation setDelegate:[BidmadCommonInterface getSharedInstance]];
+#elif PLATFORM_ANDROID
+    JNIEnv* mEnv = FAndroidApplication::GetJavaEnv(); // Context
+    jclass mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/AdFreeInformation");
+    jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/content/Context;)Lad/helper/openbidding/AdFreeInformation;", false);
+    jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis());
+
+    jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "setOnAdFreeCbListener", "()V", false);
+    FJavaWrapper::CallVoidMethod(mEnv, mJObj, midGet);
+
+    mEnv->DeleteLocalRef(mJObj);
+    mEnv->DeleteLocalRef(mJCls);
+#endif
+}
+
+bool UCommonInterface::IsAdFree() {
+#if PLATFORM_IOS
+    return ([BidmadAdFreeInformation status] == BidmadAdFreeInformationStatusBlocked);
+#elif PLATFORM_ANDROID
+    JNIEnv* mEnv = FAndroidApplication::GetJavaEnv(); // Context
+    jclass mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/AdFreeInformation");
+    jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "getInstance", "(Landroid/content/Context;)Lad/helper/openbidding/AdFreeInformation;", false);
+    jobject mJObj = mEnv->CallStaticObjectMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis());
+
+    jmethodID midGet = FJavaWrapper::FindMethod(mEnv, mJCls, "getAdFreeStatus", "()I", false);
+
+    int result = FJavaWrapper::CallIntMethod(mEnv, mJObj, midGet);
+
+    mEnv->DeleteLocalRef(mJObj);
+    mEnv->DeleteLocalRef(mJCls);
+
+    return (result==0)? true : false;
+#else
+    return false;
+#endif
+}
 
 #if PLATFORM_ANDROID && USE_ANDROID_JNI
 #elif PLATFORM_IOS
@@ -280,6 +327,12 @@ int UCommonInterface::GetGdprConsent(bool useArea){
     return [BIDMADGDPR getGDPRSetting];
 }
 
+- (void)didAdFreeInformationStatusChange:(BidmadAdFreeInformationStatus)status {
+    if(IsValid(UCommonInterface::mCommonInterface)){
+        UCommonInterface::mCommonInterface->AdFreeCallback.ExecuteIfBound(status == BidmadAdFreeInformationStatusBlocked);
+    }
+}
+
 @end
 
 #endif
@@ -287,12 +340,32 @@ int UCommonInterface::GetGdprConsent(bool useArea){
 #if PLATFORM_ANDROID
 extern "C"{
     // Java call Methods
-    JNIEXPORT void JNICALL Java_ad_helper_openbidding_BidmadCommon_onInitializedCb(JNIEnv *env, jobject obj, jboolean isComplete){
-        bool isInitialized = (isComplete != JNI_FALSE); 
-        if(IsValid(UCommonInterface::mCommonInterface)){
-            UCommonInterface::mCommonInterface->InitializeSdkCallback.ExecuteIfBound(isInitialized);
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_BidmadCommon_onInitializedCb(JNIEnv *env, jobject obj, jstring isComplete){
+        if(IsValid(UCommonInterface::mCommonInterface)) {
+
+            const char *isCompletedStr = env->GetStringUTFChars(isComplete, NULL);
+
+            if(std::strncmp(isCompletedStr, "true", 4) == 0) {
+                UCommonInterface::mCommonInterface->InitializeSdkCallback.ExecuteIfBound(true);
+            }else {
+                UCommonInterface::mCommonInterface->InitializeSdkCallback.ExecuteIfBound(false);
+            }
+            env->ReleaseStringUTFChars(isComplete, isCompletedStr);
         }
     }
+    JNIEXPORT void JNICALL Java_ad_helper_openbidding_AdFreeInformation_onAdFreeCb(JNIEnv *env, jobject obj, jstring isAdFree){
+        if(IsValid(UCommonInterface::mCommonInterface)) {
+            const char *isAdFreeStr = env->GetStringUTFChars(isAdFree, NULL);
+
+            if(std::strncmp(isAdFreeStr, "true", 4) == 0) {
+               UCommonInterface::mCommonInterface->AdFreeCallback.ExecuteIfBound(true);
+            }else {
+               UCommonInterface::mCommonInterface->AdFreeCallback.ExecuteIfBound(false);
+            }
+
+            env->ReleaseStringUTFChars(isAdFree, isAdFreeStr);
+        }
+    }  
 
 }
 
