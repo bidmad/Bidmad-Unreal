@@ -764,12 +764,14 @@ SDK 초기화 호출 이후, 콜백 이벤트 발생.
 #### 6.10 isAdFree 
 
 쿠팡 광고에 의한 광고 차단여부 확인.
-![CommonIsAdFree](https://i.imgur.com/4FCg8t7.png)
+
+![CommonIsAdFree](https://i.imgur.com/PhbimpP.jpg)
 
 #### 6.11 BindEventToOnAdFree
 
 쿠팡 광고에 의한 광고 차단 변경 콜백 이벤트 발생. 
-![CommonIsAdFree](https://i.imgur.com/CV6GD93.png)
+
+![CommonIsAdFree](https://i.imgur.com/IP53Q0y.jpg)
 
 
 #### References
