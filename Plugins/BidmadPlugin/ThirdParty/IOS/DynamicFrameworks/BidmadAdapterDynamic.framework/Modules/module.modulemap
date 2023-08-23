@@ -6,6 +6,6 @@ framework module BidmadAdapterDynamic {
 }
 
 module BidmadAdapterDynamic.Swift {
-    header "BidmadAdapterDynamic-Swift.h"
-    requires objc
+  header "BidmadAdapterDynamic-Swift.h"
+  requires objc
 }

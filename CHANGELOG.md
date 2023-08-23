@@ -1,3 +1,8 @@
+v.1.6.2
+-------------
+*iOS<br>
+-Fix Coupang Ad Network Ad Block Interface<br>
+
 v.1.6.1
 -------------
 *Unreal<br>

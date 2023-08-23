@@ -10,7 +10,7 @@
 		</data>
 		<key>Headers/BidmadAdapterDynamic-Swift.h</key>
 		<data>
-		p2SgrSIDT+fQFacEc75T0SzhOV0=
+		i5Vya8hblIzBkCEzeXY5ChQBSlI=
 		</data>
 		<key>Headers/BidmadAdapterDynamic.h</key>
 		<data>
@@ -82,7 +82,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		mYd4lIUac1rUQ+nNC/E24zEUbKc=
+		10fyhDscE292hH08h6WMUblqQYU=
 		</data>
 		<key>MobonSDKBundle.bundle/Assets.car</key>
 		<data>
@@ -112,33 +112,29 @@
 		<data>
 		/Aq2KpDCvb9gWy1RNe/g/1c7y/Y=
 		</data>
+		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64-apple-ios.abi.json</key>
+		<data>
+		7qbgkuQo202KMZdAQiBCZXpJCWM=
+		</data>
+		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
+		<data>
+		wiuCMbEigSVOAgvxuZGp6TQ3nbw=
+		</data>
 		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<data>
-		0qbtXdK0PthLgtONkyALL2FPb+c=
+		dwlBt1aHJyXa5SLfSthqdJkU8TE=
 		</data>
 		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<data>
-		WCjTn50Fl9iW418cbzri73gEMYI=
+		wiuCMbEigSVOAgvxuZGp6TQ3nbw=
 		</data>
 		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<data>
-		viJSDFnMBE0jcyeef4f7/J/ftDM=
-		</data>
-		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64.swiftdoc</key>
-		<data>
-		0qbtXdK0PthLgtONkyALL2FPb+c=
-		</data>
-		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64.swiftinterface</key>
-		<data>
-		WCjTn50Fl9iW418cbzri73gEMYI=
-		</data>
-		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64.swiftmodule</key>
-		<data>
-		viJSDFnMBE0jcyeef4f7/J/ftDM=
+		zsfoJqnsGUF1gkKdCwuvbemn2LA=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		ThLkWmRBGzoI0crg/fsL6C2x9BA=
+		UAOwi7iKYvKIPGr7Is2nijvbfUA=
 		</data>
 		<key>closeIcon.png</key>
 		<data>
@@ -158,7 +154,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			LEJ1qD/4zNk6JUdcKclV6cewQh7bd6l5CvXHCaFjXNE=
+			K114JVjDRsl16UlkLs91Rku7nQcIocLLU1EcgnG9INE=
 			</data>
 		</dict>
 		<key>Headers/BidmadAdapterDynamic.h</key>
@@ -329,53 +325,46 @@
 			cn7zHQa+oakhPxadwrwRB8CkLMify3DgbjATvmnDrt8=
 			</data>
 		</dict>
+		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64-apple-ios.abi.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			sbM2QoCwD3hvVykSQ0z1lq0uG0gYIsUIc8Es4YZC1PI=
+			</data>
+		</dict>
+		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			fFmkFJrLwStg/2/DjtbElkShq2C8r1UH7ElnNSNWlkA=
+			</data>
+		</dict>
 		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			9FpCHYKAuGSFXR1NEcYSjV060NR5RF1IGz3dKOO0L14=
+			GJIgejzaJpHrf4fmyVFbZ4/6Z8mdHdAcu/bu7NgSqi0=
 			</data>
 		</dict>
 		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			G8W35Xi6gMRO2WV+QqH2y3Xw/9AZEEP131beTfUGYeQ=
+			fFmkFJrLwStg/2/DjtbElkShq2C8r1UH7ElnNSNWlkA=
 			</data>
 		</dict>
 		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			dnpYSs1IZwvCWdAAyzJlYIQFSWkXJT4N8luq8n/slXo=
-			</data>
-		</dict>
-		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64.swiftdoc</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			9FpCHYKAuGSFXR1NEcYSjV060NR5RF1IGz3dKOO0L14=
-			</data>
-		</dict>
-		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64.swiftinterface</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			G8W35Xi6gMRO2WV+QqH2y3Xw/9AZEEP131beTfUGYeQ=
-			</data>
-		</dict>
-		<key>Modules/BidmadAdapterDynamic.swiftmodule/arm64.swiftmodule</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			dnpYSs1IZwvCWdAAyzJlYIQFSWkXJT4N8luq8n/slXo=
+			QnRClTiquzigX/7grgp0Ky2wyEbfb0msHmn9/RPF+Cg=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			WDjTeGOmMRrH/xFEkwMb/enclI7WFXq3At8PDwFqyFw=
+			4HydUpMSvb7ZS8yW6V6NjrVjND6QwAsnzvrxjDbYec4=
 			</data>
 		</dict>
 		<key>closeIcon.png</key>
