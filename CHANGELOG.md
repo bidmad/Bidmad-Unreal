@@ -6,9 +6,9 @@ v.1.6.2
 v.1.6.1
 -------------
 *Unreal<br>
-- Bug Fix Ad Network Coupang Orientation (Interstitial / Reward)
+-Bug Fix Ad Network Coupang Orientation (Interstitial / Reward)<br><br>
 *Android<br>
--Update BidmadSdk 3.7.1<br>
+-Update BidmadSdk 3.7.1<br><br>
 *iOS<br>
 -Update BidmadSDK 6.3.0<br>
 
@@ -18,7 +18,7 @@ v.1.6.0
 -Add Coupang Ad Network Banner, NativeAd<br>
 -Support for Coupang Ad Network Interface about Ad Block Information<br><br>
 *Android<br>
--Update BidmadSdk 3.7.1<br>
+-Update BidmadSdk 3.7.1<br><br>
 *iOS<br>
 -Update BidmadSDK 6.3.0<br>
 
