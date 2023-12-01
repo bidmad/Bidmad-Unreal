@@ -27,8 +27,11 @@ AOS의 경우 Admob Application ID Settings 을 위한 AndroidManifest.xml에 �
 
 #### 1.2 iOS 설정
 
-iOS의 경우 아래와 같이 추가 프로젝트 설정이 필요합니다.<br>
-​*Apple Store에서 요구하는 개인정보 보호에 관한 가이드가 필요한 경우 [이곳](https://github.com/bidmad/Bidmad-Unreal/wiki/Apple-privacy-survey%5BKOR%5D)을 참고하세요.
+- 예제 사용 시, 예제 프로젝트 내부에 [iOS 디펜던시 다운로드 링크](https://drive.google.com/file/d/1BZTYIp5bLHJ7TMXAXvAeN5kYV6Ad2Xba/view?usp=sharing)를 통해 iOS 라이브러리 따로 다운로드 및 압축 해제 이후, Plugins -> BidmadPlugin -> ThirdParty 폴더 아래에 넣어주세요<br>
+
+- 아래 설정을 진행하기 이전, Unreal Engine Build Tool 코드 수정이 필요합니다. 수정 가이드는 [Unreal Build Tool 수정 가이드](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-Build-Tool-Modification-Guide-for-iOS-Build)를 통해 확인해주세요. 수정 가이드를 진행한 이후 아래 프로젝트 세팅을 진행해주세요.<br>
+
+- Apple Store에서 요구하는 개인정보 보호에 관한 가이드가 필요한 경우 [이곳](https://github.com/bidmad/Bidmad-Unreal/wiki/Apple-privacy-survey%5BKOR%5D)을 참고하세요.<br>
 
 1. Settings → Project Settings → Platforms → iOS 세팅 패널 내부에서, 다음과 같이 프로젝트 설정을 추가합니다.<br>
 

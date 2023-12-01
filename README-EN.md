@@ -28,8 +28,11 @@ For AOS, additional settings are required in AndroidManifest.xml for Admob Appli
 
 #### 1.2 iOS settings
 
-For iOS setup, additional steps are required.<br>
-​*Please refer to the following link if you need a guide on Apple Store Privacy Survey: [Link](https://github.com/bidmad/Bidmad-Unreal/wiki/Apple-privacy-survey%5BKOR%5D).
+- When using the example, download and unzip the iOS library separately through [iOS Dependency Download Link](https://drive.google.com/file/d/1BZTYIp5bLHJ7TMXAXvAeN5kYV6Ad2Xba/view?usp=sharing)<br>. Inside the example project, place the unzipped downloaded folder under the Plugins -> BidmadPlugin -> ThirdParty folder<br>
+
+- Before proceeding with the settings below, the Unreal Engine Build Tool code needs to be modified. For the modification guide, please follow the [Unreal Build Tool Modification Guide](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-Build-Tool-Modification-Guide-for-iOS-Build). After completing the modification guide. Please proceed to the project settings below.<br>
+
+- Please refer to the following link if you need a guide on Apple Store Privacy Survey: [Link](https://github.com/bidmad/Bidmad-Unreal/wiki/Apple-privacy-survey%5BKOR%5D).
 
 1. Go inside the settings panel (Settings → Project Settings → Platforms → iOS)<br>
 
