@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
     <init>
-        <log text="Copy MyFramework..."/>
-        <copyDir src="$S(PluginDir)/../../ThirdParty/IOS/DynamicFrameworks/ADOPUtility.framework" dst="$S(BuildDir)/Frameworks/ADOPUtility.framework" />
-        <copyDir src="$S(PluginDir)/../../ThirdParty/IOS/DynamicFrameworks/BidmadAdapterDynamic.framework" dst="$S(BuildDir)/Frameworks/BidmadAdapterDynamic.framework" />
-        <copyDir src="$S(PluginDir)/../../ThirdParty/IOS/DynamicFrameworks/FBLPromises.framework" dst="$S(BuildDir)/Frameworks/FBLPromises.framework" />
-        <copyDir src="$S(PluginDir)/../../ThirdParty/IOS/DynamicFrameworks/GoogleUtilities.framework" dst="$S(BuildDir)/Frameworks/GoogleUtilities.framework" />
-        <copyDir src="$S(PluginDir)/../../ThirdParty/IOS/DynamicFrameworks/nanopb.framework" dst="$S(BuildDir)/Frameworks/nanopb.framework" />
-        <copyDir src="$S(PluginDir)/../../ThirdParty/IOS/DynamicFrameworks/OMSDK_Teadstv.framework" dst="$S(BuildDir)/Frameworks/OMSDK_Teadstv.framework" />
-        <copyDir src="$S(PluginDir)/../../ThirdParty/IOS/DynamicFrameworks/OMSDK_Pubmatic.framework" dst="$S(BuildDir)/Frameworks/OMSDK_Pubmatic.framework" />
-        <copyDir src="$S(PluginDir)/../../ThirdParty/IOS/DynamicFrameworks/TeadsSDK.framework" dst="$S(BuildDir)/Frameworks/TeadsSDK.framework" />
-        <copyDir src="$S(PluginDir)/../../ThirdParty/IOS/DynamicFrameworks/AdFitSDK.framework" dst="$S(BuildDir)/Frameworks/AdFitSDK.framework" />
-        <copyDir src="$S(PluginDir)/../../ThirdParty/IOS/DynamicFrameworks/FBAudienceNetwork.framework" dst="$S(BuildDir)/Frameworks/FBAudienceNetwork.framework" />
+        <log text="Bidmad Plugin for iOS is initializing"/>
     </init>
 </root>
