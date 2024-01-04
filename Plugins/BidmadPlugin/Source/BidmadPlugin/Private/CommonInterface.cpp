@@ -95,6 +95,7 @@ void UCommonInterface::InitializeSdkWithCallback(FString androidAppKey, FString 
     #if PLATFORM_IOS
     [[BIDMADSetting sharedInstance] initializeSdkWithKey:[NSString stringWithUTF8String:TCHAR_TO_UTF8(*iosAppKey)] completionHandler:^(BOOL isInitialized) {
         // Call the callback with the result
+        UE_LOG(FBidmadCommon, Warning, TEXT("[UCommonInterface] initializeSdkWithKey #####"));
         if(IsValid(UCommonInterface::mCommonInterface)){
             UCommonInterface::mCommonInterface->InitializeSdkCallback.ExecuteIfBound(isInitialized);
         }
@@ -328,6 +329,7 @@ bool UCommonInterface::IsAdFree() {
 }
 
 - (void)didAdFreeInformationStatusChange:(BidmadAdFreeInformationStatus)status {
+    UE_LOG(FBidmadCommon, Warning, TEXT("[UCommonInterface] iOS didAdFreeInformationStatusChange #####"));
     if(IsValid(UCommonInterface::mCommonInterface)){
         UCommonInterface::mCommonInterface->AdFreeCallback.ExecuteIfBound(status == BidmadAdFreeInformationStatusBlocked);
     }
@@ -341,6 +343,7 @@ bool UCommonInterface::IsAdFree() {
 extern "C"{
     // Java call Methods
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_BidmadCommon_onInitializedCb(JNIEnv *env, jobject obj, jstring isComplete){
+        UE_LOG(FBidmadCommon, Warning, TEXT("[UCommonInterface] Java_ad_helper_openbidding_BidmadCommon_onInitializedCb #####"));
         if(IsValid(UCommonInterface::mCommonInterface)) {
 
             const char *isCompletedStr = env->GetStringUTFChars(isComplete, NULL);
@@ -354,6 +357,7 @@ extern "C"{
         }
     }
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_AdFreeInformation_onAdFreeCb(JNIEnv *env, jobject obj, jstring isAdFree){
+        UE_LOG(FBidmadCommon, Warning, TEXT("[UCommonInterface] Java_ad_helper_openbidding_AdFreeInformation_onAdFreeCb #####"));
         if(IsValid(UCommonInterface::mCommonInterface)) {
             const char *isAdFreeStr = env->GetStringUTFChars(isAdFree, NULL);
 

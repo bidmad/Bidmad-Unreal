@@ -93,6 +93,13 @@ public class BidmadPlugin : ModuleRules
             
             PublicAdditionalFrameworks.Add(
                 new Framework(
+                    "BidmadAppLovinAdapter",
+                    "../../ThirdParty/IOS/BidmadAppLovinAdapter.embeddedframework.zip"
+                )
+            );
+
+            PublicAdditionalFrameworks.Add(
+                new Framework(
                     "BidmadAdColonyAdapter",
                     "../../ThirdParty/IOS/BidmadAdColonyAdapter.embeddedframework.zip"
                 )

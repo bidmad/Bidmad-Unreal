@@ -24,6 +24,9 @@
 /**
  * 
  */
+
+DECLARE_LOG_CATEGORY_EXTERN(FBidmadGoogleGDPR, Log, All);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConsentInfoUpdateSuccess);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConsentInfoUpdateFailure, const FString&, ErrorMsg);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConsentFormLoadSuccess);

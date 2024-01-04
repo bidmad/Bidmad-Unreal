@@ -1,6 +1,8 @@
 #include "GoogleGdprConsentInterface.h"
 #include "Engine.h"
 
+DEFINE_LOG_CATEGORY(FBidmadGoogleGDPR);
+
 UGoogleGdprConsentInterface* UGoogleGdprConsentInterface::mGoogleGdprConsentInterface;
 
 UGoogleGdprConsentInterface::UGoogleGdprConsentInterface()
@@ -170,14 +172,14 @@ void UGoogleGdprConsentInterface::DeleteRefMember(){
 #if PLATFORM_ANDROID
 extern "C"{
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentInfoUpdateSuccessCb(JNIEnv *env, jobject obj){
-
+        UE_LOG(FBidmadGoogleGDPR, Warning, TEXT("[UGoogleGdprConsentInterface] Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentInfoUpdateSuccessCb #####"));
         if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
             UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateSuccess.Broadcast();
         }
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentInfoUpdateFailureCb(JNIEnv *env, jobject obj, jstring errorMsg){
-        
+        UE_LOG(FBidmadGoogleGDPR, Warning, TEXT("[UGoogleGdprConsentInterface] Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentInfoUpdateFailureCb #####"));
         const char *msg = env->GetStringUTFChars(errorMsg, NULL);
         FString fMsg = FString(msg);
         env->ReleaseStringUTFChars(errorMsg, msg);
@@ -188,14 +190,14 @@ extern "C"{
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormLoadSuccessCb(JNIEnv *env, jobject obj){
-
+        UE_LOG(FBidmadGoogleGDPR, Warning, TEXT("[UGoogleGdprConsentInterface] Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormLoadSuccessCb #####"));
         if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
             UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadSuccess.Broadcast();
         }
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormLoadFailureCb(JNIEnv *env, jobject obj, jstring errorMsg){
-        
+        UE_LOG(FBidmadGoogleGDPR, Warning, TEXT("[UGoogleGdprConsentInterface] Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormLoadFailureCb #####"));
         const char *msg = env->GetStringUTFChars(errorMsg, NULL);
         FString fMsg = FString(msg);
         env->ReleaseStringUTFChars(errorMsg, msg);
@@ -206,7 +208,7 @@ extern "C"{
     }
 
     JNIEXPORT void JNICALL Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormDismissedCb(JNIEnv *env, jobject obj, jstring errorMsg){
-        
+        UE_LOG(FBidmadGoogleGDPR, Warning, TEXT("[UGoogleGdprConsentInterface] Java_com_adop_sdk_userinfo_consent_GoogleGDPRConsent_onConsentFormDismissedCb #####"));
         const char *msg = env->GetStringUTFChars(errorMsg, NULL);
         FString fMsg = FString(msg);
         env->ReleaseStringUTFChars(errorMsg, msg);
@@ -275,6 +277,7 @@ extern "C"{
 //Bidmad Callback
 
 - (void)onConsentFormDismissed:(NSError *)formError {
+    UE_LOG(FBidmadGoogleGDPR, Warning, TEXT("[UGoogleGdprConsentInterface] onConsentFormDismissed #####"));
     if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
         FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
         UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormDismissed.Broadcast(FormErrorDescription);
@@ -282,6 +285,7 @@ extern "C"{
 }
 
 - (void)onConsentFormLoadFailure:(NSError *)formError {
+    UE_LOG(FBidmadGoogleGDPR, Warning, TEXT("[UGoogleGdprConsentInterface] onConsentFormLoadFailure #####"));
     if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
         FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
         UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadFailure.Broadcast(FormErrorDescription);
@@ -289,12 +293,14 @@ extern "C"{
 }
 
 - (void)onConsentFormLoadSuccess {
+    UE_LOG(FBidmadGoogleGDPR, Warning, TEXT("[UGoogleGdprConsentInterface] onConsentFormLoadSuccess #####"));
     if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
         UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentFormLoadSuccess.Broadcast();
     }
 }
 
 - (void)onConsentInfoUpdateFailure:(NSError *)formError {
+    UE_LOG(FBidmadGoogleGDPR, Warning, TEXT("[UGoogleGdprConsentInterface] onConsentInfoUpdateFailure #####"));
     if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
         FString FormErrorDescription = UTF8_TO_TCHAR([formError.localizedDescription UTF8String]);
         UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateFailure.Broadcast(FormErrorDescription);
@@ -302,6 +308,7 @@ extern "C"{
 }
 
 - (void)onConsentInfoUpdateSuccess {
+    UE_LOG(FBidmadGoogleGDPR, Warning, TEXT("[UGoogleGdprConsentInterface] onConsentInfoUpdateSuccess #####"));
     if(IsValid(UGoogleGdprConsentInterface::mGoogleGdprConsentInterface)){
         UGoogleGdprConsentInterface::mGoogleGdprConsentInterface->OnConsentInfoUpdateSuccess.Broadcast();
     }

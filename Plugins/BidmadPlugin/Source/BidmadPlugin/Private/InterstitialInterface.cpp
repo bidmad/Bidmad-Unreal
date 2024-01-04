@@ -176,6 +176,7 @@ void UInterstitialInterface::BindEventToOnClose(const FOnBidmadInterstitialClose
 #if PLATFORM_ANDROID
 extern "C"{
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        UE_LOG(FBidmadInterstitial, Warning, TEXT("[UInterstitialInterface] Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadAdCb #####"));
         if(str1 == NULL || str2 == NULL){
             return;
         }
@@ -199,6 +200,7 @@ extern "C"{
     }
 
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onShowAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        UE_LOG(FBidmadInterstitial, Warning, TEXT("[UInterstitialInterface] Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onShowAdCb #####"));
         if(str1 == NULL || str2 == NULL){
             return;
         }        
@@ -222,6 +224,7 @@ extern "C"{
     }
 
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadFailAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2, jstring error){
+        UE_LOG(FBidmadInterstitial, Warning, TEXT("[UInterstitialInterface] Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onLoadFailAdCb #####"));
         if(str1 == NULL || str2 == NULL){
             return;
         }
@@ -249,6 +252,7 @@ extern "C"{
     }
 
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onCloseAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        UE_LOG(FBidmadInterstitial, Warning, TEXT("[UInterstitialInterface] Java_ad_helper_openbidding_interstitial_UnrealInterstitial_onCloseAdCb #####"));
         if(str1 == NULL || str2 == NULL){
             return;
         }
@@ -296,6 +300,7 @@ extern "C"{
 }
 
 - (void)bidmadInterstitialUEClose:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    UE_LOG(FBidmadInterstitial, Warning, TEXT("[UInterstitialInterface] bidmadInterstitialUEClose #####"));
     if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
         UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
 
@@ -305,6 +310,7 @@ extern "C"{
     }
 }
 - (void)bidmadInterstitialUEShow:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    UE_LOG(FBidmadInterstitial, Warning, TEXT("[UInterstitialInterface] bidmadInterstitialUEShow #####"));
     if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
         UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
 
@@ -314,6 +320,7 @@ extern "C"{
     }
 }
 - (void)bidmadInterstitialUELoad:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    UE_LOG(FBidmadInterstitial, Warning, TEXT("[UInterstitialInterface] bidmadInterstitialUELoad #####"));
     if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
         UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
 
@@ -323,6 +330,7 @@ extern "C"{
     }
 }
 - (void)bidmadInterstitialUEAllFail:(NSString * _Nullable)mZoneId errorReason:(NSString *)reason uuid:(NSString * _Nullable)uuid {
+    UE_LOG(FBidmadInterstitial, Warning, TEXT("[UInterstitialInterface] bidmadInterstitialUEAllFail #####"));
     if(UInterstitialInterface::mInterstitialInterfaceMap.Contains(uuid)){
         UInterstitialInterface* interstitial = UInterstitialInterface::mInterstitialInterfaceMap[uuid];
 

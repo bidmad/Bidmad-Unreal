@@ -182,6 +182,7 @@ void URewardInterface::BindEventToOnSkip(const FOnBidmadRewardSkipDelegate& OnSk
 #if PLATFORM_ANDROID
 extern "C"{
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] Java_ad_helper_openbidding_reward_UnrealReward_onLoadAdCb #####"));
         if(str1 == NULL || str2 == NULL){
             return;
         }
@@ -204,6 +205,7 @@ extern "C"{
     }
 
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onShowAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] Java_ad_helper_openbidding_reward_UnrealReward_onShowAdCb #####"));
         if(str1 == NULL || str2 == NULL){
             return;
         }
@@ -227,6 +229,7 @@ extern "C"{
     }
 
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onLoadFailAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2, jstring error){
+        UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] Java_ad_helper_openbidding_reward_UnrealReward_onLoadFailAdCb #####"));
         if(str1 == NULL || str2 == NULL){
             return;
         }
@@ -250,6 +253,7 @@ extern "C"{
     }
 
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCompleteAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] Java_ad_helper_openbidding_reward_UnrealReward_onCompleteAdCb #####"));
         if(str1 == NULL || str2 == NULL){
             return;
         }
@@ -272,6 +276,7 @@ extern "C"{
     }
 
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onCloseAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] Java_ad_helper_openbidding_reward_UnrealReward_onCloseAdCb #####"));
         if(str1 == NULL || str2 == NULL){
             return;
         }
@@ -294,6 +299,7 @@ extern "C"{
     }
 
     JNIEXPORT void JNICALL Java_ad_helper_openbidding_reward_UnrealReward_onSkippedAdCb(JNIEnv *env, jobject obj, jstring str1, jstring str2){
+        UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] Java_ad_helper_openbidding_reward_UnrealReward_onSkippedAdCb #####"));
         if(str1 == NULL || str2 == NULL){
             return;
         }
@@ -340,6 +346,7 @@ extern "C"{
     return unrealReward;
 }
 - (void)bidmadRewardUESkipped:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] bidmadRewardUESkipped #####"));
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
@@ -349,6 +356,7 @@ extern "C"{
     }
 }
 - (void)bidmadRewardUESucceed:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] bidmadRewardUESucceed #####"));
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
@@ -358,6 +366,7 @@ extern "C"{
     }
 }
 - (void)bidmadRewardUEClose:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] bidmadRewardUEClose #####"));
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
@@ -367,6 +376,7 @@ extern "C"{
     }
 }
 - (void)bidmadRewardUEShow:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] bidmadRewardUEShow #####"));
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
@@ -376,6 +386,7 @@ extern "C"{
     }
 }
 - (void)bidmadRewardUELoad:(NSString * _Nullable)mZoneId uuid:(NSString * _Nullable)uuid {
+    UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] bidmadRewardUELoad #####"));
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 
@@ -385,6 +396,7 @@ extern "C"{
     }
 }
 - (void)bidmadRewardUEAllFail:(NSString * _Nullable)mZoneId errorReason:(NSString * _Nullable)reason uuid:(NSString * _Nullable)uuid {
+    UE_LOG(FBidmadReward, Warning, TEXT("[URewardInterface] bidmadRewardUEAllFail #####"));
     if(URewardInterface::mRewardInterfaceMap.Contains(uuid)){
         URewardInterface* reward = URewardInterface::mRewardInterfaceMap[uuid];
 

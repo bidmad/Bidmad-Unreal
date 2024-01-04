@@ -1,3 +1,12 @@
+v.1.6.4
+-------------
+*Android<br>
+-Fix Pangle Target SDK 34 crash issue<br>
+-Update BidmadSdk 3.11.0<br>
+*iOS<br>
+-Update BidmadSDK 6.5.0<br>
+-iOS Depedency Update
+
 v.1.6.3
 -------------
 *Android<br>
