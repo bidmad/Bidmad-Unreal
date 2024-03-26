@@ -66,13 +66,6 @@ public class BidmadPlugin : ModuleRules
             AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(PluginPath, "Bidmad_AOS_UPL.xml"));
         }else if (Target.Platform == UnrealTargetPlatform.IOS){
             AdditionalPropertiesForReceipt.Add("IOSPlugin", Path.Combine(ModuleDirectory, "Bidmad_IOS_UPL.xml"));
-
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "AdColony",
-                    "../../ThirdParty/IOS/AdColony.embeddedframework.zip"
-                )
-            );
             
             PublicAdditionalFrameworks.Add(
                 new Framework(
@@ -95,13 +88,6 @@ public class BidmadPlugin : ModuleRules
                 new Framework(
                     "BidmadAppLovinAdapter",
                     "../../ThirdParty/IOS/BidmadAppLovinAdapter.embeddedframework.zip"
-                )
-            );
-
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "BidmadAdColonyAdapter",
-                    "../../ThirdParty/IOS/BidmadAdColonyAdapter.embeddedframework.zip"
                 )
             );
             
@@ -191,13 +177,6 @@ public class BidmadPlugin : ModuleRules
             
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "FBAudienceNetwork",
-                    "../../ThirdParty/IOS/FBAudienceNetwork.embeddedframework.zip"
-                )
-            );
-            
-            PublicAdditionalFrameworks.Add(
-                new Framework(
                     "FBLPromises",
                     "../../ThirdParty/IOS/FBLPromises.embeddedframework.zip",
                     null,
@@ -207,29 +186,8 @@ public class BidmadPlugin : ModuleRules
             
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "GoogleAppMeasurement",
-                    "../../ThirdParty/IOS/GoogleAppMeasurement.embeddedframework.zip"
-                )
-            );
-            
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "GoogleAppMeasurementIdentitySupport",
-                    "../../ThirdParty/IOS/GoogleAppMeasurementIdentitySupport.embeddedframework.zip"
-                )
-            );
-            
-            PublicAdditionalFrameworks.Add(
-                new Framework(
                     "GoogleMobileAds",
                     "../../ThirdParty/IOS/GoogleMobileAds.embeddedframework.zip"
-                )
-            );
-            
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "GoogleUtilities",
-                    "../../ThirdParty/IOS/GoogleUtilities.embeddedframework.zip"
                 )
             );
             
@@ -260,20 +218,6 @@ public class BidmadPlugin : ModuleRules
                 new Framework(
                     "LiftoffMonetizeAdapter",
                     "../../ThirdParty/IOS/LiftoffMonetizeAdapter.embeddedframework.zip"
-                )
-            );
-            
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "MetaAdapter",
-                    "../../ThirdParty/IOS/MetaAdapter.embeddedframework.zip"
-                )
-            );
-            
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "nanopb",
-                    "../../ThirdParty/IOS/nanopb.embeddedframework.zip"
                 )
             );
             

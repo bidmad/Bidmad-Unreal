@@ -1,8 +1,18 @@
+v.1.7.0
+-------------
+*Android<br>
+-Add Criteo Network<br>
+-Fix Bugs<br>
+-Update BidmadSdk 3.13.0<br><br>
+*iOS<br>
+-Update third-party frameworks for Privacy Manifest<br>
+-Update BidmadSDK 6.6.1
+
 v.1.6.4
 -------------
 *Android<br>
 -Fix Pangle Target SDK 34 crash issue<br>
--Update BidmadSdk 3.11.0<br>
+-Update BidmadSdk 3.11.0<br><br>
 *iOS<br>
 -Update BidmadSDK 6.5.0<br>
 -iOS Depedency Update
@@ -10,7 +20,7 @@ v.1.6.4
 v.1.6.3
 -------------
 *Android<br>
--Update BidmadSdk 3.10.1<br>
+-Update BidmadSdk 3.10.1<br><br>
 *iOS<br>
 -Update BidmadSDK 6.4.1<br>
 -Change third-party frameworks import structure
@@ -18,16 +28,16 @@ v.1.6.3
 v.1.6.2
 -------------
 *iOS<br>
--Fix Coupang Ad Network Ad Block Interface<br>
+-Fix Coupang Ad Network Ad Block Interface
 
 v.1.6.1
 -------------
 *Unreal<br>
--Bug Fix Ad Network Coupang Orientation (Interstitial / Reward)
+-Bug Fix Ad Network Coupang Orientation (Interstitial / Reward)<br><br>
 *Android<br>
--Update BidmadSdk 3.7.1<br>
+-Update BidmadSdk 3.7.1<br><br>
 *iOS<br>
--Update BidmadSDK 6.3.0<br>
+-Update BidmadSDK 6.3.0
 
 v.1.6.0
 -------------
@@ -35,16 +45,16 @@ v.1.6.0
 -Add Coupang Ad Network Banner, NativeAd<br>
 -Support for Coupang Ad Network Interface about Ad Block Information<br><br>
 *Android<br>
--Update BidmadSdk 3.7.1<br>
+-Update BidmadSdk 3.7.1<br><br>
 *iOS<br>
--Update BidmadSDK 6.3.0<br>
+-Update BidmadSDK 6.3.0
 
 v.1.5.1
 -------------
 *Unreal<br>
 -Fix incorrect Category in RewardInterface<br><br>
 *Android<br>
--Fix Ad Callback Error <br>
+-Fix Ad Callback Error
 
 v.1.5.0
 -------------
@@ -67,12 +77,12 @@ v.1.4.1
 -Fix Bugs<br>
 -Update BidmadSDK 2.7.0.0<br><br>
 *iOS<br>
--Update BidmadSDK 4.5.0.0<br>
+-Update BidmadSDK 4.5.0.0
 
 v.1.4.0
 -------------
 *Unreal<br>
--Update callback interface to work in C++ code<br><br>
+-Update callback interface to work in C++ code<br>
 -Change ATT Callback Name<br><br>
 *Android<br>
 -Update Ad Network Library Version<br>
@@ -104,7 +114,7 @@ v.1.2.0
 -------------
 *Unreal<br>
 -Add GDPR function for Non-Google AdNetworks<br>
--Add GDPR function for Google AdNetworks<br>
+-Add GDPR function for Google AdNetworks
 
 v.1.1.0
 -------------
@@ -112,7 +122,7 @@ v.1.1.0
 -Change Reward / Interface Interface<br><br>
 *iOS<br>
 -Support for App Tracking Transparency.<br>
--Support for SKAdNetwork..
+-Support for SKAdNetwork.
 
 v.1.0.2
 -------------
