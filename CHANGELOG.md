@@ -1,3 +1,11 @@
+v.1.7.1
+-------------
+*Android<br>
+-No change
+*iOS<br>
+-ADOPUtility & FBLPromises removed
+-Update BidmadSDK 6.6.2
+
 v.1.7.0
 -------------
 *Android<br>
