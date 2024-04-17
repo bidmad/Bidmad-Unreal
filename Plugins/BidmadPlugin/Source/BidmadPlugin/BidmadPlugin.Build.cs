@@ -69,15 +69,6 @@ public class BidmadPlugin : ModuleRules
             
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "ADOPUtility",
-                    "../../ThirdParty/IOS/ADOPUtility.embeddedframework.zip",
-                    null,
-                    true
-                )
-            );
-            
-            PublicAdditionalFrameworks.Add(
-                new Framework(
                     "AppLovinSDK",
                     "../../ThirdParty/IOS/AppLovinSDK.embeddedframework.zip",
                     "Resources/AppLovinSDKResources.bundle"
@@ -172,15 +163,6 @@ public class BidmadPlugin : ModuleRules
                 new Framework(
                     "DTExchangeAdapter",
                     "../../ThirdParty/IOS/DTExchangeAdapter.embeddedframework.zip"
-                )
-            );
-            
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "FBLPromises",
-                    "../../ThirdParty/IOS/FBLPromises.embeddedframework.zip",
-                    null,
-                    true
                 )
             );
             
