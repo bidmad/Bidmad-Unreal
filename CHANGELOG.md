@@ -1,3 +1,12 @@
+v.1.8.0
+-------------
+*Unreal
+-Appkey is deprecated. Instead, use App Domain.<br>
+*Android<br>
+-Update BidmadSdk 3.18.0<br><br>
+*iOS<br>
+-Update BidmadSDK 6.11.0
+
 v.1.7.1
 -------------
 *Android<br>

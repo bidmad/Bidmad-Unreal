@@ -5,6 +5,11 @@ You can use the plugin to serve interstitial/rewarded ads in Unreal mobile apps.
 
 - [Download the latest version and sample project](https://github.com/bidmad/Bidmad-Unreal/archive/master.zip)
 
+> [!IMPORTANT]
+> Starting with version 1.8.0, the previously used Appkey has been changed to AppDomain.<br>
+> **AppDomain is not compatible with existing Appkeys, so a new AppDomain must be issued to initiaize.**<br>
+> If you are updating to version 1.8.0, please contact **Techlabs Platform Operations Team.**<br>
+
 ## Get started
 ### 1. Plugin addition and setting
 Copy the folder and file of **Plugins/BidmadPlugin** included in the downloaded sample project to the Plugins folder of the project to which the plugin will be applied.<br>
@@ -774,14 +779,15 @@ UCommonInterface* CommonInterface = UCommonInterface::GetCommonInterfaceInstance
 ### 3. BidmadSDK Initialization (v1.5.0 or above)
 
 Performs tasks required to run BidmadSDK. The SDK won't allow ads to load unless you call the initializeSdk method.<br>
-The initializeSdk method receives the App Key as a parameter, and the App Key can be copied from ADOP Insight. You can get the App Key by referring to the [Find your App Key](https://github.com/bidmad/SDK/wiki/Find-your-app-key%5BEN%5D) guide.<br>
-Before loading ads, call the initializeSdk method as shown in the following example at the beginning of app.
+The initializeSdk method receives App Domain as a parameter.<br>
+Before loading ads, call the initializeSdk method as shown in the following example at the beginning of app execution.<br>
+(*To check the App Domain, please contact the Techlabs platform operation team.)
 
-![InitializeSdkUnrealWithoutCallback](https://i.imgur.com/UJhYyPv.jpg)
+![InitializeSdkUnrealWithoutCallback](https://i.imgur.com/AZsCPii.png)
 
 Or, you can check the initialization status by calling initializeSdkWithCallback
 
-![InitializeSdkUnrealWithCallback](https://i.imgur.com/gboXzkq.jpg)
+![InitializeSdkUnrealWithCallback](https://i.imgur.com/iyFbH2n.png)
 
 ### 4. Interstitial
 
@@ -918,13 +924,13 @@ When using the InitializeSdkWithCallback method, set up events that can receive 
 
 Callback event occurs after calling SDK initialization.
 
-![CommonInitializeSdkWithCallback](https://i.imgur.com/DxS1cgR.png)
+![CommonInitializeSdkWithCallback](https://i.imgur.com/k3U8I1K.png)
 
 #### 5.9 InitializeSdk
 
 Calling SDK initialization methods, without callbacks
 
-![CommonInitializeSdk](https://i.imgur.com/LFx7ceN.png)
+![CommonInitializeSdk](https://i.imgur.com/I1MlHkw.png)
 
 #### References
 - Unreal GDPR Guide [KOR](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BKOR%5D) | [ENG](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-GDPR-Guide-%5BENG%5D)

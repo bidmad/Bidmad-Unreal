@@ -76,7 +76,7 @@ void UCommonInterface::SetAdvertiserTrackingEnabled(bool enable){
 }
 
 bool UCommonInterface::GetAdvertiserTrackingEnabled(){
-	bool result = false;
+    bool result = false;
 
     #if PLATFORM_ANDROID
 
@@ -89,28 +89,36 @@ bool UCommonInterface::GetAdvertiserTrackingEnabled(){
     return result;
 }
 
-void UCommonInterface::InitializeSdkWithCallback(FString androidAppKey, FString iosAppKey) {
+void UCommonInterface::InitializeSdkWithCallback(FString androidAppDomain, FString iosAppDomain) {
     mCommonInterface = this;
     
     #if PLATFORM_IOS
-    [[BIDMADSetting sharedInstance] initializeSdkWithKey:[NSString stringWithUTF8String:TCHAR_TO_UTF8(*iosAppKey)] completionHandler:^(BOOL isInitialized) {
+    [[BIDMADSetting sharedInstance]
+     initializeSdkWithDomain:[NSString stringWithUTF8String:TCHAR_TO_UTF8(*iosAppDomain)]
+     platform:@"unreal"
+     completionHandler:^(BOOL initStatus) {
         // Call the callback with the result
-        UE_LOG(FBidmadCommon, Warning, TEXT("[UCommonInterface] initializeSdkWithKey #####"));
+        UE_LOG(FBidmadCommon, Warning, TEXT("[UCommonInterface] initializeSdkWithAppDomain #####"));
         if(IsValid(UCommonInterface::mCommonInterface)){
-            UCommonInterface::mCommonInterface->InitializeSdkCallback.ExecuteIfBound(isInitialized);
+            UCommonInterface::mCommonInterface->InitializeSdkCallback.ExecuteIfBound(initStatus);
         }
     }];
     #elif PLATFORM_ANDROID
     // Call Native Initialized Callback
-
-    // mInitializeSdkCallback = &callback;
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
-    mAppKey = androidAppKey;
-    jstring _appKey = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mAppKey));
+
+    jint platformCode = static_cast<jint>(5);
+    jclass platformCls = FAndroidApplication::FindJavaClass("com/adop/sdk/Common");
+    jmethodID platformJniM = FJavaWrapper::FindStaticMethod(mEnv, platformCls, "setRunningPlatform", "(I)V", false);
+    mEnv->CallStaticVoidMethod(platformCls, platformJniM, platformCode);
+
+    mAppDomain = androidAppDomain;
+    jstring _appDomain = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mAppDomain));
     jclass mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/BidmadCommon");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "initializeSdkWithCbListener", "(Landroid/app/Activity;Ljava/lang/String;)V", false);
-    mEnv->CallStaticVoidMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), _appKey);
+    mEnv->CallStaticVoidMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), _appDomain);
 
+    mEnv->DeleteLocalRef(platformCls);
     mEnv->DeleteLocalRef(mJCls);
 
     #endif
@@ -120,19 +128,27 @@ void UCommonInterface::BindEventToOnInitializeSdk(const FInitializeSdkCallback& 
     InitializeSdkCallback = OnInitializeSdk;
 }
 
-void UCommonInterface::InitializeSdk(FString androidAppKey, FString iosAppKey) {
+void UCommonInterface::InitializeSdk(FString androidAppDomain, FString iosAppDomain) {
     #if PLATFORM_ANDROID
     JNIEnv* mEnv = FAndroidApplication::GetJavaEnv();
-    mAppKey = androidAppKey;
-    jstring _appKey = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mAppKey));
+
+    jint platformCode = static_cast<jint>(5);
+    jclass platformCls = FAndroidApplication::FindJavaClass("com/adop/sdk/Common");
+    jmethodID platformJniM = FJavaWrapper::FindStaticMethod(mEnv, platformCls, "setRunningPlatform", "(I)V", false);
+    mEnv->CallStaticVoidMethod(platformCls, platformJniM, platformCode);
+
+    mAppDomain = androidAppDomain;
+    jstring _appDomain = mEnv->NewStringUTF(TCHAR_TO_ANSI(*mAppDomain));
     jclass mJCls = FAndroidApplication::FindJavaClass("ad/helper/openbidding/BidmadCommon");
     jmethodID jniM = FJavaWrapper::FindStaticMethod(mEnv, mJCls, "initializeSdk", "(Landroid/app/Activity;Ljava/lang/String;)V", false);
-    mEnv->CallStaticVoidMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), _appKey);
+    mEnv->CallStaticVoidMethod(mJCls, jniM, FAndroidApplication::GetGameActivityThis(), _appDomain);
 
     mEnv->DeleteLocalRef(mJCls);
 
     #elif PLATFORM_IOS
-    [[BIDMADSetting sharedInstance] initializeSdkWithKey:[NSString stringWithUTF8String:TCHAR_TO_UTF8(*iosAppKey)]];
+    [[BIDMADSetting sharedInstance]
+      initializeSdkWithDomain:[NSString stringWithUTF8String:TCHAR_TO_UTF8(*iosAppDomain)]
+      platform:@"unreal"];
     #endif
 }
 

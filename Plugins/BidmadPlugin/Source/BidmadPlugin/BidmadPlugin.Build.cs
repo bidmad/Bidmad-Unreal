@@ -71,7 +71,8 @@ public class BidmadPlugin : ModuleRules
                 new Framework(
                     "AppLovinSDK",
                     "../../ThirdParty/IOS/AppLovinSDK.embeddedframework.zip",
-                    "Resources/AppLovinSDKResources.bundle"
+                    null,
+                    true
                 )
             );
             
@@ -134,7 +135,9 @@ public class BidmadPlugin : ModuleRules
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "BidmadSDK",
-                    "../../ThirdParty/IOS/BidmadSDK.embeddedframework.zip"
+                    "../../ThirdParty/IOS/BidmadSDK.embeddedframework.zip",
+                    null,
+                    true
                 )
             );
             
@@ -151,11 +154,11 @@ public class BidmadPlugin : ModuleRules
                     "../../ThirdParty/IOS/BidmadVungleAdapter.embeddedframework.zip"
                 )
             );
-            
+
             PublicAdditionalFrameworks.Add(
                 new Framework(
-                    "BURelyAdSDK",
-                    "../../ThirdParty/IOS/BURelyAdSDK.embeddedframework.zip"
+                    "FrameworkWrapper",
+                    "../../ThirdParty/IOS/FrameworkWrapper.embeddedframework.zip"
                 )
             );
             
@@ -250,13 +253,6 @@ public class BidmadPlugin : ModuleRules
                 new Framework(
                     "VungleAdsSDK",
                     "../../ThirdParty/IOS/VungleAdsSDK.embeddedframework.zip"
-                )
-            );
-            
-            PublicAdditionalFrameworks.Add(
-                new Framework(
-                    "FrameworkWrapper",
-                    "../../ThirdParty/IOS/FrameworkWrapper.embeddedframework.zip"
                 )
             );
 

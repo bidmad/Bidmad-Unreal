@@ -37,7 +37,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 private: 
-	FString mAppKey;
+	FString mAppDomain;
 	FString mCUID;
     
     UCommonInterface();
@@ -53,11 +53,11 @@ public:
 
 	//Bidmad Function
     UFUNCTION(BlueprintCallable,Category="BidmadCommon")
-    void InitializeSdkWithCallback(FString androidAppKey, FString iosAppKey);
+    void InitializeSdkWithCallback(FString androidAppDomain, FString iosAppDomain);
     UFUNCTION(BlueprintCallable,Category="BidmadCommon")
     void BindEventToOnInitializeSdk(const FInitializeSdkCallback& OnInitializeSdk);
     UFUNCTION(BlueprintCallable,Category="BidmadCommon")
-    void InitializeSdk(FString androidAppKey, FString iosAppKey);
+    void InitializeSdk(FString androidAppDomain, FString iosAppDomain);
 	UFUNCTION(BlueprintCallable,Category="BidmadCommon")
     void SetDebugging(bool isDebugMod);
 	UFUNCTION(BlueprintCallable,Category="BidmadCommon")

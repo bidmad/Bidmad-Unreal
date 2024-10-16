@@ -5,6 +5,11 @@ Plugin을 사용하여 Unreal 모바일 앱에서 전면 / 보상형 광고를 �
 
 - [최신 버전 및 샘플 프로젝트 다운로드](https://github.com/bidmad/Bidmad-Unreal/archive/master.zip)
 
+> [!IMPORTANT]
+> 1.8.0 버전부터는 기존에 사용하던 **Appkey가 AppDomain으로 변경**되었습니다.<br>
+> **AppDomain은 기존 Appkey와 호환이 되지 않아 initiaize를 위해서는 AppDomain을 새로 발급받으셔야 합니다.**<br>
+> 1.8.0 버전으로 업데이트 하시는 경우에는 **테크랩스 플랫폼 사업부 운영팀에 연락 부탁 드립니다.**<br>
+
 ## 시작하기
 ### 1. Plugin 추가 및 설정
 샘플 프로젝트에 포함된 **Plugins/BidmadPlugin**의 폴더와 파일을 Plugin을 적용할 프로젝트의 Plugins폴더로 복사합니다.<br>
@@ -772,15 +777,15 @@ UCommonInterface* CommonInterface = UCommonInterface::GetCommonInterfaceInstance
 
 ### 3. BidmadSDK 초기화 (v1.5.0 이상)
 
-BidmadSDK 실행에 필요한 작업을 수행합니다. initializeSdk 메서드를 호출하지 않은 경우, SDK는 광고 로드를 허용하지 않습니다.<br>
-initializeSdk 메서드는 ADOP Insight 에서 확인가능한 App Key를 인자값으로 받고 있습니다. App Key는 [App Key 찾기](https://github.com/bidmad/SDK/wiki/Find-your-app-key%5BKR%5D) 가이드를 참고해 가져올 수 있습니다.<br>
-광고를 로드하기 전, 앱 실행 초기에 다음 예시와 같이 initializeSdk 메서드를 호출해주십시오.
+BidmadSDK 실행에 필요한 작업을 수행합니다. SDK는 initializeSdk 메서드를 호출하지 않은 경우 광고 로드를 허용하지 않습니다.<br>
+initializeSdk 메서드는 App Domain를 인자값으로 받고 있으며 광고를 로드하기 전, 앱 실행 초기에 다음 예시와 같이 initializeSdk 메서드를 호출해주십시오.<br>
+(*App Domain을 발급받으시려면 테크랩스 플랫폼 운영팀으로 연락 부탁 드립니다.)
 
-![InitializeSdkUnrealWithoutCallback](https://i.imgur.com/UJhYyPv.jpg)
+![InitializeSdkUnrealWithoutCallback](https://i.imgur.com/AZsCPii.png)
 
 혹은, initializeSdkWithCallback 메서드를 호출해 SDK의 초기화 여부를 확인할 수 있습니다.
 
-![InitializeSdkUnrealWithCallback](https://i.imgur.com/gboXzkq.jpg)
+![InitializeSdkUnrealWithCallback](https://i.imgur.com/iyFbH2n.png)
 
 ### 4. Interstitial
 
@@ -914,13 +919,13 @@ InitializeSdkWithCallback 메서드 사용 시, 콜백을 받을 수 있는 이�
 
 SDK 초기화 호출 이후, 콜백 이벤트 발생.
 
-![CommonInitializeSdkWithCallback](https://i.imgur.com/DxS1cgR.png)
+![CommonInitializeSdkWithCallback](https://i.imgur.com/k3U8I1K.png)
 
 #### 6.9 InitializeSdk
 
 콜백 없이, SDK 초기화 메서드 호출
 
-![CommonInitializeSdk](https://i.imgur.com/LFx7ceN.png)
+![CommonInitializeSdk](https://i.imgur.com/I1MlHkw.png)
 
 #### 6.10 isAdFree 
 
