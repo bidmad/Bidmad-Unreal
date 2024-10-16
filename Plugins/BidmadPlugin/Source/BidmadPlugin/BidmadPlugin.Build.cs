@@ -179,9 +179,7 @@ public class BidmadPlugin : ModuleRules
             PublicAdditionalFrameworks.Add(
                 new Framework(
                     "IASDKCore",
-                    "../../ThirdParty/IOS/IASDKCore.embeddedframework.zip",
-                    null,
-                    true
+                    "../../ThirdParty/IOS/IASDKCore.embeddedframework.zip"
                 )
             );
             
