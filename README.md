@@ -11,6 +11,13 @@ Plugin을 사용하여 Unreal 모바일 앱에서 전면 / 보상형 광고를 �
 > 1.8.0 버전으로 업데이트 하시는 경우에는 **테크랩스 플랫폼 사업부 운영팀에 연락 부탁 드립니다.**<br>
 
 ## 시작하기
+
+> [!IMPORTANT]
+> Bidmad는 fabric architecture를 지원하지 않습니다. <br>
+> 1.9.0 버전부터 다음의 개발환경이 요구됩니다.<br>
+> iOS 개발환경은 **Minimum Deployments iOS 13.0 이상**을 요구합니다.<br>
+> AOS 개발환경은 **Minimum SDK 23 / Kotlin 2.1.0 이상**을 요구합니다.
+
 ### 1. Plugin 추가 및 설정
 샘플 프로젝트에 포함된 **Plugins/BidmadPlugin**의 폴더와 파일을 Plugin을 적용할 프로젝트의 Plugins폴더로 복사합니다.<br>
 그리고, 프로젝트 내 **Source/프로젝트.Build.cs**파일에 선언된 PublicDependencyModuleNames.AddRange에 BidmadPlugin을 추가합니다.
@@ -36,7 +43,7 @@ AOS의 경우 Admob Application ID Settings 을 위한 AndroidManifest.xml에 �
 
 - 언리얼 플러그인 1.7.1 버전 이상 사용 시, Xcode 15.3 이상을 사용하십시오<br>
 
-- 예제 사용 시, 예제 프로젝트 내부에 [iOS 디펜던시 다운로드 링크](https://drive.google.com/file/d/16k7r0aBf5Uqbgx5Kx9Kl0jkRuDQ2y84-/view?usp=sharing)를 통해 iOS 라이브러리 따로 다운로드 및 압축 해제 이후, "IOS" 폴더를 Plugins -> BidmadPlugin -> ThirdParty 폴더 아래에 넣어주세요<br>
+- 예제 사용 시, 예제 프로젝트 내부에 [iOS 디펜던시 다운로드 링크](https://drive.google.com/file/d/1yqwALbOqUUhYnGUxqf27g68IhrJ_QcA-/view?usp=sharing)를 통해 iOS 라이브러리 따로 다운로드 및 압축 해제 이후, "IOS" 폴더를 Plugins -> BidmadPlugin -> ThirdParty 폴더 아래에 넣어주세요<br>
 
 - 아래 설정을 진행하기 이전, Unreal Engine Build Tool 코드 수정이 필요합니다. 수정 가이드는 [Unreal Build Tool 수정 가이드](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-Build-Tool-Modification-Guide-for-iOS-Build)를 통해 확인해주세요. 수정 가이드를 진행한 이후 아래 프로젝트 세팅을 진행해주세요.<br>
 

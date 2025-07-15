@@ -1,3 +1,12 @@
+v.1.9.0
+-------------
+*Android<br>
+-Update BidmadSdk 3.23.0<br>
+-AOS Change Min SDK 23, Target SDK 35<br><br>
+*iOS<br>
+-Update BidmadSDK 6.12.4
+-iOS Change Min iOS Version 13
+
 v.1.8.0
 -------------
 *Unreal
