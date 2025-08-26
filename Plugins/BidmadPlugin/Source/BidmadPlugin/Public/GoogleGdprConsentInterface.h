@@ -14,7 +14,10 @@
 #include "IOS/IOSAppDelegate.h"
 #include <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <BidmadSDK/BidmadSDK-Swift.h>
 #import <BidmadSDK/BidmadSDK.h>
+#import <OpenBiddingHelper/OpenBiddingHelper-Swift.h>
+#import <OpenBiddingHelper/OpenBiddingHelper.h>
 #import <BidmadSDK/UnrealGDPRforGoogle.h>
 #import <BidmadSDK/BIDMADGDPRforGoogle.h>
 #pragma clang diagnostic ignored "-Wobjc-property-no-attribute"

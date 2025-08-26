@@ -16,6 +16,9 @@
 #include <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #pragma clang diagnostic ignored "-Wobjc-property-no-attribute"
+#import <BidmadSDK/BidmadSDK-Swift.h>
+#import <BidmadSDK/BidmadSDK.h>
+#import <OpenBiddingHelper/OpenBiddingHelper-Swift.h>
 #import <OpenBiddingHelper/OpenBiddingHelper.h>
 #endif
 
