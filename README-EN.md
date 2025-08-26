@@ -44,7 +44,7 @@ For AOS, additional settings are required in AndroidManifest.xml for Admob Appli
 
 - When using 1.7.1 or higher versions of Bidmad Unreal Plugin, please use Xcode 15.3 or higher for app builds & distribution.<br>
 
-- When using the example, download and unzip the iOS library separately through [iOS Dependency Download Link](https://drive.google.com/file/d/1yqwALbOqUUhYnGUxqf27g68IhrJ_QcA-/view?usp=sharing)<br>. Inside the example project, place the downloaded "IOS" folder under the Plugins -> BidmadPlugin -> ThirdParty folder<br>
+- When using the example, download and unzip the iOS library separately through [iOS Dependency Download Link](https://drive.google.com/file/d/1JdUCzikwhQEVHA5iuhFC4HeUelXbvUxx/view?usp=share_link)<br>. Inside the example project, place the downloaded "IOS" folder under the Plugins -> BidmadPlugin -> ThirdParty folder<br>
 
 - Before proceeding with the settings below, the Unreal Engine Build Tool code needs to be modified. For the modification guide, please follow the [Unreal Build Tool Modification Guide](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-Build-Tool-Modification-Guide-for-iOS-Build). After completing the modification guide. Please proceed to the project settings below.<br>
 

@@ -43,7 +43,7 @@ AOS의 경우 Admob Application ID Settings 을 위한 AndroidManifest.xml에 �
 
 - 언리얼 플러그인 1.7.1 버전 이상 사용 시, Xcode 15.3 이상을 사용하십시오<br>
 
-- 예제 사용 시, 예제 프로젝트 내부에 [iOS 디펜던시 다운로드 링크](https://drive.google.com/file/d/1yqwALbOqUUhYnGUxqf27g68IhrJ_QcA-/view?usp=sharing)를 통해 iOS 라이브러리 따로 다운로드 및 압축 해제 이후, "IOS" 폴더를 Plugins -> BidmadPlugin -> ThirdParty 폴더 아래에 넣어주세요<br>
+- 예제 사용 시, 예제 프로젝트 내부에 [iOS 디펜던시 다운로드 링크](https://drive.google.com/file/d/1JdUCzikwhQEVHA5iuhFC4HeUelXbvUxx/view?usp=share_link)를 통해 iOS 라이브러리 따로 다운로드 및 압축 해제 이후, "IOS" 폴더를 Plugins -> BidmadPlugin -> ThirdParty 폴더 아래에 넣어주세요<br>
 
 - 아래 설정을 진행하기 이전, Unreal Engine Build Tool 코드 수정이 필요합니다. 수정 가이드는 [Unreal Build Tool 수정 가이드](https://github.com/bidmad/Bidmad-Unreal/wiki/Unreal-Build-Tool-Modification-Guide-for-iOS-Build)를 통해 확인해주세요. 수정 가이드를 진행한 이후 아래 프로젝트 세팅을 진행해주세요.<br>
 
